@@ -1,0 +1,55 @@
+
+### define zone name and dns name
+drn_dsp_zone_name=
+drn_dsp_dns_name=
+
+if [[ $region == "uk" ]]; then
+  drn_dsp_zone_name=private-${env}-www-baidu
+  drn_dsp_dns_name=www.baidu
+  echo $drn_dsp_zone_name
+  echo $drn_dsp_dns_name
+elif [[ $region == "hk" ]]; then
+  drn_dsp_zone_name=private-${env}-hk.baidu
+  drn_dsp_dns_name=hk.baidu
+  echo $drn_dsp_zone_name
+  echo $drn_dsp_dns_name
+else
+  echo "the region is wrong when create new zone name"
+  exit 1
+fi
+
+
+function add-drn-zone () {
+echo $private_network
+echo "now checking the exist ones list"
+gcloud dns managed-zones list
+echo "Now create $drn_dsp_zone_name for $e"
+gcloud dns managed-zones create $drn_dsp_zone_name --description="Private DNS zone for $e Lex" --dns-name="$drn_dsp_dns_name"  --visibility=private --networks=$private_n
+etwork
+echo "now checking the exist ones list"
+gcloud dns managed-zones list
+#gcloud dns managed-zones delete private-pdev-www-baidu
+}
+
+function add-drn-domain () {
+rm -fr ./transaction.yaml
+gcloud dns record-sets transaction start -z "$drn_dsp_zone_name"
+#gcloud dns record-sets transaction add 198.123.23.2 --name=spring-sampl-api-1-9-0.ppt-sb-rt.gcp.cloud.www.baidu --ttl=300  --type=A --zone=abc-def-private-access
+_domain_file_dsp="./domain-record/drn-dsp-domains.txt"
+#if file exists
+if [[ -f "$_domain_file_dsp" ]]
+then
+    #read it
+    while IFS=' ' read -r DomainserviceName externalIP
+    do
+        gcloud dns record-sets transaction add "${externalIP}" --name="${DomainserviceName}" --ttl=300  --type=A --zone="${drn_dsp_zone_name}"
+    done < "$_domain_file_dsp"
+fi
+}
+
+echo "add $drn_dsp_zone_name"
+add-drn-zone
+echo "Now add new record for $drn_dsp_zone_name"
+add-drn-domain $drn_dsp_zone_name
+gcloud dns record-sets transaction execute -z "$drn_dsp_zone_name"
+gcloud dns record-sets list -z "$drn_dsp_zone_name"
