@@ -1,0 +1,2049 @@
+1. sed -n ':a;1,5!{P;N;D;};N;ba' file
+2. [解析]
+这是删除文件末尾5行,原理是把第1到5行读入pattern space中，当读到第5行，超过了1,5的范畴后会执行花括号里的语句，就打印模式空间的第1行，然后再读取下一行内容，删除模式空间的第一行，并跳转到命令行首继续执行。这样就相当于隔5行打印前面的内容，最后的5行无法打印。
+-n 使用安静(silent)模式。在一般 sed 的用法中，所有来自 STDIN的数据一般都会被列出到屏幕上。但如果加上 -n 参数后，则只有经过sed 特殊处理的那一行(或者动作)才会被列出来
+-f  ：直接将 sed 的动作写在一个档案内， -f filename 则可以执行 filename 内的sed 动作；
+-r  ：sed 的动作支持的是延伸型正规表示法的语法。(预设是基础正规表示法语法)
+-i  ：直接修改读取的档案内容，而不是由屏幕输出。
+n1, n2 ：不见得会存在，一般代表『选择进行动作的行数』
+➜  shell cat a.sh|sed 's/macOS/徐乐/g;s/macos/xule/g'
+    <dict>
+        <key>phrase</key>
+        <string>徐乐</string>
+        <key>shortcut</key>
+        <string>xule</string>
+    </dict>
+2个条件替换的话可以用;号来确认 [sed复合条件
+egrep -i -n "cycle|capacity" -A 1 log-aggregated-2021-01-21-080141.ips|sed 's/<integer>//g;s/<\/integer>//g;s/<key>//g;s/<\/key>//g']
+centos7 root@parallels:~# cat a.sh
+    <dict>
+        <key>phrase</key>
+        <string>macOS</string>
+        <key>shortcut</key>
+        <string>macos</string>
+    </dict>
+centos7 root@parallels:~# cat a.sh |sed 's/macOS/徐乐/g;s/macos/xule/g'
+    <dict>
+        <key>phrase</key>
+        <string>徐乐</string>
+        <key>shortcut</key>
+        <string>xule</string>
+    </dict>
+
+
+sed在macOS 下常见的一个报错
+$ /Users/lex   sudo su -
+Mac:~ root# sed -i 's/216.58.215.229/108.177.97.109/g' /etc/hosts
+sed: 1: "/etc/hosts": extra characters at the end of h command
+Mac:~ root# sed -i "s/216.58.215.229/108.177.97.109/g" /etc/hosts
+sed: 1: "/etc/hosts": extra characters at the end of h command
+Mac:~ root# sed -i "" "s/216.58.215.229/108.177.97.109/g" /etc/hosts
+
+
+sed '/cdef/r add.txt' input.txt
+input.txt:
+
+abcd
+accd
+cdef
+line
+web
+add.txt:
+
+line1
+line2
+line3
+line4
+Test:
+
+sat:~# sed '/cdef/r add.txt' input.
+txt
+abcd
+accd
+cdef
+line1
+line2
+line3
+line4
+line
+web
+If you want to apply the changes in input.txt file. Then, use -i with sed.
+
+sed -i '/cdef/r add.txt' input.txt
+If you want to use a regex as an expression you have to use the -E tag with sed.
+
+sed -E '/RegexPattern/r add.txt' input.txt
+
+仅作示例，只保留倒数 2、5 行：
+sed -i -n "1{N;N;N;};N;${s/\n[^\n]*$//;s/[^\n]*\n//3;s/[^\n]*\n//2;p};D;" a.txt
+
+awk /./ filename 删除文件的空行
+
+删除段上几行下几行
+$ cat text.txt
+Hello New Wolrd.
+Good day
+host pc1{
+Mac address: abc
+IP address: qwe
+User name: zxc
+}
+$
+查找"Mac address: abc"，然后删除从前面一行（host pc1{）到之后三行(})的内容。
+操作后文件变成这样：
+$ cat text.txt
+Hello New Wolrd.
+Good day
+$
+如何用脚本实现这样的操作？sed，awk，vim都可以。
+
+sed '/Mac address/,+3d;:go;1!{P;$!N;D};N;bgo' file
+
+sed '/Mac address/,+3d;:go;1,3!{P;$!N;D};N;bgo' file删除前3后3
+<收起
+下一行，前4行
+sed '/check_nrpe\!check_ipsource/,+1d;:go;1,4!{P;$!N;D};N;bgo' linux27_27.cfg
+
+
+open(File,"test.txt") || die "can't open this file \n"; my $str; while(<File>) {     $str.="$_"; } close File; $str=~s/define[^\!]*\!check_ipsource[^define]*//gm; print $str;
+
+
+这个是删除从define开始到下一个define，中间有！check_ipsource的
+===================
+
+sed更完內容自動備份
+給未來的裕翔
+如果想要對檔案內容的某個字
+做一致的更換除了真的進去vim之外
+可以考慮用sed
+sed -i.bak 's/aaa/AAA/' targetFile
+這樣就可以把targetFile裡面的aaa都換成AAA
+-i.bak的意思是
+換成AAA之後的檔案, 依然叫targetFile
+但是換之前的, 存成targetFile.bak當備份
+注意, -i和.bak中間不能有空白
+而那個's/aaa/AAA/'的最後一個/不能省略
+
+
+下面这个涉及到sed调用变量的问题
+lxu@lxu-laptop:~$ cat /home/lxu/abc.txt
+2011
+lxu@lxu-laptop:~$ cat abc.sh
+#!bin/sh
+var1=`cat /home/lxu/abc.txt | bc`
+var2=`expr $var1 + 1 | bc`
+echo the final oldresult is $var1
+echo the final newresult is $var2
+sed -i "s/$var1/$var2/g" /home/lxu/abc.txt  #sed要用双引号,awk变量顺序单双$var双单
+lxu@lxu-laptop:~$ sh abc.sh
+the final oldresult is 2011
+the final newresult is 2012
+lxu@lxu-laptop:~$ sh abc.sh
+the final oldresult is 2012
+the final newresult is 2013
+
+对1072到1092行前面加#号
+[root@B2G2BC conf]# sed -i '1074,1092s/^/#/' httpd.conf
+
+清理所有HTML标签 sed 's/<[^>]*>//g'
+是清理所有空格sed 's/[[:space:]]//g'
+
+lxu@lxu-laptop:~/weather$ cat weather.html|sed 's/<[^>]*>//g'|sed 's/[[:space:]]//g'|sed '/^$/d'
+lxu@lxu-laptop:~/weather$ cat weather.html|sed 's/<[^>]*>//g;s/[[:space:]]//g;/^$/d'
+lxu@lxu-laptop:~/weather$ cat weather.html|sed '$!H;$!d;$G;$s/<[^>]*>//g'|sed 's/[[:space:]]//g'|sed '/^$/d'
+
+把所有行都放到pattern space里面后就可以直接清除跨行标签了。比较正确的方法应该是这样：
+'$!H;$!d;$G;$s/<[^>]*>//g'
+文本间隔：
+--------
+http://sed.sourceforge.net/sed1line_zh-CN.html
+ # 在每一行后面增加一空行
+ sed G
+
+ # 将原来的所有空行删除并在每一行后面增加一空行。
+ # 这样在输出的文本中每一行后面将有且只有一空行。
+ sed '/^$/d;G'
+
+ # 在每一行后面增加两行空行
+ sed 'G;G'
+
+ # 将第一个脚本所产生的所有空行删除（即删除所有偶数行）
+ sed 'n;d'
+打印偶数行奇书行
+lxu@lxu-laptop:/home/date$ sed -n 'p;n' hosts奇书
+192.168.2.100
+192.168.2.101
+192.168.2.102
+192.168.2.103
+192.168.2.104
+lxu@lxu-laptop:/home/date$ sed -n 'n;p' hosts 偶数
+sushi
+liqingzhao
+wanganshi
+liyu
+lijing
+
+lxu@lxu-laptop:/home/date$ sed -n '1~2p' hosts
+192.168.2.100
+192.168.2.101
+192.168.2.102
+192.168.2.103
+192.168.2.104
+lxu@lxu-laptop:/home/date$ sed -n '2~2p' hosts
+sushi
+liqingzhao
+wanganshi
+liyu
+lijing
+
+ # 在匹配式样“regex”的行之前插入一空行
+ sed '/regex/{x;p;x;}'
+
+ # 在匹配式样“regex”的行之后插入一空行
+ sed '/regex/G'
+
+ # 在匹配式样“regex”的行之前和之后各插入一空行
+ sed '/regex/{x;p;x;G;}'
+在匹配式样“regex”的行之后增加2空行
+sed '/regex/a\\'
+sed '/regex/{G;G;}'
+sed '/regex/G;/regex/G'
+awk '/regex/{print $0"\n\n";next}1'
+
+在空行后在增加一个空行
+sed '/^$/G'
+编号：
+--------
+在第一行之后追加
+1a\
+在行末$追加
+$a\
+#sed -i '$a\sudo sed -i "$a\/usr/local/sbin/puppetd --server songzhiwen" /etc/rc.d/rc.local' puppet.sh
+在匹配的行ErrorLog之后追加一个test
+sed -i '/ErrorLog/a\test'
+
+在有5666的行之后追加一行
+sed -i '/5666/a\-A INPUT -s 59.151.95.150 -m tcp -p tcp --dport 5666 -j ACCEPT' /etc/sysconfig/iptables
+
+sed -i '/5666/a\-A INPUT -s 42.62.115.11 -m tcp -p tcp --dport 10050 -j ACCEPT' /etc/sysconfig/iptables
+
+
+#!/bin/bash
+sed -i '/7659/d' /etc/rc.d/firewall
+sed -i '/5666/a\iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 7659 -j ACCEPT' /etc/rc.d/firewall
+iptables -I INPUT -m state --state NEW -m tcp -p tcp --dport 7659 -j ACCEPT
+
+下面就是远程拷贝之后执行
+pscp.pssh -h lv.txt iptables.sh /tmp
+pssh -x '-t -t' -h lv.txt -l xule -t 800 -P "sudo /bin/bash /tmp/iptables.sh"
+#/bin/bash
+sed -i '/dport 5666/a\iptables -A INPUT -s 10.0.0.0/24 -p tcp --dport 5666 -j ACCEPT' /etc/rc.d/firewall
+sed -i '/117.121.11.25 -p tcp --dport 22222/a\iptables -A INPUT -s 10.0.0.0/24 -p tcp --dport 22222 -j ACCEPT' /etc/rc.d/firewall
+iptables -I INPUT -s 10.0.0.0/24 -p tcp --dport 5666 -j ACCEPT
+iptables -I INPUT -s 10.0.0.0/24 -p tcp --dport 22222 -j ACCEPT
+
+
+ #/bin/bash
+  sed -i 's/117.121.11.25/117.121.11.25,42.62.25.133,10.0.0.186/' /usr/local/nagios/etc/nrpe.cfg
+  sed -i 's/117.121.11.25/117.121.11.25,42.62.25.133,10.0.0.186/' /etc/nagios/nrpe.cfg
+
+
+ sed -i '/dport 5666/a\iptables -A INPUT -s 10.0.0.0/24 -p tcp --dport 5666 -j ACCEPT' /etc/rc.d/firewall
+ sed -i '/117.121.11.25 -p tcp --dport 22222/a\iptables -A INPUT -s 10.0.0.0/24 -p tcp --dport 22222 -j ACCEPT' /etc/  rc.d/firewall
+ iptables -I INPUT -s 10.0.0.0/24 -p tcp --dport 5666 -j ACCEPT
+ iptables -I INPUT -s 10.0.0.0/24 -p tcp --dport 22222 -j ACCEPT
+
+
+#/bin/bash
+sed -i '/10.0.0.0/24 -p tcp --dport 5666 -j ACCEPT/a\iptables -A INPUT -s 42.62.25.133 -p tcp --dport 5666 -j ACCEPT' /etc/rc.d/firewall
+iptables -I INPUT -s 42.62.25.133 -p tcp --dport 5666 -j ACCEPT
+sed -i 's/117.121.11.25/117.121.11.25,42.62.25.133,10.0.0.186/' /usr/local/nagios/etc/nrpe.cfg
+sed -i 's/117.121.11.25/117.121.11.25,42.62.25.133,10.0.0.186/' /etc/nagios/nrpe.cfg
+kill -HUP `ps aux|grep nrpe.cfg|grep -v grep|awk '{print$2}'`
+/etc/init.d/nrpe reload
+
+
+
+
+
+sed "s/\(5666.*tcp\|tcp.*5666\).*/& \n test/g" firewall
+
+查找文档b中同时包含one和three的行
+b.txt的内容
+one two three
+four five six
+one two
+one seven three
+gawk "/one/&&/three/" b.txt
+sed -ne '/one/{/three/p}' b.txt
+
+
+[jumpbox]➜  ~  cat b.txt
+one two three
+four five six
+one two
+one seven three
+[jumpbox]➜  ~  sed -ne '/one/{/three/p}' b.txt
+one two three
+one seven three
+[jumpbox]➜  ~  sed -n '/one/{/three/p}' b.txt
+one two three
+one seven three
+
+[jumpbox]➜  ~  sed '/one.*three/!d' b.txt
+one two three
+one seven three
+
+匹配2个条件
+sed -n '/5666/{/tcp/p}' firewall
+iptables -A INPUT -s 117.121.11.25 -p tcp --dport 5666 -j ACCEPT
+sed -i '/5666/{/tcp/}a\ -A INPUT -s  59.109.32.160/28 -p tcp --dport 22222 -j ACCEPT' firewall
+
+行内追加(即行内修改)如何做？实际是采用替换s /&
+sed -i "s/all2:/&lxu,/" /etc/aliases
+在all2:之后追加一个lxu,
+行内追加的缺陷：如果用此法实现行尾追加，就必须把整个行不错一句的敲成pattern
+all2:123,345
+all2:lex,123,345
+
+在匹配的行后面追加：,admin
+|sed "/contact_groups/s/$/,admin/"
+
+RewriteRule ^/youbian/s-(.*?)$ /?area=youbian&cmd=q&q=$1 [PT]
+这个可以匹配sed -n '/RewriteRule ^\/youbian\/s/p'
+
+for i in zhangji wanghan lulun  gaoshi liqingzhao ;do ssh $i sed -n '658p' /usr/local/apache/conf/httpd.conf;done
+RewriteRule ^/tuanqqpurse.php$ http://60.28.211.188/tuanqqpurse.php [L]
+RewriteRule ^/tuanqqpurse.php$ http://60.28.211.188/tuanqqpurse.php [L]
+RewriteRule ^/tuanqqpurse.php$ http://60.28.211.188/tuanqqpurse.php [L]
+RewriteRule ^/tuanqqpurse.php$ http://60.28.211.188/tuanqqpurse.php [L]
+RewriteRule ^/tuanqqpurse.php$ http://60.28.211.188/tuanqqpurse.php [L]
+
+
+例如我在httpd.conf的657行之后增加RewriteRule ^/tuanqqpurse.php$ http://60.28.211.188/tuanqqpurse.php [L]
+sed -i '657a\RewriteRule ^/tuanqqpurse.php$ http://60.28.211.188/tuanqqpurse.php [L]' httpd.conf
+
+ # 为文件中的每一行进行编号（简单的左对齐方式）。这里使用了“制表符”
+ # （tab，见本文末尾关于'\t'的用法的描述）而不是空格来对齐边缘。
+ sed = filename | sed 'N;s/\n/\t/'
+
+ # 对文件中的所有行编号（行号在左，文字右端对齐）。
+ sed = filename | sed 'N; s/^/     /; s/ *\(.\{6,\}\)\n/\1  /'
+
+ # 对文件中的所有行编号，但只显示非空白行的行号。
+ sed '/./=' filename | sed '/./N; s/\n/ /'
+
+ # 计算行数 （模拟 "wc -l"）
+ sed -n '$='
+还有一个
+
+sed '=' abc
+结果如下：
+lxu@lxu-laptop:~$ cat abc
+abc 130 120 135
+ddd 160 113 140
+ddd 145 170 215
+lxu@lxu-laptop:~$ sed '=' abc
+1
+abc 130 120 135
+2
+ddd 160 113 140
+3
+ddd 145 170 215
+
+
+文本转换和替代：
+--------
+
+ # Unix环境：转换DOS的新行符（CR/LF）为Unix格式。
+ sed 's/.$//'                     # 假设所有行以CR/LF结束
+ sed 's/^M$//'                    # 在bash/tcsh中，将按Ctrl-M改为按Ctrl-V
+ sed 's/\x0D$//'                  # ssed、gsed 3.02.80，及更高版本
+
+ # Unix环境：转换Unix的新行符（LF）为DOS格式。
+ sed "s/$/`echo -e \\\r`/"        # 在ksh下所使用的命令
+ sed 's/$'"/`echo \\\r`/"         # 在bash下所使用的命令
+ sed "s/$/`echo \\\r`/"           # 在zsh下所使用的命令
+ sed 's/$/\r/'                    # gsed 3.02.80 及更高版本
+
+ # DOS环境：转换Unix新行符（LF）为DOS格式。
+ sed "s/$//"                      # 方法 1
+ sed -n p                         # 方法 2
+
+ # DOS环境：转换DOS新行符（CR/LF）为Unix格式。
+ # 下面的脚本只对UnxUtils sed 4.0.7 及更高版本有效。要识别UnxUtils版本的
+ #  sed可以通过其特有的“--text”选项。你可以使用帮助选项（“--help”）看
+ # 其中有无一个“--text”项以此来判断所使用的是否是UnxUtils版本。其它DOS
+ # 版本的的sed则无法进行这一转换。但可以用“tr”来实现这一转换。
+ sed "s/\r//" infile >outfile     # UnxUtils sed v4.0.7 或更高版本
+ tr -d \r <infile >outfile        # GNU tr 1.22 或更高版本
+
+ # 将每一行前导的“空白字符”（空格，制表符）删除
+ # 使之左对齐
+ sed 's/^[ \t]*//'                # 见本文末尾关于'\t'用法的描述
+
+ # 将每一行拖尾的“空白字符”（空格，制表符）删除
+ sed 's/[ \t]*$//'                # 见本文末尾关于'\t'用法的描述
+
+ # 将每一行中的前导和拖尾的空白字符删除
+ sed 's/^[ \t]*//;s/[ \t]*$//'
+
+ # 在每一行开头处插入5个空格（使全文向右移动5个字符的位置）
+sed -n 's/^/86/p'
+ sed 's/^/     /'
+# 在每一行开头处插入数字86
+sed 's/^/86/'
+# 在每一非空行开头处插入数字86
+sed 's/[^$]/86/'
+ # 以79个字符为宽度，将所有文本右对齐
+ sed -e :a -e 's/^.\{1,78\}$/ &/;ta'  # 78个字符外加最后的一个空格
+host文件如下
+192.168.2.21       baijuyi
+192.168.2.22       liuzongyuan
+192.168.2.23       menghaoran
+需要结果如下：
+在前面加echo "192.168.2.21       baijuyi" >> /etc/hosts
+sed 's/^/echo "/' hosts |sed 's/[ \t]*$/" >> \/etc\/hosts/'
+
+echo "192.168.2.88       Nmail" >> /etc/hosts
+echo "192.168.2.89       Omail" >> /etc/hosts
+echo "192.168.2.90       Pmail" >> /etc/hosts
+
+ # 以79个字符为宽度，使所有文本居中。在方法1中，为了让文本居中每一行的前
+ # 头和后头都填充了空格。 在方法2中，在居中文本的过程中只在文本的前面填充
+ # 空格，并且最终这些空格将有一半会被删除。此外每一行的后头并未填充空格。
+ sed  -e :a -e 's/^.\{1,77\}$/ & /;ta'                     # 方法1
+ sed  -e :a -e 's/^.\{1,77\}$/ &/;ta' -e 's/\( *\)\1/\1/'  # 方法2
+
+ # 在每一行中查找字串“foo”，并将找到的“foo”替换为“bar”
+ sed 's/foo/bar/'                 # 只替换每一行中的第一个“foo”字串
+ sed 's/foo/bar/4'                # 只替换每一行中的第四个“foo”字串
+ sed 's/foo/bar/g'                # 将每一行中的所有“foo”都换成“bar”
+ sed 's/\(.*\)foo\(.*foo\)/\1bar\2/' # 替换倒数第二个“foo”
+ sed 's/\(.*\)foo/\1bar/'            # 替换最后一个“foo”
+匹配dport 25的行中前面加＃
+sed '/dport 25/s/-A/#-A/' iptables
+ # 只在行中出现字串“baz”的情况下将“foo”替换成“bar”
+ sed '/baz/s/foo/bar/g'
+
+ # 将“foo”替换成“bar”，并且只在行中未出现字串“baz”的情况下替换
+ sed '/baz/!s/foo/bar/g'
+
+ # 不管是“scarlet”“ruby”还是“puce”，一律换成“red”
+ sed 's/scarlet/red/g;s/ruby/red/g;s/puce/red/g'  #对多数的sed都有效
+ gsed 's/scarlet\|ruby\|puce/red/g'               # 只对GNU sed有效
+
+ # 倒置所有行，第一行成为最后一行，依次类推（模拟“tac”）。
+ # 由于某些原因，使用下面命令时HHsed v1.5会将文件中的空行删除
+ sed '1!G;h;$!d'               # 方法1
+ sed -n '1!G;h;$p'             # 方法2
+
+ # 将行中的字符逆序排列，第一个字成为最后一字，……（模拟“rev”）
+ sed '/\n/!G;s/\(.\)\(.*\n\)/&\2\1/;//D;s/.//'
+
+ # 将每两行连接成一行（类似“paste”） 合并
+ sed '$!N;s/\n/ /'
+sed 'N;s/\n//'
+五行连接成一行
+awk 'ORS=NR%5?" ":"\n"{print}'
+
+
+ # 如果当前行以反斜杠“\”结束，则将下一行并到当前行末尾
+ # 并去掉原来行尾的反斜杠
+ sed -e :a -e '/\\$/N; s/\\\n//; ta'
+
+ # 如果当前行以等号开头，将当前行并到上一行末尾
+ # 并以单个空格代替原来行头的“=”
+ sed -e :a -e '$!N;s/\n=/ /;ta' -e 'P;D'
+
+ # 为数字字串增加逗号分隔符号，将“1234567”改为“1,234,567”
+ gsed ':a;s/\B[0-9]\{3\}\>/,&/;ta'                     # GNU sed
+ sed -e :a -e 's/\(.*[0-9]\)\([0-9]\{3\}\)/\1,\2/;ta'  # 其他sed
+
+ # 为带有小数点和负号的数值增加逗号分隔符（GNU sed）
+ gsed -r ':a;s/(^|[^0-9.])([0-9]+)([0-9]{3})/\1\2,\3/g;ta'
+
+ # 在每5行后增加一空白行 （在第5，10，15，20，等行后增加一空白行）
+ gsed '0~5G'                      # 只对GNU sed有效
+ sed 'n;n;n;n;G;'                 # 其他sed
+
+
+大括号作用于同一地址应用多个命令
+sed '/Consult/{s/in/IN/;s/Owner/OWNER/}' abc
+Consult Section 3.1 IN the OWNER and Operator
+$ cat abc
+Consult Section 3.1 in the Owner and Operator
+
+选择性地显示特定行：
+--------
+
+ # 显示文件中的前10行 （模拟“head”的行为）
+ sed 10q
+
+ # 显示文件中的第一行 （模拟“head -1”命令）
+ sed q
+
+ # 显示文件中的最后10行 （模拟“tail”）
+ sed -e :a -e '$q;N;11,$D;ba'
+保留10行sed -i -e :a -e '$q;N;11,$D;ba' /tmp/b
+
+ # 显示文件中的最后2行（模拟“tail -2”命令）
+ sed '$!N;$!D'
+
+ # 显示文件中的最后一行（模拟“tail -1”）
+ sed '$!d'                        # 方法1
+ sed -n '$p'                      # 方法2
+
+ # 显示文件中的倒数第二行
+ sed -e '$!{h;d;}' -e x              # 当文件中只有一行时，输入空行
+ sed -e '1{$q;}' -e '$!{h;d;}' -e x  # 当文件中只有一行时，显示该行
+ sed -e '1{$d;}' -e '$!{h;d;}' -e x  # 当文件中只有一行时，不输出
+
+ # 只显示匹配正则表达式的行（模拟“grep”）
+ sed -n '/regexp/p'               # 方法1
+ sed '/regexp/!d'                 # 方法2
+
+ # 只显示“不”匹配正则表达式的行（模拟“grep -v”）
+ sed -n '/regexp/!p'              # 方法1，与前面的命令相对应
+ sed '/regexp/d'                  # 方法2，类似的语法
+举例如下：
+有一个文本文件,大约是4亿行,每行都是
+aaaaaaaaaa
+bbbbbbbbbb
+这样的10个字符,
+但是其中有很少的不是10个字符的行(比如7个或者8个字符),想用脚本把这些行挑出来,
+请问脚本应该怎么写?
+sed '/........../d'
+sed -n '/........../!p' 123
+ awk 'length($0)!=10'
+grep -v '..........'
+
+ # 查找“regexp”并将匹配行的上一行显示出来，但并不显示匹配行
+ sed -n '/regexp/{g;1!p;};h'
+
+ # 查找“regexp”并将匹配行的下一行显示出来，但并不显示匹配行
+ sed -n '/regexp/{n;p;}'
+
+ # 显示包含“regexp”的行及其前后行，并在第一行之前加上“regexp”所
+ # 在行的行号 （类似“grep -A1 -B1”）
+ sed -n -e '/regexp/{=;x;1!p;g;$!N;p;D;}' -e h
+
+ # 显示包含“AAA”、“BBB”或“CCC”的行（任意次序）
+ sed '/AAA/!d; /BBB/!d; /CCC/!d'  # 字串的次序不影响结果
+
+ # 显示包含“AAA”、“BBB”和“CCC”的行（固定次序）
+ sed '/AAA.*BBB.*CCC/!d'
+
+ # 显示包含“AAA”“BBB”或“CCC”的行 （模拟“egrep”）
+ sed -e '/AAA/b' -e '/BBB/b' -e '/CCC/b' -e d    # 多数sed
+ gsed '/AAA\|BBB\|CCC/!d'                        # 对GNU sed有效
+
+ # 显示包含“AAA”的段落 （段落间以空行分隔）
+ # HHsed v1.5 必须在“x;”后加入“G;”，接下来的3个脚本都是这样
+ sed -e '/./{H;$!d;}' -e 'x;/AAA/!d;'
+显示包括Serial Number的段落
+➜  ~ system_profiler SPPowerDataType|sed -e '/./{H;$!d;}' -e 'x;/Serial Number/!d;'
+      Model Information:
+          Serial Number: F5D81927C63J67V6T
+          Manufacturer: DSY
+          Device Name: bq20z451
+          Pack Lot Code: 0
+          PCB Lot Code: 0
+          Firmware Version: 901
+          Hardware Revision: 2
+          Cell Revision: 1734
+      Charge Information:
+          Charge Remaining (mAh): 6426
+          Fully Charged: Yes
+          Charging: No
+          Full Charge Capacity (mAh): 6578
+      Health Information:
+          Cycle Count: 32
+          Condition: Normal
+      Battery Installed: Yes
+      Amperage (mA): -4
+      Voltage (mV): 12630
+
+
+      Connected: Yes
+      ID: 0x1656
+      Wattage (W): 86
+      Family: 0xe000400a
+      Serial Number: C0464510C42GW85AM
+      Name: 87W USB-C Power Adapter
+      Manufacturer: Apple Inc.
+      Hardware Version: 1.0
+      Firmware Version: 1070068
+      Charging: No
+
+ # 显示包含“AAA”“BBB”和“CCC”三个字串的段落 （任意次序）
+ sed -e '/./{H;$!d;}' -e 'x;/AAA/!d;/BBB/!d;/CCC/!d'
+
+ # 显示包含“AAA”、“BBB”、“CCC”三者中任一字串的段落 （任意次序）
+ sed -e '/./{H;$!d;}' -e 'x;/AAA/b' -e '/BBB/b' -e '/CCC/b' -e d
+ gsed '/./{H;$!d;};x;/AAA\|BBB\|CCC/b;d'         # 只对GNU sed有效
+
+ # 显示包含65个或以上字符的行
+ sed -n '/^.\{65\}/p'
+
+ # 显示包含65个以下字符的行
+ sed -n '/^.\{65\}/!p'            # 方法1，与上面的脚本相对应
+ sed '/^.\{65\}/d'                # 方法2，更简便一点的方法
+
+ # 显示部分文本——从包含正则表达式的行开始到最后一行结束
+ sed -n '/regexp/,$p'
+
+# 从某关键字的行开始到最后一行删除掉
+sed -n '/regexp/,$!p'
+
+# 某关键字的下一行开始到最后一行删除掉
+sed '1,/regexp/!d'
+sed -n '1,/regexp/p'
+
+ # 显示部分文本——指定行号范围（从第8至第12行，含8和12行）
+ sed -n '8,12p'                   # 方法1
+ sed '8,12!d'                     # 方法2
+
+ # 显示第52行
+ sed -n '52p'                     # 方法1
+ sed '52!d'                       # 方法2
+ sed '52q;d'                      # 方法3, 处理大文件时更有效率
+
+ # 从第3行开始，每7行显示一次   
+ gsed -n '3~7p'                   # 只对GNU sed有效
+ sed -n '3,${p;n;n;n;n;n;n;}'     # 其他sed
+
+ # 显示两个正则表达式之间的文本（包含）
+ sed -n '/Iowa/,/Montana/p'       # 区分大小写方式
+ system_profiler SPPowerDataType|sed -n '/AC Charger Information:/,/Power Events:/p'
+system_profiler SPPowerDataType|sed -n "/AC Charger Information:/,/Power Events:/p"
+打印范围2个条件：
+➜  ~system_profiler SPPowerDataType|sed -n "/AC Charger Information:/,/Power Events:/p;/Health Information:/,/Battery Installed/p"
+
+➜  ~ system_profiler SPPowerDataType|sed -n "/AC Charger Information:/,/Power Events:/p;/Health Information:/,/Voltage/p"
+      Health Information:
+          Cycle Count: 32
+          Condition: Normal
+      Battery Installed: Yes
+      Amperage (mA): -2
+      Voltage (mV): 12637
+    AC Charger Information:
+
+
+      Connected: Yes
+      ID: 0x1656
+      Wattage (W): 86
+      Family: 0xe000400a
+      Serial Number: C0464510C42GW85AM
+      Name: 87W USB-C Power Adapter
+      Manufacturer: Apple Inc.
+      Hardware Version: 1.0
+      Firmware Version: 1070068
+      Charging: No
+
+
+    Power Events:
+ system_profiler SPPowerDataType|sed -n '/AC Charger Information:/,/Power Events:/p'
+    AC Charger Information:
+
+
+      Connected: Yes
+      ID: 0x1656
+      Wattage (W): 86
+      Family: 0xe000400a
+      Serial Number: C0464510C42GW85AM
+      Name: 87W USB-C Power Adapter
+      Manufacturer: Apple Inc.
+      Hardware Version: 1.0
+      Firmware Version: 1070068
+      Charging: No
+
+
+    Power Events:
+例如打印某段时间开始到某段时间结束
+sed -n '/^Jun  6 04:05:11/,/^Jun  6 04:15:10/p' maillog
+
+sed -n '834,837p' maillog
+选择性地删除特定行：
+--------
+-n, --line-number         print line number with output lines
+grep -n "1441936988@qq.com " maillog 换个查出1441936988@qq.com的行
+awk '/^root/,/^mysql/' test----打印以正则表达式root开头的记录到以正则表达式mysql开头的记录范围内的所有记录。如果找到一个新的正则表达式root开头的记 录，则继续打印直到下一个以正则表达式mysql开头的记录为止，或到文件末尾
+
+
+
+
+ # 显示通篇文档，除了两个正则表达式之间的内容
+ sed '/Iowa/,/Montana/d'
+
+ # 删除文件中相邻的重复行（模拟“uniq”）
+ # 只保留重复行中的第一行，其他行删除
+ sed '$!N; /^\(.*\)\n\1$/!P; D'
+
+ # 删除文件中的重复行，不管有无相邻。注意hold space所能支持的缓存
+ # 大小，或者使用GNU sed。
+ sed -n 'G; s/\n/&&/; /^\([ -~]*\n\).*\n\1/d; s/\n//; h; P'
+
+ # 删除除重复行外的所有行（模拟“uniq -d”）
+ sed '$!N; s/^\(.*\)\n\1$/\1/; t; D'
+
+https://www.mkyong.com/mac/sed-command-hits-undefined-label-error-on-mac-os-x/
+undefined label
+
+ # 删除文件中开头的10行
+ sed '1,10d'
+＃保留regexp之前的行
+sed '1,/regexp/!d'
+
+ # 删除文件中的最后一行
+ sed '$d'
+
+ # 删除文件中的最后两行
+ sed 'N;$!P;$!D;$d'
+
+ # 删除文件中的最后10行
+ sed -e :a -e '$d;N;2,10ba' -e 'P;D'   # 方法1
+ sed -n -e :a -e '1,10!{P;N;D;};N;ba'  # 方法2
+
+ # 删除8的倍数行
+ gsed '0~8d'                           # 只对GNU sed有效
+ sed 'n;n;n;n;n;n;n;d;'                # 其他sed
+
+ # 删除匹配式样的行
+ sed '/pattern/d'                      # 删除含pattern的行。当然pattern
+                                       # 可以换成任何有效的正则表达式
+                                       vi的时候是
+                                       3. 删除包含特定字符串的行
+:g/pattern/d
+
+ # 删除文件中的所有空行（与“grep '.' ”效果相同）
+ sed '/^$/d'                           # 方法1
+ sed '/./!d'                           # 方法2
+
+ # 只保留多个相邻空行的第一行。并且删除文件顶部和尾部的空行。
+ # （模拟“cat -s”）
+ sed '/./,/^$/!d'        #方法1，删除文件顶部的空行，允许尾部保留一空行
+ sed '/^$/N;/\n$/D'      #方法2，允许顶部保留一空行，尾部不留空行
+
+ # 只保留多个相邻空行的前两行。
+ sed '/^$/N;/\n$/N;//D'
+
+ # 删除文件顶部的所有空行
+ sed '/./,$!d'
+
+ # 删除文件尾部的所有空行
+ sed -e :a -e '/^\n*$/{$d;N;ba' -e '}'  # 对所有sed有效
+ sed -e :a -e '/^\n*$/N;/\n$/ba'        # 同上，但只对 gsed 3.02.*有效
+
+ # 删除每个段落的最后一行
+ sed -n '/^$/{p;h;};/./{x;/./p;}'
+删除200001行到行末
+sed -i '2000001,$d' oupeng
+
+剩余2000000 oupeng
+
+#清空文件
+sed -i '1,$d' file
+特殊应用：
+--------
+
+ # 移除手册页（man page）中的nroff标记。在Unix System V或bash shell下使
+ # 用'echo'命令时可能需要加上 -e 选项。
+ sed "s/.`echo \\\b`//g"    # 外层的双括号是必须的（Unix环境）
+ sed 's/.^H//g'             # 在bash或tcsh中, 按 Ctrl-V 再按 Ctrl-H
+ sed 's/.\x08//g'           # sed 1.5，GNU sed，ssed所使用的十六进制的表示方法
+
+ # 提取新闻组或 e-mail 的邮件头
+ sed '/^$/q'                # 删除第一行空行后的所有内容
+
+ # 提取新闻组或 e-mail 的正文部分
+ sed '1,/^$/d'              # 删除第一行空行之前的所有内容
+
+ # 从邮件头提取“Subject”（标题栏字段），并移除开头的“Subject:”字样
+ sed '/^Subject: */!d; s///;q'
+
+ # 从邮件头获得回复地址
+ sed '/^Reply-To:/q; /^From:/h; /./d;g;q'
+
+ # 获取邮件地址。在上一个脚本所产生的那一行邮件头的基础上进一步的将非电邮
+ # 地址的部分剃除。（见上一脚本）
+ sed 's/ *(.*)//; s/>.*//; s/.*[:<] *//'
+
+ # 在每一行开头加上一个尖括号和空格（引用信息）
+ sed 's/^/> /'
+
+ # 将每一行开头处的尖括号和空格删除（解除引用）
+ sed 's/^> //'
+
+ # 移除大部分的HTML标签（包括跨行标签）
+ sed -e :a -e 's/<[^>]*>//g;/</N;//ba'
+
+ # 将分成多卷的uuencode文件解码。移除文件头信息，只保留uuencode编码部分。
+ # 文件必须以特定顺序传给sed。下面第一种版本的脚本可以直接在命令行下输入；
+ # 第二种版本则可以放入一个带执行权限的shell脚本中。（由Rahul Dhesi的一
+ # 个脚本修改而来。）
+ sed '/^end/,/^begin/d' file1 file2 ... fileX | uudecode   # vers. 1
+ sed '/^end/,/^begin/d' "$@" | uudecode                    # vers. 2
+
+ # 将文件中的段落以字母顺序排序。段落间以（一行或多行）空行分隔。GNU sed使用
+ # 字元“\v”来表示垂直制表符，这里用它来作为换行符的占位符——当然你也可以
+ # 用其他未在文件中使用的字符来代替它。
+ sed '/./{H;d;};x;s/\n/={NL}=/g' file | sort | sed '1s/={NL}=//;s/={NL}=/\n/g'
+ gsed '/./{H;d};x;y/\n/\v/' file | sort | sed '1s/\v//;y/\v/\n/'
+
+ # 分别压缩每个.TXT文件，压缩后删除原来的文件并将压缩后的.ZIP文件
+ # 命名为与原来相同的名字（只是扩展名不同）。（DOS环境：“dir /b”
+ # 显示不带路径的文件名）。
+ echo @echo off >zipup.bat
+ dir /b *.txt | sed "s/^\(.*\)\.TXT/pkzip -mo \1 \1.TXT/" >>zipup.bat
+
+
+使用SED：Sed接受一个或多个编辑命令，并且每读入一行后就依次应用这些命令。
+当读入第一行输入后，sed对其应用所有的命令，然后将结果输出。接着再读入第二
+行输入，对其应用所有的命令……并重复这个过程。上一个例子中sed由标准输入设
+备（即命令解释器，通常是以管道输入的形式）获得输入。在命令行给出一个或多
+个文件名作为参数时，这些文件取代标准输入设备成为sed的输入。sed的输出将被
+送到标准输出（显示器）。因此：
+
+ cat filename | sed '10q'         # 使用管道输入
+ sed '10q' filename               # 同样效果，但不使用管道输入
+ sed '10q' filename > newfile     # 将输出转移（重定向）到磁盘上
+
+要了解sed命令的使用说明，包括如何通过脚本文件（而非从命令行）来使用这些命
+令，请参阅《sed & awk》第二版，作者Dale Dougherty和Arnold Robbins
+（O'Reilly，1997；http://www.ora.com），《UNIX Text Processing》，作者
+Dale Dougherty和Tim O'Reilly（Hayden Books，1987）或者是Mike Arst写的教
+程——压缩包的名称是“U-SEDIT2.ZIP”（在许多站点上都找得到）。要发掘sed
+的潜力，则必须对“正则表达式”有足够的理解。正则表达式的资料可以看
+《Mastering Regular Expressions》作者Jeffrey Friedl（O'reilly 1997）。
+Unix系统所提供的手册页（“man”）也会有所帮助（试一下这些命令
+“man sed”、“man regexp”，或者看“man ed”中关于正则表达式的部分），但
+手册提供的信息比较“抽象”——这也是它一直为人所诟病的。不过，它本来就不
+是用来教初学者如何使用sed或正则表达式的教材，而只是为那些熟悉这些工具的人
+提供的一些文本参考。
+
+括号语法：前面的例子对sed命令基本上都使用单引号（'...'）而非双引号
+（"..."）这是因为sed通常是在Unix平台上使用。单引号下，Unix的shell（命令
+解释器）不会对美元符（$）和后引号（`...`）进行解释和执行。而在双引号下
+美元符会被展开为变量或参数的值，后引号中的命令被执行并以输出的结果代替
+后引号中的内容。而在“csh”及其衍生的shell中使用感叹号（!）时需要在其前
+面加上转义用的反斜杠（就像这样：\!）以保证上面所使用的例子能正常运行
+（包括使用单引号的情况下）。DOS版本的Sed则一律使用双引号（"..."）而不是
+引号来圈起命令。
+
+'\t'的用法：为了使本文保持行文简洁，我们在脚本中使用'\t'来表示一个制表
+符。但是现在大部分版本的sed还不能识别'\t'的简写方式，因此当在命令行中为
+脚本输入制表符时，你应该直接按TAB键来输入制表符而不是输入'\t'。下列的工
+具软件都支持'\t'做为一个正则表达式的字元来表示制表符：awk、perl、HHsed、
+sedmod以及GNU sed v3.02.80。
+
+不同版本的SED：不同的版本间的sed会有些不同之处，可以想象它们之间在语法上
+会有差异。具体而言，它们中大部分不支持在编辑命令中间使用标签（:name）或分
+支命令（b,t），除非是放在那些的末尾。这篇文档中我们尽量选用了可移植性较高
+的语法，以使大多数版本的sed的用户都能使用这些脚本。不过GNU版本的sed允许使
+用更简洁的语法。想像一下当读者看到一个很长的命令时的心情：
+
+   sed -e '/AAA/b' -e '/BBB/b' -e '/CCC/b' -e d
+
+好消息是GNU sed能让命令更紧凑：
+
+   sed '/AAA/b;/BBB/b;/CCC/b;d'      # 甚至可以写成
+   sed '/AAA\|BBB\|CCC/b;d'
+
+此外，请注意虽然许多版本的sed接受象“/one/ s/RE1/RE2/”这种在's'前带有空
+格的命令，但这些版本中有些却不接受这样的命令:“/one/! s/RE1/RE2/”。这时
+只需要把中间的空格去掉就行了。
+
+速度优化：当由于某种原因（比如输入文件较大、处理器或硬盘较慢等）需要提高
+命令执行速度时，可以考虑在替换命令（“s/.../.../”）前面加上地址表达式来
+提高速度。举例来说：
+
+   sed 's/foo/bar/g' filename         # 标准替换命令
+   sed '/foo/ s/foo/bar/g' filename   # 速度更快
+   sed '/foo/ s//bar/g' filename      # 简写形式
+
+当只需要显示文件的前面的部分或需要删除后面的内容时，可以在脚本中使用“q”
+命令（退出命令）。在处理大的文件时，这会节省大量时间。因此：
+
+   sed -n '45,50p' filename           # 显示第45到50行
+   sed -n '51q;45,50p' filename       # 一样，但快得多
+
+如果你有其他的单行脚本想与大家分享或者你发现了本文档中错误的地方，请发电
+子邮件给本文档的作者（Eric Pement）。邮件中请记得提供你所使用的sed版本、
+该sed所运行的操作系统及对问题的适当描述。本文所指的单行脚本指命令行的长
+度在65个字符或65个以下的sed脚本〔译注1〕。本文档的各种脚本是由以下所列作
+者所写或提供：
+
+ Al Aab                               # 建立了“seders”邮件列表
+ Edgar Allen                          # 许多方面
+ Yiorgos Adamopoulos                  # 许多方面
+ Dale Dougherty                       # 《sed & awk》作者
+ Carlos Duarte                        # 《do it with sed》作者
+ Eric Pement                          # 本文档的作者
+ Ken Pizzini                          # GNU sed v3.02 的作者
+ S.G. Ravenhall                       # 去html标签脚本
+ Greg Ubben                           # 有诸多贡献并提供了许多帮助
+-------------------------------------------------------------------------
+
+译注1：大部分情况下，sed脚本无论多长都能写成单行的形式（通过`-e'选项和`;'
+号）——只要命令解释器支持，所以这里说的单行脚本除了能写成一行还对长度有
+所限制。因为这些单行脚本的意义不在于它们是以单行的形式出现。而是让用户能
+方便地在命令行中使用这些紧凑的脚本才是其意义所在。
+
+去除掉test1中的空格
+[root@mail ~]# cat test1
+0 12   2r    4 t    t
+[root@mail ~]# awk '{for(i=1;i<=NF;i++)printf$i;printf"\n"}' test1
+0122r4tt
+[root@mail ~]# sed 's/\ //g' test1
+0122r4tt
+[root@mail ~]# sed 's/ //g' test1
+0122r4tt
+
+取前三个字符
+lxu@lxu-laptop:~$ echo "abcddef"|sed 's/\(...\).*/\1/'
+abc
+lxu@lxu-laptop:~$ echo "abcddef"|sed 's/\(.\{3\}\).*/\1/'
+abc
+
+(...\).*
+(.\{3\}\).*
+
+lxu@lxu-laptop:~$ echo "abcddef"|cut -b1-3
+abc
+长选项必须使用的参数对于短选项时也是必需使用的。
+  -b, --bytes=列表          只选中指定的这些字节
+取后三个字符
+lxu@lxu-laptop:~$ echo "ABCDEF"|sed 's/.*\(...\)$/\1/'
+DEF
+
+
+
+sed编辑器使用圆括号定义替换模式中的子字符串元素，然后在替换模式中使用特定的符号来引用字符串元素，
+替换字符由反斜杠和数字组成，数字表示字符串元素的位置，
+sed编辑器将第一个元素分配为字符\1
+第二个元素分配为字符\2
+
+The System Administrator manual
+用User替换Administrator
+lxu@lxu-laptop:~$ echo "The System Administrator manual"|sed 's/\(System\) Administrator/\1 User/'
+The System User manual
+lxu@lxu-laptop:~$ echo "The System Administrator manual"|sed 's/Administrator/User/g'
+The System User manual
+
+下面这个好理解些 对于文件中有 furry hat将furry hat中的hat替换为cat
+lxu@lxu-laptop:~$ cat def
+That furry hat is pretty
+That furry hat is tow
+hello
+That furrt hat is pretty
+That furry hac is pretty
+lxu@lxu-laptop:~$ cat def |sed 's/\(furry\) hat/\1 cat/'
+That furry cat is pretty
+That furry cat is tow
+hello
+That furrt hat is pretty
+That furry hac is pretty
+
+继续举例如下：
+lxu@lxu-laptop:~$ cat for.sh
+for i in 3 4 5 6 7 8 9 10 11 12 13 14 15 16 18
+do
+      echo $i
+  done
+将for用\1调用替换 那么原文件是不变的
+lxu@lxu-laptop:~$ sed "s/\(for\)/\1/g" for.sh
+for i in 3 4 5 6 7 8 9 10 11 12 13 14 15 16 18
+do
+      echo $i
+  done
+将for用FOR替换
+lxu@lxu-laptop:~$ sed "s/\(for\)/FOR/g" for.sh
+FOR i in 3 4 5 6 7 8 9 10 11 12 13 14 15 16 18
+do
+      echo $i
+  done
+
+
+Time Functions
+       Since one of the primary uses of AWK programs is processing log files that  contain  time  stamp
+       information,  gawk  provides  the  following  functions for obtaining time stamps and formatting
+       them.
+
+       mktime(datespec)
+                 Turns datespec into a time stamp of the same form as returned by systime().  The date-
+                 spec  is  a  string of the form YYYY MM DD HH MM SS[ DST].  The contents of the string
+                 are six or seven numbers representing respectively the full  year  including  century,
+                 the  month from 1 to 12, the day of the month from 1 to 31, the hour of the day from 0
+                 to 23, the minute from 0 to 59, and the second from 0 to 60, and an optional  daylight
+                 saving flag.  The values of these numbers need not be within the ranges specified; for
+                 example, an hour of -1 means 1 hour before midnight.  The origin-zero Gregorian calen-
+                 dar  is  assumed, with year 0 preceding year 1 and year -1 preceding year 0.  The time
+                 is assumed to be in the local timezone.  If the daylight saving flag is positive,  the
+                 time  is  assumed to be daylight saving time; if zero, the time is assumed to be stan-
+                 dard time; and if negative (the default), mktime() attempts to determine whether  day-
+                 light  saving  time is in effect for the specified time.  If datespec does not contain
+                 enough elements or if the resulting time is out of range, mktime() returns -1.
+
+       strftime([format [, timestamp[, utc-flag]]])
+                 Formats timestamp according to the specification in format.  If  utc-flag  is  present
+                 and  is  non-zero  or non-null, the result is in UTC, otherwise the result is in local
+                 time.  The timestamp should be of the same form as returned by systime().   If  times-
+                 tamp  is  missing,  the  current time of day is used.  If format is missing, a default
+                 format equivalent to the output of date(1) is used.  See  the  specification  for  the
+                 strftime()  function  in  ANSI  C for the format conversions that are guaranteed to be
+                 available.
+
+       systime() Returns the current time of day as the number of seconds since the  Epoch  (1970-01-01
+
+                 00:00:00 UTC on POSIX systems).
+
+打印urfile的除第一和最后一行
+sed '1d;$d' urfile
+
+awk 'NR>2{print p}{p=$0}' urfile
+就是从第3行起打印前一行
+
+awk '{a[NR]=$0}END{for(i=2;i<NR;i++)print a[i]}' file
+
+
+
+在每一行的下面添加一行内容依次是echo "上一行的行号 ok."
+awk '{print$0"\n",NR}' abc
+
+$ cat abc|sed -n 's/.*/&\necho "/p;='|sed '/^echo "/{N;s/\n//;s/$/ ok"/}'
+
+
+lxu@lxu-laptop:~$ cat test
+The honeysuckle band played all night long for only $90.
+hello world
+It was an evening of splendid music and company.
+Too bad the disco floor fell through at 23:10.
+The local nurse Miss P.Neave was in attendance.
+lxu@lxu-laptop:~$ sed -n '/The/{=};/The/p' test
+1
+The honeysuckle band played all night long for only $90.
+5
+The local nurse Miss P.Neave was in attendance.
+lxu@lxu-laptop:~$ sed -nf sedsrc test
+1
+The honeysuckle band played all night long for only $90.
+5
+The local nurse Miss P.Neave was in attendance.
+lxu@lxu-laptop:~$ cat sedsrc
+/The/{
+    =
+    p
+}
+
+lxu@lxu-laptop:~$ sed -nf sedsrc test|sed 'N;s/\n/:/'
+1:The honeysuckle band played all night long for only $90.
+5:The local nurse Miss P.Neave was in attendance.
+lxu@lxu-laptop:~$ sed -nf sedsrc test|sed 'N;s/\n/;/'
+1;The honeysuckle band played all night long for only $90.
+5;The local nurse Miss P.Neave was in attendance.
+lxu@lxu-laptop:~$ sed -nf sedsrc test|sed 'N;s/\n/ /'
+1 The honeysuckle band played all night long for only $90.
+5 The local nurse Miss P.Neave was in attendance.
+lxu@lxu-laptop:~$ sed -nf sedsrc test|sed 'N;s/\n/\t/'
+1     The honeysuckle band played all night long for only $90.
+5     The local nurse Miss P.Neave was in attendance.
+
+
+给每行加标
+awk '{print NR,$0}'
+sed = test|sed 'N;s/\n/ /'
+
+
+
+筛选出在''里面的只有数字和字母组成的且只有八个字符的
+lxu@lxu-laptop:~$ cat netstat|sed "s/.*'\([a-zA-Z0-9]\{8\}\)'.*/\1/g"
+a2s3fd5s
+3d8jf5h6
+lxu@lxu-laptop:~$ cat netstat
+  '<asda7900834adadasda[sd]adasd>'=('a2s3fd5s')
+    '12312312（3g1）gk15135g3515135'=('3d8jf5h6')
+lxu@lxu-laptop:~$ cat netstat|sed "s/.*'\([a-zA-Z0-9]\{8\}\)'.*/\1/g"
+a2s3fd5s
+3d8jf5h6
+
+
+筛选出在''里面的只有数字和字母组成的且只有八个字符的
+sed "s/.*'\([a-zA-Z0-9]\{8\}\)'.*/\1/g"
+sed "s/.*'\([a-zA-Z0-9]\{8\}\)'.*/\1/g"
+
+.*出现一次或不出现
+'\([a-zA-Z0-9]\{8\}\)'  数字和字母组合
+
+比如字符串 abcdefghijklmnopqrst
+要把其中第5个字符开始的连续3个字符（也就是efg）替换为 $name（其中，name = "haha"）
+能帮忙实现一下么，
+用 haha替换abcdefghijklmnopqrst中的地4
+name=haha;echo "abcdefghijklmnopqrst"|sed -r 's/^(.{4}).{3}/\1'"$name"'/'
+
+
+lxu@lxu-laptop:~$ cat test.sh
+#!/bin/bash
+var=abcdefghijklmnopqrst
+echo $var
+name=haha
+echo $name
+tihuan=`echo $var|cut -b5-7`
+echo $tihuan
+urlfile=`echo $var |sed "s/$tihuan/$name/g"`
+echo $urlfile
+lxu@lxu-laptop:~$ sh test.sh
+abcdefghijklmnopqrst
+haha
+efg
+abcdhahahijklmnopqrst
+
+从第二行打印
+ll|sed -n '2,$p'
+ll|sed '1d'
+ll|awk 'NR>1{print}'
+
+
+  -r, --regexp-extended
+                 在脚本中使用扩展正则表达式
+
+lxu@lxu-laptop:/home/date$ egrep '\<([a-z]+).\1\>' list
+the the hello world ,My name name is lxu
+Form now on,welcome  come to our world. good good
+lxu@lxu-laptop:/home/date$ cat list |sed -rn "/\<([a-z]+).\1\>/p"
+the the hello world ,My name name is lxu
+Form now on,welcome  come to our world. good good
+lxu@lxu-laptop:/home/date$ cat list |sed -rn "s/\<([a-z]+).\1\>/TIHUAN/p"
+TIHUAN hello world ,My name name is lxu
+Form now on,welcome  come to our world. TIHUAN
+
+
+www.a.com
+b.com
+aaa.c.com
+
+打印上例的正则表达, 打印后显示如下
+
+^http://www\.a\.com
+^http://b\.com
+^http://aaa\.c\.com
+
+
+sed -e 's/\(\.\)/\\\1/g' -e 's#\(^.*\)#^http://\1#'  urlfile
+$ sed 's/\./\\&/g'
+$ sed -e 's/\./\\./g' urlfile
+www\.a\.com
+b\.com
+aaa\.c\.com
+
+sed 's#\(^.*\)#^http://\1#' urlfile
+^http://www.a.com
+^http://b.com
+^http://aaa.c.com
+
+$ awk '{print "^http://"$0}' urlfile|sed -e 's/\./\\./g'
+^http://www\.a\.com
+^http://b\.com
+^http://aaa\.c\.com
+
+sed 's/^/http:\/\//' urlfile
+http://www.a.com
+http://b.com
+http://aaa.c.com
+
+
+删除其中内容重复的行 不大乱顺序
+sed  -n "G;s/\n/&&/;/^\(.*\n\).*\n\1/d; s/\n//;h;P"
+
+
+
+如何实现：使得文件中，每一行的$2...$NF ，仅剩下唯一不重复的。
+例如：
+输入：
+infile
+a 12 21 34 34 12 34
+b 34 34 12 12 21 34
+c 11 21 34 34 11 34
+复制代码
+结果:
+outfile
+a 12 21 34
+b 34 12 21
+c 11 21 34
+复制代码
+谢谢！
+awk '{for(i=2;i<=NF;i++) for(j=i+1;j<=NF;j++) if($i == $j) $j=""}1' file
+awk '{printf $1;for(i=2;i<=NF;i++){printf !a[NR,$i]++?" "$i:""};printf "\n"}' file
+sed ':n;s/\(\(\<[^ ]\+\>\).*\)\<\2\>/\1/g;tn' urfile
+
+一个效率
+sudo sed -n '8344301,8344304p' /var/log/maillog
+sudo sed '8344301,8344304!d' /var/log/maillog
+
+
+有一个文本,要求每一行(同一行)前插入aaa,然后每行后查入bbb:
+例如:
+1111
+2222
+3333
+
+变成
+aaa 1111
+bbb
+aaa 2222
+bbb
+aaa 3333
+bbb
+
+sed 's/^/aaa/;s/$/\nbbb/'
+awk '{print "aaa",$0;print "bbb"}'
+sed 's/.*/aaa &\nbbb/;'
+sed 's/.*/aaa &/;a\bbb'
+
+
+http://bbs.chinaunix.net/viewthread.php?tid=336126
+抛砖引玉----翻译加注sed1line
+翻译了一下  http://bbs.chinaunix.net/forum/24/20040514/325187.html
+      我是新手，翻译得不好，加注得马马虎虎，很多地方都是凭自己的理解写的。由于刚开始学sed，所以很多地方写得很初级，呵呵，难免有些罗嗦。写到最后又有些头晕，还请大虾们多多指点，里头好几个命令我解释不清楚，如不吝赐教，感激不尽！ :em16:
+
+     同时欢迎拍砖！你拍一，我拍一，....... :em02:
+
+FILE SPACING:
+
+# double space a file
+#使一个文件中每一行都占用两行空间(就是在每一行后边插一行空行)
+sed G
+###sed 中G命令的解释为append hold space to pattern space.
+###就是在当前位置后加一行保留空间中的内容，无任何动作时，保留空间为空行
+###所以就double space a file 了，呵呵．
+
+# double space a file which already has blank lines in it. Output file
+# should contain no more than one blank line between lines of text.
+#假若文件已经含有空白行在其中，使一个文件中每一行占用两行
+#空间。输出文件中文本行之间不含有超过一行的空行
+sed '/^$/d;G'    
+###先用sed  '/^$/d'  查找并删除空行；然后用 sed G插入空行
+
+# triple space a file
+#使一个文件中每一行都占用三行空间(就是在每一行后边插两行空行)
+sed 'G;G'
+###不用说了吧，重复两次sed G.
+
+# undo double-spacing (assumes even-numbered lines are always blank)
+#撤销占用两行空间的操作(假设偶数行都是空白行)
+sed 'n;d'
+###sed 中命令n的解释为Read　the next line of input into the pattern space．
+###所以我理解为用sed n 读入下一行兵紧接着用sed d 删除，如果隔两行删除一行那么
+###用sed 'n,n,d',要是隔100行删除一行呢....什么???!!!你要写100个n???!!!
+
+# insert a blank line above every line which matches "regex"
+#在每个含有字符串regex的行上插入一行空白行
+sed '/regex/{x;p;x;}'
+###sed 中命令x解释为Exchange the contents of the hold and pattern spaces.
+###我的理解也就是交换保留空间与模式空间的内容
+###sed 中命令p为Print the current pattern space．就是打印模式空间中的内容．
+###所以理解为保留空间中开始为空行，模式空间中经过sed  '/regex/'查询后为包含
+###regex内容的那一行，1)x;交换模式空间和保留空间的内容，此时模式空间中内容
+###为空行，保留空间中内容为含有regex内容的行， 2)p；命令打印模式空间内容(
+###空行)，在原文中含有regex内容的那一行的位置出现两行空行，其中后一行为
+###模式空间中的内容，3)x;后交换模式空间和保留空间中的内容，．．．．结果就是在原
+###来出现regex的位置前一行加入了一行空行。
+
+
+# insert a blank line below every line which matches "regex"
+# 在每个含有字符串regex的行下插入一行空白行
+sed '/regex/G'
+###比较简单，查找后在后边加入一空行
+
+# insert a blank line above and below every line which matches "regex"
+#在每个含有字符串regex的行上，下各插入一行空白行
+sed '/regex/{x;p;x;G;}'
+###兄弟两个sed '/regex/G'和sed '/regex/{x;p;x;}'合作的结果．
+
+NUMBERING:
+
+# number each line of a file (simple left alignment) Using a tab (see
+# note on '\t' at end of file)instead of space will preserve margins.
+#给文件每一行加上数字序号。用TAB制表符替换空间来保留空白(?)
+#(在数字序号和文本中间加一TAB制表符)
+sed = filename | sed 'N;s/\n/\t/'
+###sed = filename的功能是 Print the current line number.
+###但是这个功能是在每一行前面另加一行，并且显示行号,而不是直接在行首加序号
+###sed中命令N的解释为Append the next line of input into the pattern space.
+###也就是把当前行后一行的内容加在当前行后边．
+###sed中命令s/regexp/replacement/解释为Attempt  to match regexp against the
+###pattern space.  If successful,  replace  that  portion  matched  with
+### replacement.大概意思是在模式空间外匹配regexp，如果成功，使用匹配replace
+###ment的内容替换regexp.说白了就是查找替换吧．\n是换行符,\t是TAB制表符, 
+###所以整个命令的意思也就出来了．
+
+# number each line of a file (nnumber on left, right-aligned)
+#给文件每一行加上数字序号(数字在左边，向右对齐？)
+sed = filename | sed 'N; s/^/ /; s/ *\(.\{6,\}\)\n/\1 /'
+### 前面不用说了，但是后边......
+###s/ *\(.\{6,\}\)\n/\1 /' 这个地方确实不是很明白!~~
+
+# number each line of file, but only print numbers if line is not blank
+#给文件每一行加上数字序号，但是仅当行非空时打印数字
+sed '/./=' filename | sed '/./N; s/\n/ /'
+###sed '/./=' filename的用处是查找除非空行赋予行号,sed '/./N; s/\n/ /'查找非
+##空行并把后一行附加到当前行,然后用空格替换换行符\n
+
+
+# count lines (emulates "wc -l")
+#统计行数(类似于 "wc -l")
+sed -n '$='
+#sed中参数n的含义是suppress automatic printing of pattern space,也就是限制
+###自动打印模式空间中内容的功能， '$='中$的含义是Match the last line，=前边
+###已经说过了，就是打印行号，所以匹配最后一行而且只打印行号不打印内容，就是
+###"wc -l"了
+
+TEXT CONVERSION AND SUBSTITUTION:
+
+# IN UNIX ENVIRONMENT: convert DOS newlines (cR/LF)to Unix format
+#在UNIX环境下：转换DOS换行符(?)(cR/LF)UNIX格式
+
+sed 's/.$//' # assumes that all lines end with CR/LF
+                 # 假设所有的行都以CR/LF结尾
+                 关于这里的测试 首先通过file来查看文件
+                 如下：
+                 lxu@lxu-laptop:/home/date$ file 1.txt
+1.txt: ASCII text, with CRLF line terminators
+那么我通过 sed -i 's/.$//' 1.txt命令之后
+再次
+lxu@lxu-laptop:/home/date$ file 1.txt
+1.txt: ASCII text
+
+
+###可能在DOS中的ASCII码(包括CR/LF)到了UNIX中都成了单字符吧，又因为".$"代表
+###每行最后一个字符，所以把它们替换掉就OK了．CR/LF是啥？CR---ASCII Carriage
+###Return(ASCII 回车) ,LF----ASCII Linefeed (ASCII换行)
+
+sed 's/^M$//' # in bash/tcsh, press Ctrl-V then Ctrl-M
+                      #在bash/tcsh中，按下Ctrl-V然后按 Ctrl-M
+###没啥说的，就是查找替换，注意命令中"^M"在输入时一定是按下Ctrl-V然后按 Ctrl-M
+###如果输入成ctrl+6键，然后输入一个大写M,什么替换也完成不了啦．
+
+sed 's/\x0D$//' # gsed 3.02.80, but top script is easier
+                         # ???
+###不是很了解！高手说一下吧！
+
+# IN UNIX ENVIRONMENT: convert Unix newlines (F)to DOS format
+#在unix环境中：转换Unix换行符(F)DOS格式
+sed "s/$/`echo -e \\\r`/" # command line under ksh
+　　　　　　　　　　　　　#在ksh下的命令行
+sed 's/$'"/`echo \\\r`/" # command line under bash
+　　　　　　　　　　　　 #在bash下的命令行
+sed "s/$/`echo \\\r`/" # command line under zsh
+                       #在zsh下的命令行
+sed 's/$/\r/' # gsed 3.02.80
+　　　　　　　# gsed3.02.80版本下的命令行
+###以上四个命令是在不同的shell版本下用\r(好象就是ASCII码下的CR)替换行尾
+
+# IN DOS ENVIRONMENT: convert Unix newlines (F)to DOS format
+#在DOS环境下转换Unix换行符到DOS格式
+sed "s/$//" # method 1
+sed -n p # method 2
+###这句又不是很了解，本来$就是行尾了，把行尾替换成空，那就变成了DOS格式了吗？
+###下边一句也很奇怪，参数-n是suppress automatic printing of pattern space，命
+###令p是Print the current pattern space，一正一反就换成DOS格式了？乖乖~~
+
+
+# IN DOS ENVIRONMENT: convert DOS newlines (cR/LF)to Unix format
+#在Dos环境下：转换DOS换行符为UNIX格式
+# Cannot be done with DOS versions of sed. Use "tr" instead.
+#用DOS版本的sed不能做到这点，用"tr"代替．
+tr -d \r <infile >outfile # GNU tr version 1.22 or higher
+　　　　　　　　　　　　　#GNU tr 1.22版本或者更高版本
+
+# delete leading whitespace (spaces, tabs)from front of each line
+# aligns all text flush left
+#删除每一行开头的空白(空格，TAB)左对齐排列全文．
+sed 's/^[ \t]*//' # see note on '\t' at end of file
+　　　　　　　　　# ???
+### 又是替换成空，^[ \t]* 的含义为以空格或者TAB键开始的(或者是他们的组合)行．
+
+# delete trailing whitespace (spaces, tabs)from end of each line
+#从每一行结尾处删除最后的空格(空格,TAB)
+sed 's/[ \t]*$//' # see note on '\t' at end of file
+                  #??
+### 跟上边的命令"前呼后拥"呀．
+
+# delete BOTH leading and trailing whitespace from each line
+#删除每一行的开头和结尾的空格
+sed 's/^[ \t]*//;s/[ \t]*$//'
+###两步走．
+
+# insert 5 blank spaces at beginning of each line (ake page offset)
+#在每一行开始处插入5个空格(整页偏移)
+sed 's/^/ /'
+###没啥说的．
+
+# align all text flush right on a 79-column width
+#右对齐，按79列宽排列所有文本
+sed -e :a -e 's/^.\{1,78\}$/ &/;ta' # set at 78 plus 1 space
+###这个语句好像很麻烦，不过看懂了还挺有意思．：）
+###首先出现了几个新东东1.":"  2."&". 3. "-e " 4."t"，解释一下
+###1.":"  Label for b and t commands.(给b和t命令加注标签)
+###2."&"　表示重复整个匹配的规则表达式．
+###3. "-e" add the script to the commands to be executed
+###   把脚本加到命令里用以执行
+###4. t label If  a  s///  has  done  a successful substitution since the last
+###input line was read and since the last  t  or  T  command,  then branch to
+###label; if label is omitted, branch to end of script.      
+###如果从读入最后一个输入行并且执行最后一个t或者T命令后，一个s///命令成功替换，
+###那么流程分支指向label处，如果label被忽略(就是没有成功替换吧，我想),那么流程
+###分支指向脚本结束．
+###回过头来看，整个sed命令行是一个循环执行的语句，每一行都要替换(78-当前行的字
+###符数)次,所以如果整个文件比较大，或者一行字符数比较少，做这个动作就有点吃力了．
+###不信你试试吧，呵呵．
+
+# center all text in the middle of 79-column width. In method 1,
+# spaces at the beginning of the line are significant, and trailing
+# spaces are appended at the end of the line. In method 2, spaces at
+# the beginning of the line are discarded in centering the line, and
+# no trailing spaces appear at the end of lines.
+#使所有文本居于79列宽的格式中央。在第一种方法中，每一行开头处的空格是
+#很重要的，最后的空格被附在行尾。第二种方法中，一行开头的空格在中心对
+#齐的行中被丢弃，行尾也没有原来结尾处的空格。
+sed -e :a -e 's/^.\{1,77\}$/ & /;ta' # method 1
+sed -e :a -e 's/^.\{1,77\}$/ &/;ta' -e 's/\(*\)1/\1/' # method 2
+###跟上边的差不多,当两边都加空格的时候，效率要高一些~~
+
+# substitute (ind and replace)"foo" with "bar" on each line
+#在每一行中用"bar"替换(找并替换)foo"
+sed 's/foo/bar/' # replaces only 1st instance in a line
+                 # 在一行中，仅在第一次出现时替换
+sed 's/foo/bar/4' # replaces only 4th instance in a line
+                  #在一行中，仅在第四次出现时替换
+sed 's/foo/bar/g' # replaces ALL instances in a line
+                  #在一行中替换所有出现的值
+###这三个命令很简单,不多说了.
+
+sed 's/\(.*\)foo\(.*foo\)/\1bar\2/'  # replace the next-to-last case
+                                #替换紧邻最后一个匹配出现的值
+###'s///---- The replacement may contain the special character & to refer to that
+###portion of the pattern space  which  matched,  and  the  special escapes  \1
+### through  \9  to refer to the corresponding matching sub-expressions in the regexp.                                  
+###就不直接翻译了，大概意思就是replacement处可以包含&代表匹配的模式空间中
+###的部分,特殊的\1-\9可以代表regexp中相应的"子表达式",也就是说前面regexp
+###可以分为几个子表达式,而后边replacement中可以用\1-\9分别代表它们.这样就
+###增加了灵活性，便于修改sed命令.
+###把regexp中的\去掉后，就变成(.*)foo(*foo),其中(.*)表示零个或者多个字符，
+###这样加上后边的\1bar\2就变成了改变倒数第二个foo,而倒数第一个不变
+
+sed 's/\(*\)foo/\1bar/' # replace only the last case
+                       #只替换最后一个值
+###比上一个简单
+
+# substitute "foo" with "bar" ONLY for lines which contain "baz"
+#在每一含有"baz"的行中用"bar"替换(查找并替换)foo"
+sed '/baz/s/foo/bar/g'
+### /baz/用来查找，后边的用来替换
+
+# substitute "foo" with "bar" EXCEPT for lines which contain "baz"
+#在每一不含有"baz"的行中用"bar"替换(找并替换)foo"
+sed '/baz/!s/foo/bar/g'
+###反其道而行之．
+
+# change "scarlet" or "ruby" or "puce" to "red"
+#将"scarlet"或者"ruby"或者"puce"替换成"red"
+sed 's/scarlet/red/g;s/ruby/red/g;s/puce/red/g' # most seds
+                                                #大多数sed可用
+###三步走．
+gsed 's/scarlet\|ruby\|puce/red/g' # GNU sed only
+                                   #仅GNU sed可用
+
+
+# reverse order of lines (emulates "tac")
+#反转文章行的顺序(类似"tac" )
+# bug/feature in HHsed v1.5 causes blank lines to be deleted
+#???????
+sed '1!G;h;$!d' # method 1
+###
+###首先看第一个命令1!G，这个是啥意思?"!"表示后边的命令对所有没有
+###被选定的行发生作用，G呢？获得保留空间(专业名词叫内存缓冲区?)中
+###的内容，并追加到当前模式空间的后面.1就是选定第一行.h的含义是拷贝
+###模式空间内容到保留空间(内存缓冲区)。那么先看 sed '1!G'什么含义
+###执行一下这个命令，假若文件是
+### $ cat  test.txt
+###  1
+###  2
+###  3
+###  4
+###那么 sed '1!G' test.txt的结果是
+### $ sed '1!G' test.txt
+###  1
+###  2
+### 
+###  3
+###
+###  4
+###
+###  $
+### 也就是说除了第一行,后边每行都加了空行,这是因为内存缓冲区中默认值
+###是空行吧。然后我们加上h,看看发生什么
+### $ sed '1!G;h' test.txt
+###  1
+###  2
+###  1
+###  3
+###  2
+###  1
+###  4
+###  3
+###  2
+###  1
+###  $
+### 空行没了，咋回事?我是这样理解的，不知道对不对，大家帮助看看：）
+###首先要确定，执行到每一行，sed把当前处理的行存在临时的缓冲区内，
+###称为模式空间(pattern space).一旦sed完成对模式空间中行的处理，模式
+###空间中的行就被送往屏幕．行被处理完成后，就被移出模式空间．．．
+###
+###命令执行第一行时，由于匹配了第一行，所以"!G"不起作用，只打印了
+###第一行的内容，然后"h"把模版块中的内容也就是第一行的内容拷贝进缓冲区，
+###注意此时是用第一行的内容替换空行.模式空间中的内容要打印，所以出现1.
+###执行到第二行时，打印第二行内容，而且由于不匹配"1",所以在后边"G"命令起
+###作用,获得了缓冲区中的第一行的内容，然后加到当前模式空间中，并打印,出现
+###21。然后把模式空间中的内容写入缓冲区，也就是把21写入缓冲区。执行到第三行
+###匹配不成功,所以缓冲区的内容应该是第二行的内容加上第一行的内容，追加到模
+###式空间的第三行后边：321.然后把321拷贝到缓冲区，．．．以此类推就出现了上
+###面的结果.
+###我不知道这么解释对不对，但是当我把命令中的1换成2，3，4后执行，得到了我
+###想象的结果。还请高手指点~~
+###加上最后一句"$!d",那就是前面三行的结果删除，保留最后一行。这样就形成了
+### tac的效果啦。
+
+sed -n '1!G;h;$p' # method 2
+###与上边类似的，不罗嗦!
+
+# reverse each character on the line (emulates "rev")
+#反转一行中每个字符的顺序(类似"rev")
+sed '/\n/!G;s/\(.\)\(.*\n\)/&\2\1/;//D;s/.//' 
+###这个命令真是.....
+###我是在解释不通,所以按照我的想法来说一下吧,完全是瞎说!
+###'/\n/!G'是判断本行是否有换行符,如果没有执行G命令
+###'s/\(.\)\(.*\n\)/&\2\1/'命令是在原来行+第二个字符(或者没有)开始到换行符+第一个字符
+###//D命令是在模式空间删除第一行,注意执行完成后如果模式空间不为空，继续下一个
+###循环执行.
+###s/.//命令是删除第一个字符
+###假设一行文字是 123\n
+###那么执行后模式空间中的内容应该按下边的顺序变化
+###  123\n
+###  123\n23\n1
+###  23\n1
+###  23\n13\n21
+###  13\n21
+###  3\n21
+###  3\n21\n321
+###  \n321
+###  321
+### 我的疑问就是,为什么第一次没有执行s/.//?!如果执行了,那么就得不到结果了啊!
+### 救~~~~命~~~啊！????????????????????????????????
+
+
+QUOTE:
+原帖由 "waker" 发表：
+#反转一行中每个字符的顺序(类似"rev")
+sed '/\n/!G;s/\(.\)\(.*\n\)/&\2\1/;//D;s/.//'
+###假设一行文字是 123
+###那么执行后模式空间中的内容应该按下边的顺序变化
+执行/\n/!G;得
+123\n
+然后s/\(.\)\(.*\n\)/&\2\1/;
+得
+123\n23\n1
+执行//D
+23\n1
+因为是D命令所以从头循环
+模式空间有\n
+所以/\n/!G;中G不执行
+再来s...
+23\n3\n21
+再D
+3\n21
+循环,G不执行
+再来s...
+3\n\n321
+再D
+\n321
+循环
+G和s和D都不执行
+执行最后的s/.//
+321
+
+
+
+# join pairs of lines side-by-side (like "paste")
+#把两行合为一行(类似于"paste")
+sed '$!N;s/\n/ /'
+###这个命令改成 sed 'N;s/\n/ /'一样可以达到目的，不知前面
+###的$!有什么用处...
+
+# if a line ends with a backslash, append the next line to it
+#如果一行以"\"结束，把下一行加在此行上
+sed -e :a -e '/\\$/N; s/\\\n//; ta'
+###循环操作，两次替换。
+
+# if a line begins with an equal sign, append it to the previous line
+# and replace the "=" with a single space
+#如果一等号开始某一行，把这一行加到前一行后边，并且用一个空格替换等号
+sed -e :a -e '$!N;s/\n=/ /;ta' -e 'P;D'
+###和上边差不多，要注意两个新的命令:
+### P命令--Print up to the first embedded newline of  the  current 
+###pattern  space.打印当前模式空间中第一行。
+###D命令--Delete up to the first embedded newline in
+### the  pattern  space. Start  next  cycle,  but skip reading from
+###the input if there is still data in the pattern space.
+###删除当前模式空间中第一行。开始新的循环，但是如果在模式空间中仍然
+###有数据，那么跳过读取输入。
+
+# add commas to numeric strings, changing "1234567" to "1,234,567"
+#给数字串加逗号，把"1234567"变为"1,234,567"
+gsed ':a;s/\B[0-9]\{3\}\>/,&/;ta' # GNU sed
+sed -e :a -e 's/\(.*[0-9]\)\([0-9]\{3\}\)/\1,\2/;ta'  # other seds
+###(.*[0-9])表示零个或者多个字符(可能包含数字)+一个数字,而
+###([0-9]{3})表示三个数字,然后不停的替换,直到条件不成立,也就是没有
+###四个以上连续的数字出现就停止了.
+
+# add commas to numbers with decimal points and minus signs (NU sed)
+#给带有小数点和负号的数字的数字加上逗号
+gsed ':a;s/\(^\|[^0-9.]\)\([0-9]\+\)\([0-9]\{3\}\)/\1\2,\3/g;ta'
+###没有gsed，不解释了
+
+# add a blank line every 5 lines (after lines 5, 10, 15, 20, etc.)
+#每五行后加一空行
+gsed '0~5G' # GNU sed only
+sed 'n;n;n;n;G;' # other seds
+###一大早就说过了的...
+
+SELECTIVE PRINTING OF CERTAIN LINES:
+
+# print first 10 lines of file (emulates behavior of "head")
+#打印一个文件的前10行(模仿动作"head")
+sed 10q
+
+# print first line of file (emulates "head -1")
+#打印一个文件的第一行(仿"head -1")
+sed q
+### q命令的解释Immediately quit the sed  script  without  processing
+###any  more input,  except  that  if  auto-print is not disabled the
+###current pattern space will be printed.
+### 所以上边两个命令都清楚了，执行到第10行退出就打印前10行，执行第一行
+###就退出就打印第一行  
+
+# print the last 10 lines of a file (emulates "tail")
+#打印一个文件的后10行(仿"tail")
+sed -e :a -e '$q;N;11,$D;ba'
+###Label b : Branch to label; if label is omitted, branch to end of script.
+###命令D 删除模式空间内第一个 newline 字母 \n 前的资料。 
+###命令N 把输入的下一行添加到模式空间中。
+### b label:分支到脚本中带有标号的地方，如果标号不存就分支到脚本的末尾
+###
+
+QUOTE:
+原帖由 "waker" 发表：
+试着注一下，不知道对不对
+
+如果我们只看sed -e :a -e '$q;N;ba'
+这个循环不停的读入下 一行直到结尾，这样整个文本就形成一个由\n分割的链
+
+现在加上11,$D
+sed -e :a -e '$q;N;11,$D;ba'
+如果文本不超过10行
+模式空间将保留整个文本打印出来
+如果文本大于10行
+从第11行开始，在下一行加入到链中后，模式空间第一个由\n分割的记录将被删除，这样看起来就是链头被链尾挤出整个链，总是保持10个链环，循环结束后，链中保存的就是文件的后10行,最后印出结果
+
+
+:em16:
+
+# print the last 2 lines of a file (emulates "tail -2")
+#打印一个文件的最后两行(仿"tail -2")
+sed '$!N;$!D'
+### 开始看不太懂，抄了CU精华一段
+###sed '$!N;$!D' : 对文件倒数第二行以前的行来说，N 将当前行的下一行放到模
+###式空间中以后，D 就将模式空间的内容删除了；到倒数第二行的时候，将最后一行
+###附加到倒数第二行下面，然后最后一行不执行 D ，所以文件的最后两行都保存下来了。
+###不知道是这段话说得有些含糊，还是我理解得有偏差，总觉得D命令解释成
+###"将模式空间的内容删除了"有些让人糊涂.
+###而我是这样理解的，不知道对不对.首先说D命令是 Delete up to the first
+###embedded newline in  the  pattern  space.也就是说D命令是删除模式空间中
+###第一个换行符之前的内容，也就是删除第一行.然后D命令的解释还有一句,我认为
+###这句很重要: Start  next  cycle,  but skip reading from the input if there
+### is still data in the pattern space.开始下一个循环，但是如果模式空间中有 
+###数据，则跳过从输入中读取数据.
+###具体怎么工作呢? 假设文件为
+### $ cat test.txt
+###   1
+###   2
+###   3
+###   4
+###   5
+### 那么当执行第一行时,$!N把第二行加入到模式空间中第一行后边,然后$!D把第一行
+###内容删除，模式空间中只剩下第二行的内容.注意,此时由于D命令开始下一个循环，
+###所以不打印模式空间中的内容! (这个地方也是我想了半天才这么解释的，我也知道
+###很可能不对，欢迎拍砖，呵呵)由于D命令要求模式空间中有数据的话就跳过读取下一行，
+###所以继续下一个循环又到了$!N，此时读入第三行加到第二行后边，....以此类推。
+###执行到读入第5行附加在第四行后边，然后由于$!D得不到执行，所以第4行和第5行
+###都被保留，命令结束，打印模式空间...
+
+# print the last line of a file (emulates "tail -1")
+#打印一个文件的最后一行(仿"tail -1")
+sed '$!d' # method 1
+sed -n '$p' # method 2
+###哈哈，终于看懂了一个，你也看懂了吧　：）
+
+
+# print only lines which match regular expression (emulates "grep")
+#只打印匹配的一定字符的行(仿"grep")
+sed -n '/regexp/p' # method 1
+sed '/regexp/!d' # method 2
+###明白参数-n和命令p和d就明白这两个命令．
+
+# print only lines which do NOT match regexp (emulates "grep -v")
+#只打印于一定字符不匹配的行(效"grep -v")
+sed -n '/regexp/!p' # method 1, corresponds to above
+sed '/regexp/d' # method 2, simpler syntax
+###和上边相反，正如注释所说．
+
+# print the line immediately before a regexp, but not the line
+# containing the regexp
+#打印包含"regexp"那一行的上一行,但是不打印包含"regexp"的行.
+sed -n '/regexp/{g;1!p;};h'
+###在命令执行到包含"regexp"那一行的上一行时,模式空间中这行的内容被
+###拷贝到保留空间中．执行到包含"regexp"那一行时就打印它了.
+
+# print the line immediately after a regexp, but not the line
+# containing the regexp
+#打印在"regexp"之后紧跟那一行，但是除去包含"regexp"的行.
+sed -n '/regexp/{n;p;}'
+###与上边类似，比上边简单．
+
+# print 1 line of context before and after regexp, with line number
+# indicating where the regexp occurred (imilar to "grep -A1 -B1")
+#在"regexp"前后打印一行上下文，使其行号指示"regexp"在哪里出现(
+#grep -A1 -B1相似)
+sed -n -e '/regexp/{=;x;1!p;g;$!N;p;D;}' -e h
+###看上去好像挺复杂，其实倒是不难解释．
+###假设文档是这样
+###$ cat test.txt
+###  1 abc
+###  2 cde
+###  3 regexp
+###  4 fgh
+###  5 xyz
+###命令执行到regexp前一行，引号里边的命令不执行,只执行h命令得到结果
+###     command          parttern space             holdspace              output
+###   执行到前一行               2cde                2cde
+###   执行到regexp行 "="         3regexp                                      3              
+###      "x"                      2cde              3regexp
+###      "1!p"                    2cde              3regexp                  2cde
+###      "g"                     3regexp            3regexp                            
+###      "$N"                3regexp ; 4fgh         3regexp                
+###       "p"                3regexp ; 4fgh         3regexp                 3regexp
+###                                                                          4fgh
+###       "D"                     4fgh              3regexp    
+###       "h"                     4fgh               4fgh
+###  
+###  看一下最右边的输出结果，还不错吧！
+
+# grep for AAA and BBB and CCC (n any order)
+#查找"AAA"和"BBB"和"CCC".(任意顺序)
+sed '/AAA/!d; /BBB/!d; /CCC/!d'
+
+# grep for AAA and BBB and CCC (n that order)
+# 查找"AAA"和"BBB"和"CCC".(一定顺序)
+sed '/AAA.*BBB.*CCC/!d'
+
+# grep for AAA or BBB or CCC (emulates "egrep")
+#查找"AAA"或"BBB"或"CCC".(任意顺序)
+sed -e '/AAA/b' -e '/BBB/b' -e '/CCC/b' -e d # most seds
+gsed '/AAA\|BBB\|CCC/!d' # GNU sed only
+###上边三个没什么说的，就是查找功能呗．
+
+
+# print paragraph if it contains AAA (blank lines separate paragraphs)
+# HHsed v1.5 must insert a 'G;' after 'x;' in the next 3 scripts below
+#如果某段包含"AAA",则打印这一段。(空行用来分隔段落)
+#HHsed v1.5必须在'x;'之后插入一个'G;'
+sed -e '/./{H;$!d;}' -e 'x;/AAA/!d;'
+###前边一部分命令用保留空间来存储整个段落内容，后边一个命令用来查找
+
+# print paragraph if it contains AAA and BBB and CCC (n any order)
+#如果某段包含"AAA"和"BBB"和"CCC",则打印这一段
+sed -e '/./{H;$!d;}' -e 'x;/AAA/!d;/BBB/!d;/CCC/!d'
+###同上
+
+# print paragraph if it contains AAA or BBB or CCC
+# 如果某段包含"AAA"或"BBB"或"CCC",则打印这一段
+sed -e '/./{H;$!d;}' -e 'x;/AAA/b' -e '/BBB/b' -e '/CCC/b' -e d
+gsed '/./{H;$!d;};x;/AAA\|BBB\|CCC/b;d' # GNU sed only
+###同上
+
+# print only lines of 65 characters or longer
+#仅打印长于65个字符的行
+sed -n '/^.\{65\}/p'
+###这也没什么好说的，正则表达式的运用．
+
+# print only lines of less than 65 characters
+#仅打印少于65个字符的行
+sed -n '/^.\{65\}/!p' # method 1, corresponds to above
+sed '/^.\{65\}/d' # method 2, simpler syntax
+###又没啥吧
+
+# print section of file from regular expression to end of file
+#打印从字符"regexp"开始到文件结束的部分
+sed -n '/regexp/,$p'
+###还没啥，注意","的作用是选择行的范围，从包含regexp的行到最后一行
+
+# print section of file based on line numbers (ines 8-12, inclusive)
+#根据行号来打印文件的一部分(-12行，包括在内)
+sed -n '8,12p' # method 1
+sed '8,12!d' # method 2
+
+# print line number 52
+#打印第52行
+sed -n '52p' # method 1
+sed '52!d' # method 2
+sed '52q;d' # method 3, efficient on large files
+###仅注意第三种方法效率比较高就行了
+
+# beginning at line 3, print every 7th line
+#从第三行开始，每7行打印一行
+gsed -n '3~7p' # GNU sed only
+sed -n '3,${p;n;n;n;n;n;n;}' # other seds
+###好像很容易理解了吧
+
+# print section of file between two regular expressions (nclusive)
+#打印文件中指定字符之间的部分(含字符在内)
+➜  ~ system_profiler SPPowerDataType|sed -n "/AC Charger Information:/,/Power Events:/p"
+sed -n '/Iowa/,/Montana/p' # case sensitive
+###现在简单了吧．：）
+
+SELECTIVE DELETION OF CERTAIN LINES:
+
+# print all of file EXCEPT section between 2 regular expressions
+#打印除指定字符之间部分之外的全文
+sed '/Iowa/,/Montana/d'
+###与上边相似的简单
+
+# delete duplicate, consecutive lines from a file (emulates "uniq")
+# First line in a set of duplicate lines is kept, rest are deleted.
+#删除文件中重复的连续的行(似于"uniq"命令)
+#重复行中第一行保留，其他删除
+sed '$!N; /^\(.*\)\n\1$/!P; D' 　
+###如果不是最后一行，就把下一行附加在模式空间，然后进行查找操作
+###"^"和"$"中间的内容如果有重复就匹配成功．如果匹配不成功就用P打印
+###第一行．　然后删除第一行．
+
+# delete duplicate, nonconsecutive lines from a file. Beware not to
+# overflow the buffer size of the hold space, or else use GNU sed.
+#删除文件中重复的，但不连续的行。注意不要溢出保留空间的缓冲器的大小，
+#否则使用GNU sed.
+sed -n 'G; s/\n/&&/; /^\([ -~]*\n\).*\n\1/d; s/\n//; h; P'  
+###在我的linux环境执行不了，出错是sed: -e expression #1, char 34:
+###Invalid range end.是不是所谓的溢出保留空间的大小了呢？我也不得而知．
+###大家补充吧．!!?????????????????
+
+# delete the first 10 lines of a file
+#删除一个文件中前10行
+sed '1,10d'
+# delete the last line of a file
+#删除一个文件中最后1行
+sed '$d'
+###与上边一个都是查找删除
+
+# delete the last 2 lines of a file
+#删除一个文件中最后2行
+sed 'N;$!P;$!D;$d'
+###如果理解了sed '$!N;$!D'是如何工作的，这句话也不在话下吧！
+
+# delete the last 10 lines of a file
+#删除一个文件中后10行
+sed -e :a -e '$d;N;2,10ba' -e 'P;D' # method 1
+sed -n -e :a -e '1,10!{P;N;D;};N;ba' # method 2
+###和打印后10行相似．什么？打印后10那个没看懂? /shakehand  ：）
+###?????????????????
+
+# delete every 8th line
+# 每8行删除1行
+gsed '0~8d' # GNU sed only
+sed 'n;n;n;n;n;n;n;d;' # other seds
+###没说的!
+
+# delete ALL blank lines from a file (ame as "grep '.' ")
+#删除文件所有空白行(似于"grep '.' ")
+sed '/^$/d' # method 1
+sed '/./!d' # method 2
+###这两句就是告诉我们1.无内容的删除,2.有内容的保留 : )
+
+# delete all CONSECUTIVE blank lines from file except the first; also
+# deletes all blank lines from top and end of file (emulates "cat -s")
+#删除文件中除一行空白行之外的所有连续空白行，也同时删除所有从头到尾的所
+#有空白行(似于"cat -s")
+sed '/./,/^$/!d' # method 1, allows 0 blanks at top, 1 at EOF
+                 #方法1不允许文件顶部有空行，文件尾部可以
+sed '/^$/N;/\n$/D' # method 2, allows 1 blank at top, 0 at EOF
+                 #方法2不允许文件尾部有空行，文件顶部可以
+###两个先选择，后删除命令.不多说了.
+
+# delete all CONSECUTIVE blank lines from file except the first 2:
+#删除文件中连续空行中除前两行空白行之外的所有空白行
+sed '/^$/N;/\n$/N;//D'
+###跟上边的命令相似，多了一步而已.               
+
+# delete all leading blank lines at top of file
+#删除文件开头部分中的所有空白行
+sed '/./,$!d'
+###从有字符开始的行直到最后一行保留，其他删除.
+
+# delete all trailing blank lines at end of file
+#删除文件结尾部分中的所有空白行
+sed -e :a -e '/^\n*$/{$d;N;ba' -e '}' # works on all seds
+sed -e :a -e '/^\n*$/N;/\n$/ba' # ditto, except for gsed 3.02*
+###不行了要死了，还是高手说吧，我再看下去会疯的！
+###?????????????????????????????
+
+# delete the last line of each paragraph
+#删除每个段落中最后1行
+sed -n '/^$/{p;h;};/./{x;/./p;}'
+###应该是假设段落间用空行分隔
+###命令执行时，如果不是空行那么交换模式空间和保留空间，如果交换后
+###模式空间不为空，则打印模式空间中内容；如果是空行，那么打印模式空间
+###间中的内容,也就是打印空行...以此类推,出现结果.
+
+###终于完了，下边的特殊应用没有加注，随便翻译了一下，可能不够准确，大家参考一下吧. :em11:
+
+SPECIAL APPLICATIONS:
+
+# remove nroff overstrikes (char, backspace)from man pages. The 'echo'
+# command may need an -e switch if you use Unix System V or bash shell.
+# 从man page页里删除所有overstrikes(字符,backspace).如果使用unix系统v
+#或者bash shell,echo命令可能需要-e参数.
+sed "s/.`echo \\\b`//g" # double quotes required for Unix environment
+                        #unix环境下需要双引号
+sed 's/.^H//g' # in bash/tcsh, press Ctrl-V and then Ctrl-H
+               #在bash/tcsh中，按Ctrl-V然后按Ctrl-H
+sed 's/.\x08//g' # hex expression for sed v1.5
+                 #sed v1.5中的hex表达式
+
+# get Usenet/e-mail message header
+# 获得新闻组/e-mail信息的标题部分
+sed '/^$/q' # deletes everything after first blank line
+
+# get Usenet/e-mail message body
+#获得新闻组/e-mail信息的主体部分
+sed '1,/^$/d' # deletes everything up to first blank line
+
+# get Subject header, but remove initial "Subject: " portion
+#获得题目的标题，但是删去开始的"Subject: "部分
+sed '/^Subject: */!d; s///;q'
+
+# get return address header
+#获得返回的地址标题()
+sed '/^Reply-To:/q; /^From:/h; /./d;g;q'
+
+# parse out the address proper. Pulls out the e-mail address by itself
+# from the 1-line return address header (ee preceding script)
+#正确解析地址。把email地址从一行中单独提出来并返回地址头()
+sed 's/ *(*)/; s/>.*//; s/.*[:<] *//'
+
+# add a leading angle bracket and space to each line (uote a message)
+#给每行增加的尖括号和空格()信息被引用)
+#sed 's/^/> /'
+
+# delete leading angle bracket & space from each line (nquote a message)
+#删除每行的尖括号和空格()信息不被引用)
+sed 's/^> //'
+
+# remove most HTML tags (ccommodates multiple-line tags)
+#删去大部分HTML标签(供多行标签))
+sed -e :a -e 's/<[^>]*>//g;/</N;//ba'
+
+# extract multi-part un(?)encoded binaries, removing extraneous header
+# info, so that only the uuencoded portion remains. Files passed to
+# sed must be passed in the proper order. Version 1 can be entered
+# from the command line; version 2 can be made into an executable
+# Unix shell script. (odified from a script by Rahul Dhesi.)
+#抽取多部分未编码的二进制字节,删除无关的头信息,使得只保留未编码的部分.
+#文件传送给sed必须保持正确的顺序。第一版本可以用于命令行的执行，第二版本
+#可以制作成一个可执行的unix shell脚本
+sed '/^end/,/^begin/d' file1 file2 ... fileX | uudecode # vers. 1
+sed '/^end/,/^begin/d' "$@" | uudecode # vers. 2
+
+# zip up each .TXT file individually, deleting the source file and
+# setting the name of each .ZIP file to the basename of the .TXT file
+# (under DOS: the "dir /b" switch returns bare filenames in all caps)
+#独立的压缩每个txt文件，删除原文件并且根绝原文本文件设置每个zip文件名。
+echo @echo off >zipup.bat
+dir /b *.txt | sed "s/^\(*\).TXT/pkzip -mo \1 \1.TXT/" >>zipup.bat
+
+
+http://bbs.chinaunix.net/thread-1762006-1-1.html
+用标签完成 是AA就加上YES,不是AA就加NO,
+这里注意$的用法
+lxu@lxu-laptop:/home/date/shell$ cat urlfile
+AA
+BC
+AA
+CB
+CC
+AA
+lxu@lxu-laptop:/home/date/shell$ sed '/^AA/s/$/YES/;t;s/$/NO/' urlfile
+AAYES
+BCNO
+AAYES
+CBNO
+CCNO
+AAYES
+
+
+文本如下：
+
+"张三",37559924,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,
+"里斯",37530215,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,
+"王五",37464466,78.19,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,
+"赵六",37490489,402.10,27000.00,0.00,157000.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,22750.00,
+如何在第二个字段后面批量追加日期？日期格式20100823
+如何把文本每行最后那个，去掉？
+处理后格式如下
+"张三",37559924,20100823,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+"里斯",37530215,20100823,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+"王五",37464466,20100823,78.19,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00
+"赵六",37490489,20100823,402.10,27000.00,0.00,157000.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,22750.00
+答案如下：
+sed 's/,/,20100823,/2;s/,$//'
+说明：
+s/,/,20100823,/2 将位置2的那个,用,20100823,代替
+s/,$//
+$ sed 's/,/|/2' urlfile将第二个都好用|代替
+"张三",37559924|0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,
+"里斯",37530215|0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,
+"王五",37464466|78.19,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,
+"赵六",37490489|402.10,27000.00,0.00,157000.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,22750.00,
+
+
+sed 's/../& /g'
+汉字一般是两个字符，所以..用&重复整个匹配的规则表达式
+sed 's/./&#/g' hanhan
+最#后#，#这#些#都#不#重#要#，#最#重#要#的#是#，#我#，#如#果#今#天#能#为#唐#福#珍#和#谢#朝#平#而#游#行#，#那#么#明#天#我#就#一#定#会#为#钓#鱼#岛#和#奥#运#火#炬#而#游#行#。#但#这#又#是#一#个#悖#论#，#往#往#你#能#够#为#唐#福#珍#谢#朝#平#游#行#的#时#候#，#你#往#往#就#不#会#有#钓#鱼#岛#奥#运#火#炬#之#类#的#事#，#而#且#更#不#会#有#唐#福#珍#谢#朝#平#之#类#的#事#出#现#。#一#个#对#内#不#能#和#平#游#行#的#民#族#，#他#的#对#外#任#何#游#行#是#完#全#没#有#价#值#的#，#那#只#是#一#场#集#体#舞#。#
+
+统计大小 不统计home目录
+du -sh `ll|awk '{print$NF}'|sed '/^home/d'`
+
+
+
+
+
+来看下面一组
+lxu@lxu-laptop:/home/date$ file 3.txt
+3.txt: ASCII text
+lxu@lxu-laptop:/home/date$ file 1.txt
+1.txt: ASCII text, with CRLF line terminators
+lxu@lxu-laptop:/home/date$ sed -n '/1$/p' 3.txt
+abc.com 1
+lxu@lxu-laptop:/home/date$ cat 3.txt
+abc.com 1
+dada.com 5
+da.com 5
