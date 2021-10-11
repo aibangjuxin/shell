@@ -1,0 +1,35 @@
+https://tldp.org/HOWTO/Bash-Prog-Intro-HOWTO-7.html
+
+
+
+
+https://stackoverflow.com/questions/13638670/adding-counter-in-shell-script
+https://www.tutorialspoint.com/unix/if-elif-statement.htm
+https://alvinalexander.com/linux-unix/linux-shell-script-counter-math-addition-loop/
+[d5145841@hkl20111021 script]$ cat count.sh
+counter=0
+while true; do
+  if [ -f /home/script ]
+  then
+       echo "Files Present"
+       exit 0
+  elif [[ "$counter" -gt 5 ]]; then
+       echo "Counter: $counter times reached; Exiting loop!"
+       exit 1
+  else
+       counter=$((counter+1))
+       echo "Counter: $counter time(s); Sleeping for another half an hour"
+       sleep 3
+  fi
+done
+#
+# a shell script loop/counter example
+# alvin alexander, http://alvinalexander.com
+#
+count=1
+while [ $count -lt 200 ]
+do
+  filename="node${count}.shtml"
+  echo "Redirect 301 /java/java_oo/${filename} http://www.devdaily.com/java/java_oo/"
+  count=`expr $count + 1`
+done
