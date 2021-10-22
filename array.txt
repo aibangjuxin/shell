@@ -56,3 +56,13 @@ read -ra : 分配给新的数组 fn
 5 将新的数组 fn 赋值给变量fn_name
 
 EOF
+
+for be in `grep -r "^type=be" $BACKUP_DIR/|awk -F":" '{print$1}'`;do
+    for ((i=0;i<${#be[@]};i++));do
+        echo "++++++++++++++++++"
+        echo "${be[$i]}"
+        org_name=`cat "${be[$i]}"|awk -F"=" '/org_name/{print$2}'`
+        code=`cat "${be[$i]}"|awk -F"=" '/code/{print$2}'`
+    done
+    echo "./a.sh -e $org_name -c $code "
+done
