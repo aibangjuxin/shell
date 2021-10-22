@@ -9,7 +9,7 @@ for i in ${!zone[*]};do
       fn_name=${fn[*]}
     #echo "The all of filename is $fn_name"
     for n in $fn_name;do
-        while [ "$n" == "private-devenv-gcp-cloud-hsbc" ]
+        while [ "$n" == "private-devenv-gcp-cloud-hhb" ]
         do
             echo "The zone name have exist,so you cant't create it"
             echo "$n"
@@ -44,7 +44,7 @@ echo "Determine whether the domain name exists"
     do
         zone_name=${zone_name_lists[i]}
         for n in $zone_name;do
-            while [ "$n" == "private-devenv-gcp-cloud-hsbc" ]
+            while [ "$n" == "private-devenv-gcp-cloud-hhb" ]
             do
                 echo "The zone name have exist,so you cant't create it"
                 echo "$n"
@@ -55,7 +55,7 @@ echo "Determine whether the domain name exists"
     done
 
 zone_name_lists=($(gcloud dns managed-zones list --format="value(name)"))
-old_name_lists=(private-devenv-gcp-cloud-hsbc env-private-access)
+old_name_lists=(private-devenv-gcp-cloud-hhb env-private-access)
 #echo zone_name_lists=${zone_name_lists[@]}
 #echo old_name_lists=${old_name_lists[@]}
 for i in ${zone_name_lists[@]};do
