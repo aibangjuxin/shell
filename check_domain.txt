@@ -1,0 +1,48 @@
+#!/bin/bash
+# define domain list
+domain_ip=/tmp/a.txt
+collect_ip=/tmp/b.txt
+# Specify DNS server
+dnsserver="119.29.29.29"
+# function to get IP address
+function get_ipaddr {
+  local hostname=$1
+  local query_type=A
+  ip_address=""
+    # use host command for DNS lookup operations
+    host -t ${query_type}  "${hostname}" &>/dev/null ${dnsserver}
+    if [ "$?" -eq "0" ]; then
+      # get ip address
+      ip_address="$(host -t ${query_type} "${hostname}" ${dnsserver}| awk '/has.*address/{print $NF; exit}')"
+    else
+        echo "############"
+    fi
+# display ip
+    echo "$ip_address"
+}
+
+true > $collect_ip
+#cat /home/lex/dns/a.txt| while IFS=" " read -r line;do domain_array+=("$line");done
+domain_array=($(awk '{print$1}' < $domain_ip))
+for ((i=0;i<${#domain_array[@]};i++))
+do
+    echo -e "\033[31m ${domain_array[$i]} \033[0m"
+    #echo ${domain_array[$i]}
+    get_ipaddr "${domain_array[$i]}"
+    echo "${domain_array[$i]}" "$(get_ipaddr "${domain_array[$i]}")" >> $collect_ip
+done
+if [ $? -eq 0 ]
+then
+     echo "generate record successfully"
+fi
+echo "now compare file"
+function checkfilesume() {
+    local_file_sum=$(md5sum $domain_ip|cut -d" " -f1)
+    gener_file_sum=$(md5sum $collect_ip|cut -d" " -f1)
+    if [ "$local_file_sum" == "$gener_file_sum" ];then
+        echo "checksum success"
+    else
+        echo "checksum failure"
+    fi
+}
+checkfilesume
