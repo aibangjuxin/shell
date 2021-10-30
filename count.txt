@@ -33,3 +33,31 @@ do
   echo "Redirect 301 /java/java_oo/${filename} http://www.devdaily.com/java/java_oo/"
   count=`expr $count + 1`
 done
+
+
+#!/bin/bash
+
+urls="
+https://www.baidu.com
+https://www.taobao.com
+https://www.jd.com/abc
+https://www.12306.cn/index/
+192.168.1.111
+"
+echo $urls
+
+for url in $urls;do
+    count=0
+    while [ $count -lt 3 ];do
+       STATUS=$(curl -I -m 10 -o /dev/null -s -w %{http_code} $url)
+
+       if [ $STATUS -eq 200 ];then
+          echo "$url  OK"
+          break 1
+       fi
+       count=$(($count+1))
+    done
+    if [ $count -eq 3 ];then
+       echo "$url Error"
+    fi
+done

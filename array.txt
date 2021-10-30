@@ -24,6 +24,14 @@ for i in ${!array[*]};do
     echo "The all of filename is $fn_name"
 done
 
+
+echo "#列出所有键值对"
+for key in "${!array[@]}"
+do
+    echo "${key} -> ${array[$key]}"
+done
+
+
 echo "////判断要找的某个文件在不在？//////////////"
 echo "${array[*]}"|grep rsync-onedrive.sh
 
