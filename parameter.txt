@@ -1,0 +1,51 @@
+
+#!/bin/bash
+echo "the script's name"
+echo $0
+echo "The parameter one"
+echo $1
+echo "The parameter two"
+echo $2
+echo "参数nums:$#"
+echo "*"$*
+echo "for M in $*"
+for M in $*
+do
+ echo $M
+done
+echo "@" $@
+
+echo "for M in $@"
+for M in $@
+do
+ echo $M
+done
+
+echo "传递参数作为1个字符串显示: $*"
+for M in "$*"
+do
+ echo $M
+done
+echo "传递参数分开显示:$@"
+for N in "$@"
+do
+ echo $N
+done
+echo "PID$$"
+/usr/bin/java -version
+echo $?
+
+$# 是传给脚本的参数个数
+$0 是脚本本身的名字
+$1是传递给该shell脚本的第一个参数
+$2是传递给该shell脚本的第二个参数
+$@ 是传给脚本的所有参数的列表
+$0 这个程式的执行名字
+$n 这个程式的第n个参数值，n=1..9
+$* 这个程式的所有参数,此选项参数可超过9个。
+$# 这个程式的参数个数
+$$ 这个程式的PID(脚本运行的当前进程ID号)
+$! 执行上一个背景指令的PID(后台运行的最后一个进程的进程ID号)
+$? 执行上一个指令的返回值 (显示最后命令的退出状态。0表示没有错误，其他任何值表明有错误)
+$- 显示shell使用的当前选项，与set命令功能相同
+$@ 跟$*类似，但是可以当作数组用
