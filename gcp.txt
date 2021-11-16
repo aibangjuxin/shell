@@ -1,33 +1,43 @@
+gcp.sh
+////////////////////////////////////////////////////////////////////////////////
 Your company has decided to make a major revision of their API in order to create better experiences for their developers. They need to keep the old version of the Apl available and deployable, while allowing new customers and testers to try out the new API. They want to keep the same SSL and DNS records in place to serve both APIS.
 What should they do?
-
-D Use separate backend pools for each API path behind the load balancer
-
-D.为负载平衡器后面的每个API路径使用单独的后端池
-
-
-
-Your company plans to migrate a multi-peta byte data set to the cloud. The data set must be available 24hrs a day. Your business analysts have experience only with using a SQL interface
+Use separate backend pools for each API path behind the load balancer
+贵公司已决定对其 API 进行重大修订，以便为其开发人员创造更好的体验。 他们需要保持旧版本的 Apl 可用和可部署，同时允许新客户和测试人员试用新 API。 他们希望保留相同的 SSL 和 DNS 记录来为这两个 APIS 提供服务。
+他们应该怎么做？
+为负载均衡器后面的每个 API 路径使用单独的后端池
+////////////////////////////////////////////////////////////////////////////////
+your company plans to migrate a multi-peta byte data set to the cloud. The data set must be available 24hrs a day. Your business analysts have experience only with using a SQL interface
 How should you store the data to optimize it for ease of analysis?
-您的公司计划将一个数PB的数据集迁移到云中。数据集必须每天24小时可用。您的业务分析师只有使用SQL接口的经验
-您应该如何存储数据以优化数据以便于分析？
-
 Correct Answer: A
 Bigquery is Google's serverless, highly scalable, low cost enterprise data warehouse designed to make all your data analysts productive
 Because there is no infrastructure to manage, you can focus on analyzing data to find meaningful insights using familiar SQL and you dont need a database administrator
 Bigquery enables you to analyze all your data by creating a logical data warehouse over managed, columnar storage as well as data from object storage, and spreadsheets.
 Reference:
 https://cloud.google.com/bigquery/
+利用内置机器学习技术的平台，安全且可伸缩，使更多的用户可以获取数据洞见
+通过灵活的多云分析解决方案，以存储在多种云环境内的数据推动业务决策
+大规模运行分析的三年期总拥有成本 (TCO) 比其他云数据仓库低 26%–34%
+从字节到拍字节，以任意规模调整适应您的数据， 不会增加运维开销
+您的公司计划将多 PB 的数据集迁移到云中。 数据集必须全天 24 小时可用。 您的业务分析师只有使用 SQL 接口的经验
+您应该如何存储数据以对其进行优化以便于分析？
 正确答案：A
-Bigquery是谷歌的无服务器、高度可扩展、低成本的企业数据仓库，旨在让您的所有数据分析师都高效工作
-因为没有可管理的基础设施，所以您可以使用熟悉的SQL专注于分析数据以找到有意义的见解，而不需要数据库管理员
-Bigquery使您能够通过在托管、列式存储以及对象存储和电子表格中创建逻辑数据仓库来分析所有数据。
+Bigquery 是 Google 的无服务器、高度可扩展、低成本的企业数据仓库，旨在提高所有数据分析师的工作效率
+由于没有要管理的基础架构，您可以专注于使用熟悉的 SQL 分析数据以找到有意义的见解，而且您不需要数据库管理员
+Bigquery 使您能够通过在托管的列式存储以及来自对象存储和电子表格的数据上创建逻辑数据仓库来分析所有数据。
 参考：
 https://cloud.google.com/bigquery/
-
-
-///////////////
-The operations manager asks you for a list of recommended practices 【实践】that she should consider when migrating a J2EE application to the cloud
+伸缩能力极强且经济实惠的无服务器多云数据仓库，提升您的业务敏捷性
+BigQuery ML
+借助 BigQuery ML，数据科学家和数据分析师可以直接在 BigQuery 内使用简单的 SQL，在极短时间内基于全球规模的结构化或半结构化数据构建机器学习模型，并将其付诸使用。将用于在线预测的 BigQuery ML 模型导出到 Vertex AI 或您自己的服务层。详细了解我们目前支持的模型。
+BigQuery Omni
+BigQuery Omni 是一种灵活的全代管式多云分析解决方案， 可让您跨多种云环境（例如 AWS 和 Azure）经济高效 而又安全地分析数据。您可以使用标准 SQL 和您熟悉的 BigQuery 界面，通过涵盖您的各种数据集的单一管理平台迅速解答问题并分享结果。10 月底发布。
+BigQuery BI Engine
+BigQuery BI Engine 是内置于 BigQuery 中的内存中分析服务，允许用户以互动方式分析大型复杂数据集，具备亚秒级查询响应时间，并且支持高并发操作。BI Engine 天然与 Google 的数据洞察集成，另外通过 ODBC/JDBC 与 Looker、关联工作表及我们所有的商业智能合作伙伴解决方案相集成（目前处于预览阶段）。了解详情并注册 BI Engine 的预览版。
+BigQuery GIS
+BigQuery GIS 独一无二地兼具 BigQuery 的无服务器架构和对地理空间分析的原生支持，您可以使用位置信息来增强分析工作流程。BigQuery GIS 支持采用常见地理空间数据格式的任意点、线、多边形和多重多边形，可帮助您简化分析，以全新方式查看空间数据，以及发掘全新的业务线。
+////////////////////////////////////////////////////////////////////////////////
+The operations manager asks you for a list of recommended practices that she should consider when migrating a J2EE application to the cloud
 Which three practices should you recommend? (Choose three
 A Port the application code to run on Google App Engine
 B Integrate Cloud Dataflow into the application to capture real-time metrics
@@ -37,61 +47,57 @@ E Deploy a continuous integration tool with automated testing in a staging envir
 F Migrate from MYSQL to a managed NOSQL database like Google Cloud Datastore or Bigtable
 Correct Answer: ADE
 References:
-https://cloud.google.com/appengine/docs/standard/java/tools/uploadinganapp https://cloud.google.com/appengine/docs/standard/java/building-app/cloud-sqi
-
-
-操作管理器要求您在将J2EE应用程序迁移到云时应考虑的推荐实践列表。
-你应该推荐哪三种做法？（选择三个
-A 要在Google App Engine上运行的应用程序代码的端口
-#B将云数据流集成到应用程序中，以捕获实时指标
-#C使用Stackdriver Debugger之类的监视工具为应用程序插入仪器
-D.选择一个自动化框架来可靠地提供云基础设施
-E部署一个连续集成工具，在临时环境中进行自动化测试
-F从MYSQL迁移到托管的NOSQL数据库，如Google Cloud Datastore或Bigtable
+https://cloud.google.com/appengine/docs/standard/java/tools/uploadinganapp https://cloud.google.com/appengine/docs/standard/java/building-app/cloud-sql
+运营经理要求您提供一份她在将 J2EE 应用程序迁移到云时应考虑的推荐实践列表
+您应该推荐哪三种做法？ （选择三个
+A 移植应用程序代码以在 Google App Engine 上运行
+B 将 Cloud Dataflow 集成到应用程序中以捕获实时指标
+C 使用 Stackdriver Debugger 等监控工具检测应用程序
+D. 选择一个自动化框架来可靠地供应云基础设施
+E 在临时环境中部署具有自动化测试的持续集成工具
+F 从 MYSQL 迁移到托管的 NOSQL 数据库，如 Google Cloud Datastore 或 Bigtable
 正确答案：ADE
-参考资料：
-https://cloud.google.com/appengine/docs/standard/java/tools/uploadinganapp https://cloud.google.com/appengine/docs/standard/java/building-app/cloud-sqi
-
-
-
-
+参考：
+https://cloud.google.com/appengine/docs/standard/java/tools/uploadinganapp https://cloud.google.com/appengine/docs/standard/java/building-app/cloud-sql
+////////////////////////////////////////////////////////////////////////////////
 A news feed web service has the following code running on Google App Engine. During peak load, users report that they can see news articles they already viewed.
 What is the most likely cause of this problem?
-新闻提要web服务在Google App Engine上运行以下代码。在峰值负载期间，用户报告他们可以看到他们已经看过的新闻文章。
-这个问题最可能的原因是什么？
-
 A. The session variable is local to just a single instance
-会话变量 仅对单个实例
-
+新闻提要 Web 服务具有在 Google App Engine 上运行的以下代码。 在高峰负载期间，用户报告说他们可以看到他们已经看过的新闻文章。
+这个问题最可能的原因是什么？
+A. session 变量对于单个实例是本地的
+////////////////////////////////////////////////////////////////////////////////
 An application development team believes their current logging tool will not meet their needs for their new cloud-based product. They want a better tool to capture errors and help them analyze their historical log data. You want to help them find a solution that meets their needs
 What should you do?
-一个应用程序开发团队认为，他们目前的日志记录工具无法满足他们对基于云的新产品的需求。他们需要一个更好的工具来捕获错误并帮助他们分析历史日志数据。您希望帮助他们找到满足其需求的解决方案
-你该怎么办？
 A Direct them to download and install the Google Stackdriver logging agent
-A指导他们下载并安装Google Stackdriver日志代理
-
-/////////////////////////////////////////////////
+一个应用程序开发团队认为他们当前的日志工具无法满足他们对基于云的新产品的需求。 他们想要一个更好的工具来捕获错误并帮助他们分析历史日志数据。 您想帮助他们找到满足他们需求的解决方案
+你该怎么办？
+A 指导他们下载并安装 Google Stackdriver 日志代理
+指导他们下载并安装 Google Stackdriver 日志代理
+////////////////////////////////////////////////////////////////////////////////
 You need to reduce the number of unplanned rollbacks of erroneous production deployments in your companye"s web hosting platform. improvement to the QA/
 Test processes accomplished an 80% reduction
 Which additional two approaches can you take to further reduce the rollbacks?(Choose two)
-您需要减少公司web托管平台中错误生产部署的计划外回滚次数。对QA的改进/
-测试过程实现了80%的减少
-您还可以采取哪两种方法来进一步减少回滚？（选择两种）
+////////////////////////////////////////////////////////////////////////////////
+You need to reduce the number of unplanned rollbacks of erroneous production deployments in your companye"s web hosting platform. improvement to the QA/
+Test processes accomplished an 80% reduction
+Which additional two approaches can you take to further reduce the rollbacks?(Choose two)
 A C
-
 A Introduce a green-blue deployment model
 B. Replace the QA environment with canary releases
 C Fragment the monolithic platform into microservices
 D Reduce the platform E s dependency on relational database systems
 E. Replace the platforma s relational database systems with a NOSQL database
-A.介绍一种绿-蓝部署模型
-B.用金丝雀版本替换QA环境
-C将单片平台分割成微服务
-D减少平台E对关系数据库系统的依赖
-E.将platforma的关系数据库系统替换为NOSQL数据库
-/////////////////////////////////////////////////
-To reduce costs, the Director of Engineering as quied all deve oers o move their development infrastructure resources from on-premises virtual machines
-(VMS)to Google Cloud Platform. These resources go through multiple start/stop events during the day and require state to persist. You have been asked to design the process of running a development environment in Google Cloud while providing cost visibility to the finance department.
+您需要减少公司网络托管平台中错误生产部署的计划外回滚次数。改进 QA/
+测试流程减少了 80%
+您还可以采取哪两种方法来进一步减少回滚？（选择两项）
+A 引入绿蓝部署模式
+B. 用金丝雀版本替换 QA 环境
+C 将单体平台拆分为微服务
+D 减少平台 E 对关系数据库系统的依赖
+E. 将平台关系数据库系统替换为 NOSQL 数据库
+////////////////////////////////////////////////////////////////////////////////
+To reduce costs, the Director of Engineering as quied all deveops move their development infrastructure resources from on-premises virtual machines (VMS)to Google Cloud Platform. These resources go through multiple start/stop events during the day and require state to persist. You have been asked to design the process of running a development environment in Google Cloud while providing cost visibility to the finance department.
 Which two steps should you take?(Choose two)
 A. Use the--no-auto-delete flag on all persistent disks and stop the VM
 B Use the--auto-delete flag on all persistent disks and terminate the VM
@@ -99,49 +105,49 @@ C Apply VM CPU utilization label and include it in the Bigquery billing export
 D. Use Google Bigquery billing export and labels to associate cost to groups
 E. Store all state into local SSD, snapshot the persistent disks, and terminate the VM
 F. Store all state in Google Cloud Storage, snapshot the persistent disks, and terminate the VM
-
 C E
-为了降低成本，工程总监要求所有开发人员将其开发基础设施资源从本地虚拟机转移（VMS）到谷歌云平台。这些资源在一天中经历多个启动/停止事件，并且需要状态保持。您被要求设计在谷歌云中运行开发环境的流程，同时向财务部门提供成本可见性。
-你应该采取哪两个步骤？（选择两个）
-A.在所有持久磁盘上使用--no auto delete标志并停止VM
-B在所有持久磁盘上使用--auto delete标志并终止VM
-C应用VM CPU利用率标签并将其包含在Bigquery计费导出中
-D.使用Google Bigquery账单导出和标签将成本与组关联
-E.将所有状态存储到本地SSD，快照持久磁盘，并终止VM
-F.将所有状态存储在Google云存储中，快照持久磁盘，并终止VM
-
-
-////////////////////////////////////
+这个需求应该是需要保留数据的，所以选择了E 另外需要给财务报表的，所以选择了C
+为了降低成本，工程总监要求所有开发人员将他们的开发基础架构资源从本地虚拟机 (VMS) 转移到 Google Cloud Platform。 这些资源在白天经历多个启动/停止事件，并且需要状态保持。 您被要求设计在 GCP 中运行开发环境的流程，同时向财务部门提供成本可见性。
+你应该采取哪两个步骤？（选择两项）
+A. 在所有永久性磁盘上使用 --no-auto-delete 标志并停止 VM
+B. 在所有永久性磁盘上使用 --auto-delete 标志并终止 VM
+C. 应用虚拟机 CPU 利用率标签并将其包含在 Bigquery 计费导出中
+D. 使用 Google Bigquery 帐单导出和标签将费用与组相关联
+E. 将所有状态存储到本地 SSD，快照永久磁盘，并终止 VM
+F. 将所有状态存储在 Google Cloud Storage 中，对永久性磁盘进行快照，并终止 VM
+////////////////////////////////////////////////////////////////////////////////
 Your company wants to track whether someone is present in a meeting room reserved for a scheduled meeting. There are 1000 meeting rooms across 5 offices on 3 continents. Each room is equipped with a motion sensor that reports its status every second. The data from the motion detector includes only a sensor ID and several different discete items of information Analysts will use this data, together with information about account owners and office locations
 Which database type should you use?
 A. Flat file
-B NOSQL
-C Relational
+B. NOSQL
+C. Relational
 D. Blobstore
-
-答案是B
-
-您的公司希望跟踪预定会议的会议室中是否有人出席。在三大洲的5个办公室中有1000个会议室。每个房间都配备了一个运动传感器，可以每秒报告其状态。来自运动检测器的数据仅包括一个传感器ID和几个不同的信息项，分析师将使用这些数据以及有关帐户所有者和办公室位置的信息
+选择B
+您的公司想要跟踪是否有人出现在为预定会议预留的会议室。 在 3 大洲设有 5 个办事处，共有 1000 间会议室。 每个房间都配备了一个运动传感器，每秒报告其状态。 来自运动检测器的数据仅包括一个传感器 ID 和几个不同的信息项，分析师将使用这些数据，以及有关帐户所有者和办公地点的信息
 您应该使用哪种数据库类型？
-A.平锉
+A.平面文件
 B NOSQL
-C关系型
-D 布卢斯托
-
+C 关系型
+D. Blobstore
 Correct Answer: B
 Relational databases were not designed to cope with the scale and agility challenges that face modern applications, nor were they built to take advantage of the commodity storage and processing power available today NOSQL fits well for
-
 E Developers are working with applications that create massive volumes of new, rapidly changing data types structured, semi-structured, unstructured and polymorphic data
 Incorrect Answers.
 D: The Blobstore API allows your application to serve data objects, called blobs, that are much larger than the size allowed for objects in the
-
 Datastore service
 Blobs are useful for serving large files, such as video or image files, and for allowing users to upload large data files.
 Reference:
 https://www.mongodb.com/nosq-explained
-
+正确答案：B
+关系数据库不是为了应对现代应用程序面临的【规模和敏捷性】挑战而设计的，也不是为了利用当今可用的商品存储和处理能力，NOSQL 非常适合
+E 开发人员正在使用创建大量新的、快速变化的数据类型结构化、半结构化、非结构化和多态数据的应用程序
+不正确的答案。
+D：Blobstore API 允许您的应用程序提供数据对象，称为 blob，这些对象的大小远大于
+数据存储服务
+Blob 可用于提供大文件（例如视频或图像文件）以及允许用户上传大数据文件。
+参考：
+https://www.mongodb.com/nosq-explained
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 You set up an autoscaling instance group to serve web traffic for an upcoming launch. After configuring the instance group as a backend service to an Http(s)load balancer you notice that virtual machine(vm)instances are being terminated and re-launched every minute The instances do not have a public IP address
 You have verified the appropriate web response is coming from each instance using the curl command You want to ensure the backend is configured correctly
 What should you do?
@@ -153,21 +159,22 @@ Correct Answer: C
 The best practice when configuration a health check is to check health and serve traffic on the same port. However, it is possible to perform health checks on one port, but serve traffic on another. If you do use two different ports, ensure that firewall rules and services running on instances are configured appropriately. If you run health checks and serve traffic on the same port, but decide to switch ports at some point, be sure to update both the backend service and the health check
 Backend services that do not have a valid global forwarding rule referencing it will not be health checked and will have no health status
 Reference
-https://cloud.googlecom/compute/docs/load-balancing/http:/backend-service
-
-您设置了一个自动缩放实例组，以便为即将到来的发布提供web流量服务。将实例组配置为Http（s）负载平衡器的后端服务后，您会注意到每分钟都会终止并重新启动虚拟机（vm）实例，这些实例没有公共IP地址
-您已经使用curl命令验证了来自每个实例的相应web响应，以确保后端配置正确
+https://cloud.google.com/load-balancing/docs/backend-service
+////////////////////////////////////////////////// ////////////////////////////////////////////////// ////////
+您设置了一个自动缩放实例组来为即将推出的网络流量提供服务。将实例组配置为 Http(s) 负载均衡器的后端服务后，您会注意到虚拟机 (vm) 实例每分钟都会终止并重新启动 实例没有公共 IP 地址
+您已经使用 curl 命令验证了来自每个实例的适当 Web 响应 您想确保后端配置正确
 你该怎么办？
-A.确保防火墙规则发布程序允许源TrafficonHttp/Http存储负载平衡器
-B为每个实例分配一个公共IP，并配置防火墙规则以允许负载平衡器访问实例公共IP
-C.确保存在防火墙规则，以允许负载平衡器运行状况检查到达实例组中的实例
-D.在每个实例上创建一个带有负载平衡器名称的标记。配置防火墙规则，将负载平衡器的名称作为源，实例标记作为目标
+A.确保存在防火墙规则以允许 HTTP/HTTPS 上的源流量到达负载均衡器
+B 为每个实例分配一个公网P，并配置防火墙规则，允许负载均衡器访问实例公网IP
+C. 确保存在防火墙规则以允许负载均衡器健康检查到达实例组中的实例
+D. 使用负载均衡器的名称在每个实例上创建一个标签。配置以负载均衡器名称为源，实例标签为目标的防火墙规则
 正确答案：C
-配置运行状况检查时的最佳实践是检查运行状况并在同一端口上提供流量服务。但是，可以在一个端口上执行运行状况检查，但在另一个端口上为流量提供服务。如果您使用两个不同的端口，请确保适当配置了实例上运行的防火墙规则和服务。如果在同一端口上运行运行状况检查并提供通信，但决定在某个点切换端口，请确保同时更新后端服务和运行状况检查
-没有引用它的有效全局转发规则的后端服务将不会进行运行状况检查，并且没有运行状况状态
+配置运行状况检查的最佳做法是检查运行状况并在同一端口上提供流量。但是，可以在一个端口上执行健康检查，但在另一个端口上提供流量。如果您确实使用了两个不同的端口，请确保正确配置了在实例上运行的防火墙规则和服务。如果您运行健康检查并在同一端口上提供流量，但决定在某个时候切换端口，请确保同时更新后端服务和健康检查
+没有引用它的有效全局转发规则的后端服务将不会进行健康检查并且没有健康状态
 参考
-https://cloud.googlecom/compute/docs/load-balancing/http:/backend-服务
-
+https://cloud.google.com/load-balancing/docs/backend-service
+后端服务定义了 Cloud Load Balancing 如何分配流量。后端服务配置包含一组值，例如用于连接到后端的协议、各种分发和会话设置、运行状况检查和超时。这些设置可对负载平衡器的行为进行精细控制。如果需要快速开始，大多数设置都具有允许轻松配置的默认值
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 You write a Python script to connect to Google Bigquery from a Google Compute Engine virtual machine. The script is printing errors that it cannot connect to
 Bigquery
@@ -177,54 +184,44 @@ B. Run your script on a new virtual machine with the Bigquery access scope enabl
 C. Create a new service account with Bigquery access and execute your script with that user
 D. Install the bg component for cloud with the command cloud components install bq
 Correct Answer: C
-
-您可以编写一个Python脚本，从Google计算引擎虚拟机连接到Google Bigquery。脚本正在打印无法连接到的错误
+您编写了一个 Python 脚本来从 Google Compute Engine 虚拟机连接到 Google Bigquery。 该脚本正在打印无法连接到的错误
 大查询
-您应该如何修复脚本？
-A.为Python安装最新的Bigquery Apl客户端库
-B.在启用Bigquery访问范围的新虚拟机上运行脚本
-C.创建一个具有Bigquery访问权限的新服务帐户，并与该用户一起执行脚本
-D.使用命令cloudcomponents Install bq为cloud安装bg组件
+你应该怎么做来修复脚本？
+A. 为 Python 安装最新的 Bigquery Apl 客户端库
+B. 在启用 Bigquery 访问范围的新虚拟机上运行您的脚本
+C. 创建一个具有 Bigquery 访问权限的新服务帐户并使用该用户执行您的脚本
+D. 使用命令 cloud components install bq 为 cloud 安装 bg 组件
 正确答案：C
+https://cloud.google.com/bigquery
+伸缩能力极强且经济实惠的无服务器多云数据仓库，提升您的业务敏捷性
+利用内置机器学习技术的平台，安全且可伸缩，使更多的用户可以获取数据洞见
+通过灵活的多云分析解决方案，以存储在多种云环境内的数据推动业务决策
+大规模运行分析的三年期总拥有成本 (TCO) 比其他云数据仓库低 26%–34%
+从字节到拍字节，以任意规模调整适应您的数据， 不会增加运维开销
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Your customer is moving an existing corporate application to Google Cloud Platform from an on-premises data center. The business owners require minimal user disruption【中断】. There are strict security team requirements for storing passwords
+Your customer is moving an existing corporate application to Google Cloud Platform from an on-premises data center. The business owners require minimal user disruption. There are strict security team requirements for storing passwords
 What authentication strategy should they use?
 A. Use G Suite Password Sync to replicate passwords into Google
-B Federate authentication via SAML 2.0 to the existing Identity Provider
+B. Federate authentication via SAML 2.0 to the existing Identity Provider
 C. Provision users in Google using the Google Cloud Directory Sync tool
 D. Ask users to set their Google password to match their corporate password
 Correct Answer: C
-您的客户正在将现有的企业应用程序从本地数据中心移动到Google云平台。企业主要求用户中断最小。安全团队对存储密码有严格的要求
+您的客户正在将现有的企业应用从本地数据中心迁移到 Google Cloud Platform。 企业主需要最小的用户干扰。 对存储密码有严格的安全团队要求
 他们应该使用什么身份验证策略？
-A.使用G套件密码同步将密码复制到Google中
-B通过SAML 2.0对现有身份提供程序进行联邦成员身份验证
-C.使用Google云目录同步工具在Google中配置用户
-D 要求用户设置他们的谷歌密码以匹配他们的公司密码
+A. 使用 G Suite Password Sync 将密码复制到 Google
+B. 通过 SAML 2.0 对现有身份提供者进行联合身份验证
+C. 使用 Google Cloud Directory Sync 工具在 Google 中配置用户 【GCDS】
+D. 要求用户设置他们的 Google 密码以匹配他们的公司密码
 正确答案：C
-
-Provision users to Google's directory
-The global Directory is available to both loud Platform and G Suite resources and can be provisioned by a number of means. Provisioned users can take advantage of rich authentication features including single sign-on(SS), Auth, and two-factor verification
-You can provision users automatically using one of the following tools and services
-Google Cloud Directory Sync(GCDS)
-Google Admin SDK
-A third-party connector
-GCDS is a connector that can provision users and groups on your behalf for both Cloud Platform and G Suite. Using GCDS, you can automate the addition, modification, and deletion of users, groups, and non-employee contacts. You can synchronize the data from your LDAP directory server to your Cloud Platform domain by using LDAP queries. This synchronization is one-way: the data in your LDAP directory server is never modified
-Reference
-https:/cloud.google.com/docs/enterprise/best-practices-for-enterprise-organizationsauthentication-and-identity
-将用户设置到Google的目录
-loud Platform和G Suite资源都可以使用全局目录，并且可以通过多种方式进行配置。配置的用户可以利用丰富的身份验证功能，包括单点登录（SS）、身份验证和双因素验证
-您可以使用以下工具和服务之一自动调配用户
-谷歌云目录同步（GCDS）
-谷歌管理SDK
-第三方连接器
-GCDS是一个连接器，可以代表您为云平台和G套件提供用户和组。使用GCD，您可以自动添加、修改和删除用户、组和非员工联系人。您可以使用LDAP查询将数据从LDAP目录服务器同步到云平台域。这种同步是单向的：LDAP目录服务器中的数据永远不会被修改
-参考
-https:/cloud.google.com/docs/enterprise/best-practices-for-enterprise-organizationsauthentication-and-identity
-
-//////////
-Your company has successfully migrated to the cloud and wants to analyze their data stream to optimize operations. They do not have any existing code for this analysis, so they are exploring all their options. These options include a mix of batch and stream processing, as they are running some hourly jobs and live- processing some data as it comes in
-Which technology should they use for this?
-A Google Cloud Dataproc
+https://cloud.google.com/docs/enterprise/best-practices-for-enterprise-organizations
+About Google Cloud Directory Sync
+With Google Cloud Directory Sync (GCDS), you can synchronize the data in your Google Account with your Microsoft Active Directory or LDAP server.
+ GCDS doesn't migrate any content (such as email messages, calendar events, or files) to your Google Account. You use GCDS to synchronize your Google users, groups, and shared contacts to match the information in your LDAP server.
+关于 Google Cloud Directory Sync
+使用 Google Cloud Directory Sync (GCDS)，您可以将 Google 帐户中的数据与 Microsoft Active Directory 或 LDAP 服务器同步。 GCDS 不会将任何内容（例如电子邮件、日历活动或文件）迁移到您的 Google 帐户。您可以使用 GCDS 同步您的 Google 用户、群组和共享联系人，以匹配 LDAP 服务器中的信息。
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Your company has successfully migrated to the cloud and wants to analyze their data stream to optimize operations. They do not have any existing code for this analysis, so they are exploring all their options. These options include a mix of batch and stream processing, as they are running some hourly jobs and live- processing some data as it comes in Which technology should they use for this?
+A. Google Cloud Dataproc
 B. Google Cloud Dataflow
 C. Google Container Engine with Bigtable
 Google Compute Engine with Google Bigquery
@@ -232,120 +229,123 @@ Correct Answer: B
 Cloud Dataflow is a fully-managed service for transforming and enriching data in stream(real time)and batch(historical)modes with equal reliability and expressiveness-no more complex workarounds or compromises needed
 Reference:
 https://cloud.google.com/dataflow/
-
-您的公司已成功迁移到云，并希望分析其数据流以优化运营。他们没有任何用于此分析的现有代码，因此他们正在探索所有选项。这些选项包括批处理和流处理的混合，因为它们每小时运行一次作业，并实时处理一些数据
-他们应该使用哪种技术？
-A.谷歌云数据处理
-B.谷歌云数据流
-C.带有Bigtable的Google容器引擎
-使用Google Bigquery的Google计算引擎
+您的公司已成功迁移到云，并希望分析其数据流以优化运营。 他们没有用于此分析的任何现有代码，因此他们正在探索所有选项。 这些选项包括批处理和流处理的混合，因为它们正在运行一些每小时的作业并实时处理一些数据，他们应该为此使用哪种技术？
+A. Google Cloud Dataproc
+B. 谷歌云数据流
+C. 带有 Bigtable 的 Google 容器引擎
+谷歌计算引擎与谷歌 Bigquery
 正确答案：B
-云数据流是一种完全管理的服务，用于以流（实时）和批（历史）模式转换和丰富数据，具有同等的可靠性和表达能力，无需更复杂的解决方法或妥协
+Cloud Dataflow 是一项完全托管的服务，用于以流（实时）和批处理（历史）模式转换和丰富数据，具有同等的可靠性和表现力——无需更复杂的变通方法或妥协
 参考：
 https://cloud.google.com/dataflow/
-
-2
-Your customer is receiving reports that their recently updated Google App Engine application is taking approximately 30 seconds to load for some of their users
+无服务器、快速且经济高效的统一流式数据处理和批量数据处理
+全代管式数据处理服务
+自动预配和管理处理资源
+横向自动扩缩工作器资源以最大化资源利用率
+使用 Apache Beam SDK 实现 OSS 社区驱动的创新
+可靠且一致的一次性处理
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Your customer is receiving reports that their [recently updated Google App Engine application] is taking approximately 30 seconds to load for some of their users
 This behavior was not reported before the update.
 What strategy should you take?
-A Work with your ISP to diagnose the problem
+A. Work with your ISP to diagnose the problem
 B. Open a support ticket to ask for network capture and flow data to diagnose the problem, then roll back your application
-C Roll back to an earlier known good release initially, then use Stackdriver Trace and Logging to diagnose the problem in a development/test/staging environment
-D. Roll back to an earlier known good release, then push the release again at a quieter period to investigate. Then use Stackdriver Trace and
-Logging to diagnose the problem
+C. Roll back to an earlier known good release initially, then use Stackdriver Trace and Logging to diagnose the problem in a development/test/staging environment
+D. Roll back to an earlier known good release, then push the release again at a quieter period to investigate. Then use Stackdriver Trace and Logging to diagnose the problem
 Correct Answer: C
 Stackdriver Logging allows you to store, search, analyze, monitor, and alert on log data and events from Google Cloud Platform and Amazon
-Web Services
-(AWS). Our Apl also allows ingestion of any custom log data from any source. Stackdriver Logging is a fully managed service that performs at scale and can ingest application and system og data from thousands of VMS. Even better, you can analyze all that log data in real time.
+Web Services (AWS). Our Apl also allows ingestion of any custom log data from any source. Stackdriver Logging is a fully managed service that performs at scale and can ingest application and system og data from thousands of VMS. Even better, you can analyze all that log data in real time.
 Reference:
 https://cloud.google.com/logging/
-
-您的客户收到报告称，他们最近更新的Google App Engine应用程序需要大约30秒才能为部分用户加载
-更新之前未报告此行为。
+您的客户收到报告称，他们最近更新的 Google App Engine 应用程序需要大约 30 秒才能为部分用户加载
+更新前未报告此行为。
 你应该采取什么策略？
-与ISP合作诊断问题
-B.打开支持票证，请求网络捕获和流数据以诊断问题，然后回滚应用程序
-C最初回滚到一个已知的良好版本，然后使用Stackdriver跟踪和日志记录来诊断开发/测试/登台环境中的问题
-D.回滚到较早的已知良好版本，然后在较安静的时间再次推动该版本进行调查。然后使用Stackdriver跟踪和
-记录日志以诊断问题
+A 与您的 ISP 合作诊断问题
+B. 开一张支持票，要求网络捕获和流量数据来诊断问题，然后回滚你的应用程序
+C. 最初回滚到早期已知的良好版本，然后使用 Stackdriver Trace and Logging 诊断开发/测试/暂存环境中的问题
+D. 回滚到较早的已知良好版本，然后在较安静的时期再次推送该版本以进行调查。然后使用 Stackdriver Trace and Logging 来诊断问题
 正确答案：C
-Stackdriver日志允许您存储、搜索、分析、监视和提醒来自Google云平台和Amazon的日志数据和事件
-网络服务
-（美国焊接学会）。我们的Apl还允许从任何来源摄取任何自定义日志数据。Stackdriver日志记录是一种完全受管理的服务，可大规模执行，并可从数千个虚拟机接收应用程序和系统og数据。更好的是，您可以实时分析所有日志数据。
+Stackdriver Logging 允许您存储、搜索、分析、监控来自 Google Cloud Platform 和 Amazon 的日志数据和事件并发出警报
+网络服务 (AWS)。我们的 Apl 还允许从任何来源摄取任何自定义日志数据。 Stackdriver Logging 是一项完全托管的服务，可大规模执行并可以从数千个 VMS 中提取应用程序和系统日志数据。更好的是，您可以实时分析所有日志数据。
 参考：
 https://cloud.google.com/logging/
-
-
-
-////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
 A production database virtual machine on Google Compute Engine has an ext4-formatted persistent disk for data files. The database is about to run out of storage space
 How can you remediate the problem with the least amount of downtime?
-A In the Cloud Platform Console, increase the size of the persistent disk and use the resize2fs command in Linux
-B Shut down the virtual machine, use the Cloud Platform Console to increase the persistent disk size, then restart the virtual machine
-C In the Cloud Platform Console, increase the size of the persistent disk and verify the new space is ready to use with the fdisk command in
-Linux
-D In the Cloud Platform Console, create a new persistent disk attached to the virtual machine, format and mount it, and configure the database service to move the files to the new disk
-E In the Cloud Platform Console, create a snapshot of the persistent disk restore the snapshot to a new larger disk, unmount the old disk, mount the new disk and restart the database service
+A. In the Cloud Platform Console, increase the size of the persistent disk and use the resize2fs commandin Linux
+B. Shut down the virtual machine, use the Cloud Platform Console to increase the persistent disk size, then restart the virtual machine
+C. In the Cloud Platform Console, increase the size of the persistent disk and verify the new space is ready to use with the fdisk commandin Linux
+D. In the Cloud Platform Console, create a new persistent disk attached to the virtual machine, format and mount it, and configure the database service to move the files to the new disk
+E. In the Cloud Platform Console, create a snapshot of the persistent disk restore the snapshot to a new larger disk, unmount the old disk, mount the new disk and restart the database service
 Correct Answer: A
-On Linux instances, connect to your instance and manually resize your partitions and file systems to use the additional disk space that you added
-Extend the file system on the disk or the partition to use the added space. If you grew a partition on your disk, specify the partition. If your disk does not have a partition table, specify only the disk ID sudo resize/dev/DISK_ID PARTITION_.NUMBER where [DISK_ID is the device name and PARTITION_NUMBER) is the partition number for the device where you are resizing the file system
+On Linux instances, connect to your instance and manually resize your partitions and file systems to use the additional disk space that you added Extend the file system on the disk or the partition to use the added space. If you grew a partition on your disk, specify the partition. If your disk does not have a partition table, specify only the disk ID sudo resize/dev/DISK_ID PARTITION_.NUMBER where [DISK_ID is the device name and PARTITION_NUMBER) is the partition number for the device where you are resizing the file system
 Reference:
 https://cloud.google.com/compute/docs/disks/add-persistent-disk
-
-
-Google Compute Engine上的生产数据库虚拟机有一个ext4格式的数据文件持久磁盘。数据库的存储空间即将用完
-如何以最少的停机时间解决问题？
-A在云平台控制台中，增加永久磁盘的大小，并在Linux中使用resize2fs命令
-B关闭虚拟机，使用云平台控制台增加持久磁盘大小，然后重新启动虚拟机
-C在云平台控制台中，增加永久磁盘的大小，并验证新空间是否可以与中的fdisk命令一起使用
-Linux
-D在云平台控制台中，创建一个连接到虚拟机的新永久磁盘，格式化并装载它，并配置数据库服务以将文件移动到新磁盘
-E在云平台控制台中，创建持久磁盘的快照，将快照恢复到新的较大磁盘，卸载旧磁盘，装载新磁盘，并重新启动数据库服务
+Google Compute Engine 上的生产数据库虚拟机具有用于数据文件的 ext4 格式的永久磁盘。数据库即将耗尽存储空间
+您如何以最少的停机时间修复问题？
+A.在云平台控制台，增加永久磁盘的大小，在Linux中使用resize2fs命令
+B. 关闭虚拟机，使用云平台控制台增加永久磁盘大小，然后重启虚拟机
+C. 在 Cloud Platform Console 中，增加永久磁盘的大小并在 Linux 中使用 fdisk 命令验证新空间是否可以使用
+D. 在云平台控制台中，新建一个附加到虚拟机的永久磁盘，格式化并挂载它，并配置数据库服务将文件移动到新磁盘
+E.在云平台控制台中，创建持久磁盘的快照将快照恢复到新的更大的磁盘，卸载旧磁盘，装载新磁盘并重新启动数据库服务
 正确答案：A
-在Linux实例上，连接到实例并手动调整分区和文件系统的大小，以使用添加的额外磁盘空间
-扩展磁盘或分区上的文件系统以使用添加的空间。如果在磁盘上增加了分区，请指定该分区。如果您的磁盘没有分区表，请仅指定磁盘ID sudo resize/dev/disk_ID partition_.NUMBER，其中[disk_ID是设备名称，partition_NUMBER]是调整文件系统大小的设备的分区号
+在 Linux 实例上，连接到您的实例并手动调整分区和文件系统的大小以使用您添加的额外磁盘空间扩展磁盘或分区上的文件系统以使用添加的空间。如果您在磁盘上增加了一个分区，请指定该分区。如果您的磁盘没有分区表，请仅指定磁盘 ID sudo resize/dev/DISK_ID PARTITION_.NUMBER 其中 [DISK_ID 是设备名称，PARTITION_NUMBER) 是您要调整文件系统大小的设备的分区号
 参考：
 https://cloud.google.com/compute/docs/disks/add-persistent-disk
-////////////////////////////////////////////////////////////////////////
-
+创建和挂接磁盘
+您可以创建空白的永久性磁盘，也可以从数据源创建磁盘。您可以将永久性磁盘用作虚拟机实例的启动磁盘，也可以用作挂接到虚拟机的数据磁盘。本文档介绍如何完成以下任务：
+创建空白的非启动可用区永久性磁盘，并将其挂接到虚拟机实例。
+格式化并装载磁盘，因为它最初没有任何数据或文件系统。
+如需大致了解永久性磁盘以及可用磁盘类型，请参阅永久性磁盘概览
+使用 gcloud compute disks create 命令创建可用区永久性磁盘。
+gcloud compute disks create DISK_NAME \
+  --size DISK_SIZE \
+  --type DISK_TYPE
+请替换以下内容：
+DISK_NAME：新磁盘的名称。
+DISK_SIZE：新磁盘的大小（以 GB 为单位）。可接受的大小范围介于 10 GB 到 65536 GB（含边界值）之间并以 1 GB 为增量。
+DISK_TYPE：永久性磁盘类型的完整或部分网址。例如 https://www.googleapis.com/compute/v1/projects/PROJECT_ID/zones/ZONE/diskTypes/pd-ssd。
+创建磁盘后，将其挂接到任何正在运行或已停止的实例。 使用 gcloud compute instances attach-disk 命令：
+gcloud compute instances attach-disk INSTANCE_NAME \
+  --disk DISK_NAME
+请替换以下内容：
+INSTANCE_NAME：要向其中添加新地区永久性磁盘的实例的名称
+DISK_NAME：您要挂接到实例的新磁盘的名称。
+使用 gcloud compute disks describe 命令查看磁盘的说明。
+创建新磁盘并将其挂接到虚拟机后，必须格式化并装载磁盘，以便操作系统可以使用可用的存储空间。
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Your application needs to process credit card transactions. You want the smallest scope of Payment Card Industry(PCI)compliance without compromising the ability to analyze transactional data and trends relating to which payment methods are used
 How should you design your architecture?
 A. Create a tokenizer service and store only tokenized data
-B Create separate projects that only process credit card data
-C Create separate subnetworks and isolate the components that process credit card data
-D Streamline the audit discovery phase by labeling all of the virtual machines(VMS)that process PCI data
+B. Create separate projects that only process credit card data
+C. Create separate subnetworks and isolate the components that process credit card data
+D. Streamline the audit discovery phase by labeling all of the virtual machines(VMS)that process PCI data
 E. Enable Logging export to Google Bigquery and use ACLS and views to scope the data shared with the auditor
-Correct Answer: A
-Reference:
-hps//www.sansoreadn-oom/whiepapers/compliance/ways-educe-pc-dss-audit-scope-tokenizing-cardholder-data-33194
-您的应用程序需要处理信用卡交易。您希望获得最小范围的支付卡行业（PCI）合规性，同时不影响分析交易数据的能力以及与所使用的支付方法相关的趋势
+Correct Answer: A [这里仅仅需要一个服务就可以了。不需要项目]
+您的应用程序需要处理信用卡交易。 您需要最小范围的支付卡行业 (PCI) 合规性，同时又不影响分析与所用支付方式相关的交易数据和趋势的能力
 你应该如何设计你的架构？
-A.创建标记器服务并仅存储标记化数据
-B创建仅处理信用卡数据的单独项目
-C创建独立的子网络，并隔离处理信用卡数据的组件
-D通过标记处理PCI数据的所有虚拟机（VM），简化审核发现阶段
-E.启用日志导出到Google Bigquery，并使用ACL和视图来确定与审计员共享的数据的范围
+A. 创建一个分词器服务并只存储分词数据
+B. 创建仅处理信用卡数据的单独项目
+C. 创建单独的子网并隔离处理信用卡数据的组件
+D. 通过标记所有处理 PCI 数据的虚拟机 (VMS) 来简化审计发现阶段
+E. 启用 Logging 导出到 Google Bigquery 并使用 ACLS 和视图来确定与审计员共享的数据的范围
 正确答案：A
-参考：
-hps//www.sansoreadn-oom/whiepapers/compliance/ways-educe-pc-dss-audit-scope-tokenizing-carden-data-33194
-/////////////////////////////////////////////////////////////////
-
+https://www.sans.org/white-papers/33194/
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
 You have been asked to select the storage system for the click-data of your companyt s large portfolio of websites. This data is streamed in from a custom website analytics package at a typical rate of 6,000 clicks per minute. With bursts of up to 8, 500 clicks per second. t must have been stored for future analysis by your data science and user experience teams
 Which storage infrastructure should you choose?
 A. Google Cloud SQL
 B. Google Cloud Bigtable
 C. Google Cloud Storage
 D. Gooale Cloud Datastore
-
-
-B 正确答案：
-您被要求为公司的大型网站组合的点击数据选择存储系统。这些数据以每分钟6000次点击的典型速率从自定义网站分析包中传输进来。每秒点击次数高达8500次。t必须已存储，以便数据科学和用户体验团队将来进行分析
+B 正确答案
+您被要求为贵公司的大量网站组合的点击数据选择存储系统。 此数据以每分钟 6,000 次点击的典型速率从自定义网站分析包流入。 突发高达 8 次，每秒 500 次点击。 t 必须已被您的数据科学和用户体验团队存储以备将来分析
 您应该选择哪种存储基础架构？
-A.谷歌云SQL
-B.谷歌云大表
-C.谷歌云存储
-D.Gooale云数据存储
-
+A. 谷歌云 SQL
+B. 谷歌云 Bigtable
+C. 谷歌云存储
+D. Gooale 云数据存储
+https://cloud.google.com/bigtable
 Google Cloud Bigtable is a scalable, fully-managed NOSQL wide-column database that is suitable for both real-time access and analytics workloads
 Good for:
 s Low-latency read/write access
@@ -364,99 +364,97 @@ Es Hierarchical data ce Durable key-value data a Common workloads: s User profil
 Game state
 Reference:
 https://cloud.google.com/storage-options/
-
-Google Cloud Bigtable是一个可扩展、完全管理的NOSQL宽列数据库，适用于实时访问和分析工作负载
-有益于：
-s低延迟读/写访问
-Es高通量分析2本机时间序列支持
-常见工作量：ce标段、财务、adtech
-ce个性化、建议和es监控
-2地理空间数据集和图形
-错误答案
-C:Google云存储是一个可扩展、完全管理、高度可靠且经济高效的对象/blob存储。
-有利于：
-图像、图片和视频es对象和BLOB 2非结构化数据
-D:GoogleCloudDatastore是一个可扩展的、完全管理的NOSQL文档数据库，适用于您的web和移动应用程序
-有利于：
-Es半结构化应用程序数据
-Es分层数据ce持久键值数据a通用工作负载：s用户配置文件s产品目录
+全代管式可扩缩的 NoSQL 数据库服务，用于处理大规模分析和运营工作负载，可用性达 99.999%。
+延迟时间始终在 10 毫秒以内，每秒可处理数百万个请求
+非常适合个性化、广告技术、金融技术、数字媒体和 IoT 等使用场景
+可根据您的存储需求无缝扩缩；重新配置时无需停机
+采用适合机器学习应用的存储引擎设计，可提升预测效果
+可轻松连接到 Google Cloud 服务（例如 BigQuery）或 Apache 生态系统
+主要特性
+以低延迟方式实现高吞吐量
+Bigtable 适合将大量数据存储在键值存储区中，支持以低延迟方式实现高读写吞吐量，以便快速访问大量数据。吞吐量以线性方式扩缩；您可以通过添加 Bigtable 节点来提高 QPS（每秒查询数）。Bigtable 是使用经过实践检验的基础架构打造的，该架构为有数十亿用户的 Google 产品（例如搜索和地图）提供支持。
+无需停机即可调整集群大小
+可从每秒数千次读/写无缝扩容为每秒数百万次读写。Bigtable 吞吐量可动态调整，您只需添加或移除集群节点，而无需重启。也就是说，您可以扩大 Bigtable 集群，运行几个小时以处理某个大型负载，然后再缩减集群，整个过程中无需停机。
+可以灵活地自动复制，以优化任何工作负载
+写入数据一次，就能根据需要自动复制，并确保最终一致性，从而使您有足够的控制能力以实现高可用性，并将读写工作负载隔离开。无需执行手动步骤，即可确保一致性、修复数据或同步写入和删除操作。使用多集群路由的实例可获享 SLA 承诺的 99.999% 高可用性（单集群实例可享 99.9% 高可用性）。
+Google Cloud Bigtable 是一个可扩展、完全托管的 NOSQL 宽列数据库，适用于实时访问和分析工作负载
+适合：
+s 低延迟读/写访问
+Es 高吞吐量分析 2 原生时间序列支持
+常见工作负载：ce lot、finance、adtech
+ce 个性化、建议 es 监控
+2 地理空间数据集 e Graphs
+不正确的答案
+C：Google Cloud Storage 是一个可扩展、完全托管、高度可靠且经济高效的对象/blob 存储。
+适合：
+图像、图片和视频 es 对象和 blob 2 非结构化数据
+D：Google Cloud Datastore 是一个可扩展、完全托管的 NOSQL 文档数据库，适用于您的 Web 和移动应用程序
+适合：
+Es 半结构化应用数据
+Es 分层数据 ce 持久键值数据 a 常见工作负载： s 用户配置文件 s 产品目录
 游戏状态
-
-///////////////////////////////////////////////////////////////
-
+    参考：
+https://cloud.google.com/storage-options/
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
 You are creating a solution to remove backup files older than 90 days from your backup Cloud Storage bucket. You want to optimize ongoing
 Cloud Storage spend
-
 What should you do?
-A Write a lifecycle management rule in XML and push it to the bucket with gsutil
+A. Write a lifecycle management rule in XML and push it to the bucket with gsutil
 B. Write a lifecycle management rule in JSON and push it to the bucket with gsutil
-C Schedule a cron script using gsutil Is E" Ir gs: /backups/* to find and remove items older than 90 days
+C. Schedule a cron script using gsutil Is E" Ir gs: /backups/* to find and remove items older than 90 days
 D. Schedule a cron script using gsutil Is g: acks/*to find and remove items older than 90 days and schedule it with cron
 Correct Answer: B
-
-您正在创建一个解决方案，以从备份云存储桶中删除超过90天的备份文件。你想优化正在进行的工作吗
+您正在创建一个解决方案，用于从备份 Cloud Storage 存储分区中删除超过 90 天的备份文件。 您想持续优化
 云存储支出
 你该怎么办？
-A用XML编写生命周期管理规则，并使用sutil将其推送到bucket
-B.用JSON编写生命周期管理规则，并使用sutil将其推送到bucket
-C使用sutil Is E“Ir gs:/backups/*计划一个cron脚本，以查找和删除超过90天的项目
-D.使用sutil Is g:acks/*计划cron脚本，以查找和删除超过90天的项目，并使用cron进行计划
-正确答案：B
-
-///////////////////////////////////////////////////////////////v
-
+A. 用 XML 编写生命周期管理规则，并使用 gsutil 将其推送到存储桶
+B. 用 JSON 编写生命周期管理规则，并使用 gsutil 将其推送到存储桶
+C. 使用 gsutil Is E" Ir gs: /backups/* 安排 cron 脚本以查找和删除超过 90 天的项目
+D. 使用 gsutil 调度 cron 脚本是 g: acks/* 查找并删除超过 90 天的项目并使用 cron 调度它
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Your company is forecasting a sharp increase in the number and size of Apache Spark and Hadoop jobs being run on your local datacenter. You want to utilize the cloud to help you scale this upcoming demand with the least amount of operations work and code change
 Which product should you use?
-A Google Cloud Dataflow
-B Google Cloud Dataproc
+A. Google Cloud Dataflow
+B. Google Cloud Dataproc
 C. Google Compute Engine
 D. Google Kubernetes Engine
 Correct Answer: B
+您的公司预测在您的本地数据中心上运行的 Apache Spark 和 Hadoop 作业的数量和规模将急剧增加。 您希望利用云来帮助您以最少的操作工作和代码更改来扩展即将到来的需求
+您应该使用哪种产品？
+A. 谷歌云数据流
+B. 谷歌云 Dataproc
+C. 谷歌计算引擎
+D. 谷歌 Kubernetes 引擎
 Google Cloud Dataproc is a fast, easy-to-use, low-cost and fully managed service that lets you run the Apache Spark and Apache Hadoop ecosystem on Google
 Cloud Platform. Cloud Dataproc provisions big or small clusters rapidly, supports many popular job types, and is integrated with other Google
 Cloud Platform services, such as Google Cloud Storage and Stackdriver Logging, thus helping you reduce TCO
+Google Cloud Dataproc 是一项快速、易于使用、低成本且完全托管的服务，可让您在 Google 上运行 Apache Spark 和 Apache Hadoop 生态系统
+云平台。 Cloud Dataproc 快速配置大小集群，支持多种流行的作业类型，并与其他 Google 集成
+Cloud Platform 服务，例如 Google Cloud Storage 和 Stackdriver Logging，从而帮助您降低 TCO
 Reference
 https://cloud.google.com/dataproc/docs/resources/fag
-
-您的公司预测，在您当地的数据中心上运行的Apache Spark和Hadoop作业的数量和规模将急剧增加。您希望利用云帮助您以最少的操作工作量和代码更改来扩展这一即将到来的需求
-你应该使用哪种产品？
-谷歌云数据流
-B谷歌云数据处理
-C.谷歌计算引擎
-D.谷歌Kubernetes引擎
-正确答案：B
-Google Cloud Dataproc是一种快速、易于使用、低成本且完全受管理的服务，允许您在Google上运行Apache Spark和Apache Hadoop生态系统
-云平台。CloudDataProc可以快速提供大小集群，支持许多流行的工作类型，并与其他Google集成
-云平台服务，如谷歌云存储和Stackdriver日志记录，从而帮助您降低总体拥有成本
-参考
-https://cloud.google.com/dataproc/docs/resources/fag
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////
-
-The database administration team has asked you to help them improve the performance of their new database server running on Google Compute
-Engine. The database is for importing and normalizing their performance statistics and is built with MYSQL running on Debian Linux. They have an n1-standard-8 virtual machine with 80 GB of SSD persistent disk
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+The database administration team has asked you to help them improve the performance of their new database server running on Google Compute Engine.
+The database is for importing and normalizing their performance statistics and is built with MYSQL running on Debian Linux.
+They have an n1-standard-8 virtual machine with 80 GB of SSD persistent disk
 What should they change to get better performance from this system?
 A. Increase the virtual machines memory to 64 GB
 B. Create a new virtual machine running Postgresql
-C Dynamically resize the SSD persistent disk to 500 GB
-D Migrate their performance metrics warehouse to Bigquery
-E Modify all of their batch jobs to use bulk inserts into the database
-Correct Answer: C
-
-数据库管理团队要求您帮助他们改进运行在Google Compute上的新数据库服务器的性能
-发动机该数据库用于导入和规范性能统计数据，并使用运行在DebianLinux上的MYSQL构建。他们有一个n1-standard-8虚拟机，带有80 GB的SSD永久磁盘
-他们应该改变什么以从该系统获得更好的性能？
-
-A.将虚拟机内存增加到64 GB
-B.创建运行Postgresql的新虚拟机
-C动态调整SSD永久磁盘的大小至500 GB
-D将他们的性能度量数据仓库迁移到Bigquery
-E修改它们的所有批处理作业，以便在数据库中使用批量插入
-正确答案：C
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////
+C. Dynamically resize the SSD persistent disk to 500 GB
+D. Migrate their performance metrics warehouse to Bigquery
+E.Modify all of their batch jobs to use bulk inserts into the database
+答案是 C，因为永久性磁盘性能取决于附加到实例的永久性磁盘总容量和实例具有的 vCPU 数量。 增加永久性磁盘容量将增加其吞吐量和 IOPS，从而提高 MySQL 的性能。
+Answer is C because persistent disk performance is based on the total persistent disk capacity attached to an instance and the number of vCPUs that the instance has. Incrementing the persistent disk capacity will increment its throughput and IOPS, which in turn improve the performance of MySQL.
+998 / 5000
+Translation results
+数据库管理团队要求您帮助他们提高在 Google Compute Engine 上运行的新数据库服务器的性能。 该数据库用于导入和规范化他们的性能统计数据，并使用在 Debian Linux 上运行的 MYSQL 构建。 他们有一个带有 80 GB SSD 永久性磁盘的 n1-standard-8 虚拟机
+他们应该改变什么才能从这个系统中获得更好的性能？
+A. 将虚拟机内存增加到 64 GB
+B.新建一个运行Postgresql的虚拟机
+C. 将 SSD 永久磁盘动态调整为 500 GB
+D. 将他们的性能指标仓库迁移到 Bigquery
+E.修改他们所有的批处理作业以使用批量插入数据库
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
 You want to optimize the performance of an accurate, eal-time, weather-charting application The data comes from 50,000 sensors sending 10 readings a second, in the format of a timestamp and sensor reading
 Where should you store the data?
 A. Google Bigquery
@@ -473,94 +471,86 @@ e Personalization, recommendations
 Eo Monitoring ce Geospatial datasets es Graphs
 Reference:
 https://cloud.google.com/storage-options
-
-
-您希望优化精确的eal时间天气图表应用程序的性能数据来自50000个传感器，每秒发送10个读数，格式为时间戳和传感器读数
-您应该将数据存储在哪里？
-A.谷歌Bigquery
-B.谷歌云SQL
-C.谷歌云大表
-D.谷歌云存储
+您想要优化准确、实时、天气图表应用程序的性能 数据来自 50,000 个传感器，每秒发送 10 个读数，采用时间戳和传感器读数的格式
+你应该在哪里存储数据？
+A. 谷歌 Bigquery [比如存储5年的数据]
+B. 谷歌云 SQL
+C. 谷歌云 Bigtable 【是一个可扩展、完全托管的 NOSQL 宽列数据库，适用于实时访问】
+D. 谷歌云存储
 正确答案：C
-Google Cloud Bigtable是一个可扩展、完全管理的NOSQL宽列数据库，适用于实时访问和分析工作负载
-有益于
-s低延迟读/写访问ce高通量分析
-Es本机时间序列支持
-通用工作负载e OT finance adtech
-e个性化、推荐
-Eo监测ce地理空间数据集es图
+Google Cloud Bigtable 是一个可扩展、完全托管的 NOSQL 宽列数据库，适用于实时访问和分析工作负载
+适合
+s 低延迟读/写访问 ce 高吞吐量分析
+Es Native 时间序列支持
+常见工作负载 e OT 金融广告技术
+e 个性化、推荐
+Eo Monitoring ce Geospatial datasets es Graphs
 参考：
 https://cloud.google.com/storage-options
-
-
-3
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Your companys user-feedback portal comprises a standard LAMP stack replicated across two zones. It is deployed in the us-central1 region and uses autoscaled managed instance groups on all layers, except the database. Currently, only a small group of select customers have access to the portal. The portal meets a
-99, 99%availability SLA under these conditions. However next quarter, your company will be making the portal available to all users, including unauthenticated users. You need to develop a resiliency testing strategy to ensure the system maintains the LA once they introduce additional user oad
+99, 99%availability SLA under these conditions. However next quarter, your company will be making the portal available to all users, including unauthenticated users. You need to develop a resiliency testing strategy to ensure the system maintains the LA once they introduce additional user load
 What should you do?
 A. Capture existing users input, and replay captured user load until autoscale is triggered on all layers. At the same time, terminate all resources in one of the zones
 B. Create synthetic random user input, replay synthetic load until autoscale logic is triggered on at least one layer, and introduce chaos to the system by terminating random resources on both zones
-C Expose the new system to a larger group of users, and increase group size each day until autoscale logic is triggered on all layers. At the same time, terminate random resources on both zones
+C. Expose the new system to a larger group of users, and increase group size each day until autoscale logic is triggered on all layers. At the same time, terminate random resources on both zones
 D. Capture existing users input, and replay captured user oad until resource utilization crosses 80%. Also, derive estimated number of users based on existing usen.s usage of the app, and deploy enough resources to handle 200% of expected load
 Correct Answer: B
-您公司的用户反馈门户包含一个跨两个区域复制的标准LAMP堆栈。它部署在us-central1区域，并在除数据库之外的所有层上使用自动缩放的托管实例组。目前，只有一小部分精选客户可以访问门户网站。门户遇到了一个问题
-在这些条件下，99，99%的可用性SLA。但是，下个季度，您的公司将向所有用户提供门户，包括未经验证的用户。您需要开发一个弹性测试策略，以确保系统在引入额外用户oad后维护LA
+您公司的用户反馈门户包含一个跨两个区域复制的标准 LAMP 堆栈。它部署在 us-central1 区域，并在除数据库之外的所有层上使用自动扩展的托管实例组。目前，只有一小部分选定的客户可以访问该门户。门户遇到一个
+在这些条件下，99、99% 的可用性 SLA。但是，下个季度，您的公司将向所有用户（包括未经身份验证的用户）提供该门户。您需要制定弹性测试策略，以确保系统在引入额外用户负载后仍能维持 LA
 你该怎么办？
-A.捕获现有用户输入，并重放捕获的用户负载，直到在所有层上触发自动缩放。同时，终止其中一个区域中的所有资源
-B.创建合成随机用户输入，重放合成负载，直到在至少一层触发自动缩放逻辑，并通过终止两个区域上的随机资源，将混沌引入系统
-C将新系统暴露给更大的用户组，并每天增加组大小，直到在所有层上触发自动缩放逻辑。同时，终止两个区域上的随机资源
-D.捕获现有用户输入，并重放捕获的用户oad，直到资源利用率超过80%。另外，根据现有用户对应用程序的使用情况得出估计的用户数，并部署足够的资源来处理200%的预期负载
+A. 捕获现有用户输入，并重放捕获的用户负载，直到在所有层上触发自动缩放。同时，终止其中一个区域中的所有资源
+B. 创建合成随机用户输入，重播合成负载，直到至少一层触发自动缩放逻辑，并通过终止两个区域上的随机资源给系统带来混乱
+C. 将新系统暴露给更大的用户组，每天增加组大小，直到在所有层上触发自动缩放逻辑。同时终止两个zone上的随机资源
+D. 捕获现有用户输入，并重放捕获的用户负载，直到资源利用率超过 80%。此外，根据应用程序的现有 use.s 使用情况得出估计的用户数量，并部署足够的资源来处理 200% 的预期负载
 正确答案：B
-
-////////////////////////////////////////////////////////////////
-One of the developers on your team deployed their application in Google Container Engine with the Dockerfile below They report that their application deployments are taking too long FROM ubuntu: 16.04
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+One of the developers on your team deployed their application in Google Container Engine with the Dockerfile below They report that their application deployments are taking too long
+FROM ubuntu: 16.04
 COPY . /src
-RUN apt-get update & apt-get install -y python python-pip RUN pip install -r requirements. txt
+RUN apt-get update & apt-get install -y python python-pip
+RUN pip install -r requirements. txt
 You want to optimize this Dockerfile for faster deplo ment times without adversely affecting the app s functionality
 Which two actions should you take?(Choose two)
 A. Remove Python after running pip
-B Remove dependencies from requirements. txt
-C Use a slimmed-down base image like Alpine Linux
-D Use larger machine types for your Gooale Container Engine node pools
+B. Remove dependencies from requirements. txt
+C. Use a slimmed-down base image like Alpine Linux
+D .Use larger machine types for your Gooale Container Engine node pools
 E. Copy the source after he package dependencies(Python and pip)are installed
 Correct Answer: CE
 The speed of deployment can be changed by limiting the size of the uploaded app, limiting the complexity of the build necessary in the
 Dockerfile, if present, and by ensuring a fast and reliable internet connection
 Note: Alpine Linux is built around musl ibc and bus box. This makes it smaller and more resource efficient than traditional GN/Linux distributions. A container requires no more than 8 MB and a minimal installation to disk requires around 130 MB of storage. Not only do you get a fully-fledged Linux environment but a large selection of packages from the repository
 Reference:
-tprousogecmfomopge-appenn/mekmmbduhttpswwwapinelinux.org/about/
-
-您团队中的一名开发人员使用下面的Dockerfile在Google容器引擎中部署了他们的应用程序，他们报告说他们的应用程序部署从ubuntu:16.04拷贝花费的时间太长/src RUN apt get update&apt get install-y python pip RUN pip install-r需求。txt您想优化此Dockerfile以加快部署时间，而不会对应用程序的功能产生不利影响，您应该采取哪两种操作？
-（选择两种）
+您希望优化此 Dockerfile 以加快部署时间，而不会对应用程序的功能产生不利影响
+你应该采取哪两项行动？（选择两项）
 A.运行pip后删除Python
-B从需求中删除依赖项。txt
-C使用精简的基础映像，如Alpine Linux
-D为您的Gooale容器引擎节点池使用更大的机器类型
-E.在安装包依赖项（Python和pip）后复制源
+B. 从需求中删除依赖项。文本
+C. 使用像 Alpine Linux 这样精简的基础镜像
+D .为您的 Gooale Container Engine 节点池使用更大的机器类型
+E.安装包依赖（Python和pip）后复制源码
 正确答案：CE
-通过限制上载应用程序的大小可以更改部署速度
-，限制Dockerfile（如果存在）中必要构建的复杂性，并确保快速可靠的internet连接注意：Alpine Linux是围绕musl ibc和bus box构建的。这使得它比传统的GN/Linux发行版更小、资源效率更高。一个容器不需要超过8MB，而磁盘上的最小安装需要大约130MB的存储空间。您不仅可以获得一个成熟的Linux环境，还可以从存储库参考中获得大量软件包：tprousogecmfomopge appenn/mekmmbduhttpswwwapinelinux.org/about/
-
-/////////////////////////////////////////////////////////////////////////////////
+部署速度可以通过限制上传的应用程序的大小来改变，限制必要的构建复杂性
+Dockerfile（如果存在）并确保快速可靠的互联网连接
+注意：Alpine Linux 是围绕 musl ibc 和 bus box 构建的。这使得它比传统的 GN/Linux 发行版更小，资源效率更高。一个容器需要不超过 8 MB 的空间，最小安装到磁盘需要大约 130 MB 的存储空间。您不仅可以获得成熟的 Linux 环境，还可以从存储库中选择大量软件包
+参考：
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Question #23
-Topic 7
 Your solution is producing performance bugs in production that you did not see in staging and test environments. You want to adjust your test and deployment procedures to avoid this problem in the future
 What should you do?
-A Deploy fewer changes to production
-B Deploy smaller changes to production
-C Increase the load on your test and staging environments
+A. Deploy fewer changes to production
+B. Deploy smaller changes to production
+C. Increase the load on your test and staging environments
 D. Deploy changes to a small subset of users before rolling out to production
 Correct Answer: D
-问题23
-专题7
-您的解决方案会在生产中产生性能缺陷，而这些缺陷在登台和测试环境中是看不到的。您希望调整测试和部署过程以避免将来出现此问题
+您的解决方案在生产中产生了您在暂存和测试环境中没有看到的性能错误。 您希望调整您的测试和部署程序以避免将来出现此问题
 你该怎么办？
-A将更少的更改部署到生产环境中
-B将较小的更改部署到生产环境中
-C增加测试和登台环境的负载
-D.在投入生产之前，将更改部署到一小部分用户
+A. 对生产部署更少的更改
+B. 将较小的更改部署到生产中
+C. 增加测试和登台环境的负载
+D. 在部署到生产环境之前将更改部署到一小部分用户
 正确答案：D
-
-/////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Question #24
 Topic 1
 A small number of Apl requests to your microservices-based application take a very long time. You know that each request to the API can traverse many services
@@ -568,56 +558,48 @@ You want to know which service takes the longest in those cases
 What should you do?
 A. Set timeouts on your application so that you can fail requests faster
 B. Send custom metrics for each of your requests to Stackdriver Monitoring
-C Use Stackdriver Monitoring to look for insights that show when your API latencies are high
-D Instrument your application with Stackdriver Trace in order to break down the request latencies at each microservice
-
-Correct Answer: D
+C. Use Stackdriver Monitoring to look for insights that show when your API latencies are high
+D. Instrument your application with Stackdriver Trace in order to break down the request latencies at each microservice
+Correct Answer: D 【many services each microservice】
 Reference:
 https://cloud.google.com/trace/docs/quickstart#find_a_trace
-
-
-问题24
-专题1
-向基于微服务的应用程序发出少量Apl请求需要很长时间。您知道，对API的每个请求都可以遍历许多服务
-您想知道在这些情况下，哪个服务花费的时间最长
+问题 #24
+主题1
+对基于微服务的应用程序的少量 Apl 请求需要很长时间。 您知道对 API 的每个请求都可以遍历许多服务
+您想知道在这些情况下哪个服务花费的时间最长
 你该怎么办？
-A.设置应用程序的超时，以便更快地使请求失败
-B.向Stackdriver Monitoring发送每个请求的自定义指标
-C使用Stackdriver监视来查找显示API延迟高的细节
-D使用Stackdriver跟踪检测应用程序，以便在每个微服务上分解请求延迟
+A. 在您的应用程序上设置超时，以便您可以更快地失败请求
+B. 将每个请求的自定义指标发送到 Stackdriver Monitoring
+C. 使用 Stackdriver Monitoring 寻找显示 API 延迟高的洞察
+D. 使用 Stackdriver Trace 检测您的应用程序，以便分解每个微服务的请求延迟
 正确答案：D
 参考：
 https://cloud.google.com/trace/docs/quickstart#find_a_trace
-
-
-
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Question #25
 Topic 7
-During a high traffic portion of the day, one of your relational databases crashes, but the replica is never promoted to a master. You want to avoid避免 this in the future
+During a high traffic portion of the day, one of your relational databases crashes, but the replica is never promoted to a master. You want to avoid this in the future
 What should you do?
 A. Use a different database
-B Choose larger instances for your database
-C Create snapshots of your database more regularly
+B. Choose larger instances for your database
+C. Create snapshots of your database more regularly
 D. Implement routinely scheduled failovers of your databases
 Correct Answer: D
-
-问题#25
-专题7
-在一天中的高流量时段，您的一个关系数据库崩溃，但复制副本从未升级到主数据库。你想在将来避免这种情况吗
+问题 #25
+话题 7
+在一天中的高流量部分，您的一个关系数据库崩溃，但副本从未提升为主数据库。 你想在未来避免这种情况
 你该怎么办？
-A.使用不同的数据库
-B为数据库选择更大的实例
-C更定期地创建数据库的快照
-D.对数据库执行例行计划的故障切换
+A. 使用不同的数据库
+B. 为您的数据库选择更大的实例
+C. 更定期地创建数据库的快照
+D. 对您的数据库实施例行计划的故障转移
 正确答案：D
-
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Question #26
 Topic 1
 Your organization requires that metrics from all applications be retained for 5 years for future analysis in possible legal proceedings
 Which approach should you use?
-A Grant the security team access to the logs in each Proiect
+A. Grant the security team access to the logs in each Proiect
 B. Configure Stackdriver Monitoring for all Projects, and export to Bigquery
 C. Configure Stackdriver Monitoring for all Proiects with the default retention policies
 D. Configure Stackdriver Monitoring for all Proiects, and export to Google Cloud Storage
@@ -626,31 +608,25 @@ Stackdriver Logging provides you with the ability to filter, search, and view lo
 Cloud Storage, and Pub/Sub
 Reference:
 https://cloud.google.com/stackdriver/
-
-
-问题#26
-专题1
-您的组织要求将所有应用程序的指标保留5年，以便将来在可能的法律诉讼中进行分析
-你应该使用哪种方法？
-A授权安全团队访问每个项目中的日志
-B.为所有项目配置Stackdriver监控，并导出到Bigquery
-C.使用默认保留策略为所有项目配置Stackdriver监控
-D.为所有项目配置Stackdriver监控，并导出到Google云存储
+问题 #26
+主题1
+您的组织要求所有应用程序的指标保留 5 年，以备将来在可能的法律诉讼中进行分析
+您应该使用哪种方法？
+A. 授予安全团队访问每个项目中的日志的权限
+B. 为所有项目配置 Stackdriver Monitoring，并导出到 Bigquery
+C. 使用默认保留策略为所有项目配置 Stackdriver Monitoring
+D. 为所有项目配置 Stackdriver Monitoring，并导出到 Google Cloud Storage
 正确答案：B
-Stackdriver日志记录为您提供了从云过滤、搜索和查看日志的能力，开源应用程序服务允许您根据合并到仪表板中的日志内容定义指标，警报允许您将日志导出到Google Big Query
+Stackdriver Logging 使您能够过滤、搜索和查看来自云和开源应用程序服务的日志 允许您根据纳入仪表板和警报的日志内容定义指标 使您能够将日志导出到 Big Query、Google
 云存储和发布/订阅
 参考：
 https://cloud.google.com/stackdriver/
-
-
-
-Your company has decided to build a backup replica of their on-premises user authentication Postgresql database on Google Cloud Platform
-The database is 4
-TB, and large updates are frequent. Replication requires private address space communication
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Your company has decided to build a backup replica of their on-premises user authentication Postgresql database on Google Cloud Platform The database is 4TB, and large updates are frequent. Replication requires private address space communication
 Which networking approach should you use?
 A. Google Cloud Dedicated Interconnect
 B. Google Cloud VPN connected to the data center network
-C A NAT and TLS translation gateway installed on-premises
+C. A NAT and TLS translation gateway installed on-premises
 D. A Google Compute Engine instance with a VPN server installed connected to the data center network
 Correct Answer: A
 Google loud Dedicated Interconnect provides direct physical connections and RFC 1918 communication between your on-premises network and Googles network Dedicated Interconnect enables you to transfer large amounts of data between networks, which can be more cost effective than purchasing additional bandwidth over the public Internet or using VPN tunnels
@@ -662,99 +638,86 @@ e You can scale your connection to Google based on your needs. Connection capaci
 The cost of egress traffic from your PC network to your on-premises network is reduced A dedicated connection is generally the least expensive method if you have a high-volume of traffic to and from Googlee s network
 Reference:
 https://cloud.google.com/interconnect/docs/details/dedicated
-
-
-贵公司已决定在谷歌云平台上构建其内部用户认证Postgresql数据库的备份副本
-数据库是4TB，并且频繁进行大型更新。复制需要专用地址空间通信
-你应该使用哪种网络方法？
-A.谷歌云专用互联
-B.连接到数据中心网络的谷歌云VPN
-C本地安装的NAT和TLS转换网关
-D.安装了VPN服务器并连接到数据中心网络的Google计算引擎实例
+贵公司决定在谷歌云平台上搭建他们本地用户认证Postgresql数据库的备份副本，数据库4TB，大更新频繁。复制需要私有地址空间通信
+您应该使用哪种网络方法？
+A. 谷歌云专用互连
+B. Google Cloud VPN 连接到数据中心网络
+C. 本地安装的 NAT 和 TLS 转换网关
+D. 安装了 VPN 服务器的 Google Compute Engine 实例连接到数据中心网络
 正确答案：A
-Google loud Specialized Interconnect提供直接物理连接，您的内部部署网络和Google network Specialized Interconnect之间的RFC 1918通信使您能够在网络之间传输大量数据，这比通过公共互联网购买额外带宽或使用VPN隧道更具成本效益
+Google Loud Dedicated Interconnect 在您的本地网络和 Google 网络之间提供直接物理连接和 RFC 1918 通信 专用互连使您能够在网络之间传输大量数据，这比通过公共 Internet 购买额外带宽或使用更划算VPN 隧道
 好处：
-您的本地网络和PC网络之间的电子通信不会穿越公共互联网。流量以较少的跳数通过专用连接，这意味着流量可能丢失或中断的故障点更少
-由于VPC网络的内部（RFC 1918）IP地址可直接从本地网络访问。您不需要使用NAT设备或VPN隧道来访问内部IP地址。Curen，您只能通过专用连接访问内部IP地址。达到
-谷歌外部IP地址，你必须使用一个单独的连接
-e您可以根据需要扩展与谷歌的连接。连接容量通过一个或多个10 Gbps以太网连接提供，最多八个连接（每个互连总共80 Gbps）
-从您的PC网络到您的本地网络的出口流量成本降低如果您有大量的流量进出谷歌的网络，专用连接通常是最便宜的方法
+e 本地网络和 PC 网络之间的流量不会穿越公共 Internet。流量以更少的跳数通过专用连接，这意味着流量可能被丢弃或中断的故障点更少
+因为您的 VPC 网络的内部 (RFC 1918) IP 地址可直接从您的本地网络访问。您不需要使用 NAT 设备或 VPN 隧道来访问内部 IP 地址。 Curen，您只能通过专用连接访问内部 IP 地址。达到
+Google 外部 IP 地址，您必须使用单独的连接
+e 您可以根据需要扩展与 Google 的连接。连接容量通过一个或多个 10 Gbps Ethemet 连接提供，最多 8 个连接（每个互连总共 80 Gbps
+降低了从您的 PC 网络到您的本地网络的出口流量成本如果您有大量进出 Googlee 网络的流量，专用连接通常是最便宜的方法
 参考：
 https://cloud.google.com/interconnect/docs/details/dedicated
-
-
-//////////////////////////////////////////////////////////////////
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Question #28
 OPIC 7
 Auditors visit your teams every 12 months and ask to review all the Google loud Identity and Access Management(Cloud IAM)policy changes in the previous 12 months. You want to streamline and expedite the analysis and audit process
 What should you do?
 A. Create custom Google Stackdriver alerts and send them to the auditor
 B. Enable Logging export to Google Bigquery and use ACLS and views to scope the data shared with the auditor
-C Use cloud functions to transfer log entries to Google Cloud SQL and use ACLS and views to limit an auditons view
-D Enable Google Cloud Storage(GCS)log export to audit logs into a GCS bucket and delegate access to the bucket
+C. Use cloud functions to transfer log entries to Google Cloud SQL and use ACLS and views to limit an auditons view
+D. Enable Google Cloud Storage(GCS)log export to audit logs into a GCS bucket and delegate access to the bucket
 Correct Answer: D
-
-问题#28
+问题 #28
 OPIC 7
-审核员每12个月访问一次您的团队，并要求审查过去12个月内谷歌云身份和访问管理（Cloud IAM）政策的所有变化。您希望简化和加快分析和审核过程
+审核员每 12 个月访问一次您的团队，并要求审查过去 12 个月内所有 Google 大声的身份和访问管理 (Cloud IAM) 政策变更。 您希望简化和加快分析和审计过程
 你该怎么办？
-A.创建自定义Google Stackdriver警报并将其发送给审计员
-B.启用日志导出到Google Bigquery，并使用ACL和视图确定与审计员共享的数据范围
-C使用云函数将日志条目传输到Google cloud SQL，并使用ACL和视图限制审核视图
-D启用谷歌云存储（GCS）日志导出，以审核进入GCS存储桶的日志，并委派对该存储桶的访问权限
+A. 创建自定义 Google Stackdriver 警报并将其发送给审计员
+B. 启用 Logging 导出到 Google Bigquery 并使用 ACLS 和视图来确定与审计员共享的数据的范围
+C. 使用云函数将日志条目传输到 Google Cloud SQL 并使用 ACLS 和视图来限制审计视图
+D. 启用 Google Cloud Storage(GCS) 日志导出以将日志审核到 GCS 存储桶中并委派对存储桶的访问权限
 正确答案：D
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Question #29
 Topic 7
-You are designing a large distributed application with 30 microservices Each of your distributed microservices needs to connect to a database back-end. You want to store the credentials凭据 securely
+You are designing a large distributed application with 30 microservices Each of your distributed microservices needs to connect to a database back-end. You want to store the credentials securely
 Where should you store the credentials
-A In the source code
-B In an environment variable
-C In a secret management system
-D In a config file that has restricted access through ACLS
+A. In the source code
+B. In an environment variable
+C. In a secret management system
+D. In a config file that has restricted access through ACLS
 Correct Answer: C
-
 Reference:
 https://cloud.google.com/kms/docs/secret-managementReference:
-
-
-问题#29
-专题7
-您正在设计一个包含30个微服务的大型分布式应用程序，每个分布式微服务都需要连接到数据库后端。您希望安全地存储凭据
-您应该将凭据存储在哪里
-A 源代码中的一
-B 环境变量中的
-C在一个秘密管理系统中的应用
-D 在通过ACL限制访问的配置文件中
+问题 #29
+话题 7
+您正在设计一个包含 30 个微服务的大型分布式应用程序您的每个分布式微服务都需要连接到一个数据库后端。 您想安全地存储凭据
+您应该在哪里存储凭据
+A.在源代码中
+B. 在环境变量中
+C. 在秘密管理系统中
+D. 在通过 ACLS 限制访问的配置文件中
 正确答案：C
 参考：
-
-
+https://cloud.google.com/kms/docs/secret-managementReference：
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Question #30
 Topic 7
 A lead engineer wrote a custom tool that deploys virtual machines in the legacy data center. He wants to migrate the custom tool to the new cloud environment
 You want to advocate for the adoption of Google Cloud Deployment Manager.
-What are two business risks of migrating to Cloud Deployment Manager?(Choose two
-A Cloud Deployment Manager uses Python
-B Cloud Deployment Manager Apls could be deprecated in the future
-C Cloud Deployment Manager is unfamiliar to the companys engineers
+What are two business risks of migrating to Cloud Deployment Manager?(Choose two)
+A. Cloud Deployment Manager uses Python
+B. Cloud Deployment Manager Apls could be deprecated in the future
+C. Cloud Deployment Manager is unfamiliar to the companys engineers
 D. Cloud Deployment Manager requires a Google Apls service account to run
 E. Cloud Deployment Manager can be used to permanently delete cloud resources
-F Cloud Deployment Manager only supports automation of Google Cloud resources
+F. Cloud Deployment Manager only supports automation of Google Cloud resources
 Correct Answer: EF
-
-问题#30
-专题7
-一位首席工程师编写了一个自定义工具，用于在遗留数据中心部署虚拟机。他希望将定制工具迁移到新的云环境
-您希望提倡采用Google Cloud Deployment Manager。
-迁移到Cloud Deployment Manager的两个业务风险是什么？（选择两个）
-A云部署管理器使用Python
-B Cloud Deployment Manager APL将来可能会被弃用
-C Cloud Deployment Manager对该公司的工程师来说并不熟悉
-D.云部署管理器需要一个Google Apls服务帐户才能运行
-E.云部署管理器可用于永久删除云资源
-F Cloud Deployment Manager仅支持Google云资源的自动化
-正确答案：EF
+https://www.examtopics.com/discussions/google/view/6843-exam-professional-cloud-architect-topic-1-question-43/
+首席工程师编写了一个自定义工具，用于在旧数据中心部署虚拟机。 他想将自定义工具迁移到新的云环境
+您想倡导采用 Google Cloud Deployment Manager。
+迁移到 Cloud Deployment Manager 的两项业务风险是什么？（选择两项）
+A. 云部署管理器使用 Python
+B. Cloud Deployment Manager Apls 将来可能会被弃用
+C. Cloud Deployment Manager 公司工程师不熟悉
+D. Cloud Deployment Manager 需要 Google Apls 服务帐户才能运行
+E. 云部署管理器可用于永久删除云资源
+F. Cloud Deployment Manager 仅支持 Google Cloud 资源的自动化
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
