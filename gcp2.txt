@@ -1,0 +1,738 @@
+A development manager is building a new application. He asks you to review his requirements and identify what cloud technologies he can use to meet them. The application must
+1. Be based on open-source technology for cloud portability
+2. Dynamically scale compute capacity based on demand
+3. Support continuous software delivery
+4. Run multiple segregated copies of the same application stack
+5. Deploy application bundles using dynamic templates
+6. Route network traffic to specific services based on URL
+Which combination of technologies will meet all of his requirements?
+A. Google Kubernetes Engine, Jenkins, and Helm
+B Google Kubernetes Engine and Cloud Load Balancing
+C. Google Kubernetes Engine and Cloud Deployment Manager
+D. Google Kubernetes Engine, Jenkins, and Cloud Load Balancing
+Correct Answer: D
+Jenkins is an open-source automation server that lets you flexibly orchestrate your build, test, and deployment pipelines. Kubernetes Engine is a losted version of
+Kubernetes, a powerful cluster manager and orchestration system for containers
+When you need to set up a continuous delivery(D)pipeline, deploying Jenkins on Kubernetes Engine provides important benefits over a standard Vm-based deployment
+Incorrect Answers
+A: Helm is a tool for managing Kubernetes charts. Charts are packages of pre-configured Kubernetes resources
+Use Helm to
+Find and use popular software packaged as Kubernetes charts
+cs Share your own applications as Kubernetes charts
+es Create reproducible builds of your Kubernetes applications cs Intelligently manage your Kubernetes manifest files
+E= Manage releases of Helm packages reference
+https://cloud.googlecom/solutions/jenkins-on-kubernetes-engine
+
+
+开发经理正在构建一个新的应用程序。他要求您审查他的需求，并确定他可以使用哪些云技术来满足这些需求。应用程序必须
+1.基于开源技术实现云的可移植性
+2.根据需求动态扩展计算容量
+3.支持连续的软件交付
+4.运行同一应用程序堆栈的多个隔离副本
+5.使用动态模板部署应用程序包
+6.根据URL将网络流量路由到特定服务
+哪种技术组合将满足他的所有要求？
+A.谷歌Kubernetes引擎、詹金斯和赫尔姆
+B Google Kubernetes引擎和云负载平衡
+C.谷歌Kubernetes引擎和云部署管理器
+D.谷歌Kubernetes引擎、Jenkins和云负载平衡
+正确答案：D
+Jenkins是一个开源自动化服务器，它允许您灵活地协调构建、测试和部署管道。Kubernetes引擎是
+Kubernetes，一个功能强大的容器集群管理器和编排系统
+当您需要设置连续交付（D）管道时，与基于标准Vm的部署相比，在Kubernetes引擎上部署Jenkins提供了重要的好处
+错误答案
+答：Helm是管理Kubernetes图表的工具。图表是预先配置的Kubernetes资源包
+掌舵
+查找并使用打包为Kubernetes图表的流行软件
+cs以Kubernetes图表的形式共享您自己的应用程序
+es创建Kubernetes应用程序的可复制版本cs智能管理Kubernetes清单文件
+E=管理Helm包的发布参考
+https://cloud.googlecom/solutions/jenkins-on-kubernetes-engine
+////////////////////////////////////////////////////////////////////////////////////
+You have created several pre-emptible Linux virtual machine instances using Google Compute Engine. You want to properly shut down your application before the virtual machines are preempte
+What should you do
+A. Create a shutdown script named k99 shutdown in the/etc/rc.6.d/directory
+B Create a shutdown script registered as a xinetd service in Linux and configure a Stackdriver endpoint check to call the service
+C. Create a shutdown script and use it as the value for a new metadata entry with the key shutdown-script in the Cloud Platform Console wher you create the new virtual machine instance
+D. Create a shutdown script, registered as a xinetd service in Linux, and use the cloud compute instances add-metadata command to specify the service URL as the value for a new metadata entry with the key shutdown-script-ur
+Correct Answer: C
+A startup script, or a shutdown script, is specified through the metadata server, using startup script metadata keys
+https://cloud.google.com/compute/docs/startupscript
+
+您已经使用Google Compute Engine创建了几个可抢占的Linux虚拟机实例。您希望在虚拟机被抢占之前正确关闭应用程序
+你该怎么办
+A.在/etc/rc.6.d/目录中创建名为k99 shutdown的关闭脚本
+B.在Linux中创建注册为xinetd服务的关机脚本，并配置Stackdriver端点检查以调用该服务
+C.创建一个关闭脚本，并在创建新的虚拟机实例时，将其用作云平台控制台中具有密钥关闭脚本的新元数据条目的值
+D.创建一个关机脚本，在Linux中注册为xinetd服务，并使用cloud compute instances add metadata命令将服务URL指定为具有密钥shutdown script ur的新元数据条目的值
+正确答案：C
+使用启动脚本元数据键，通过元数据服务器指定启动脚本或关闭脚本
+https://cloud.google.com/compute/docs/startupscript
+////////////////////////////////////////////////////////////////////////////////////
+Your organization has a 3-tier web application deployed in the same network on Google Cloud Platform. Each tier(web, APL, and database)scal independent of the others. Network raic hould flow through the web to the AP tier and then on to the database tier. raffic should not flow between the web and the database tier
+How should you configure the network?
+A Add each tier to a different subnetwork
+B Set up software based firewalls on individual VMS
+C. Add tags to each tier and set up routes to allow the desired traffic flow
+I D Aad tags to each tier and set up firewall rules to alow the desired trafic fow
+Correct Answer: D
+Google Cloud Platform(GCP)enforces firewall rules through rules and tags. GCP rules and tags can be defined once and used across all
+Reference
+https://cloud.google.com/docs/compare/openstack/
+https://aws.amazon.com/it/blogs/aws/building-three-tier-architectureswith-security-groups/
+
+您的组织在谷歌云平台的同一网络中部署了一个三层web应用程序。每一层（web、APL和数据库）都独立于其他层。网络raic应该通过web流向AP层，然后再流向数据库层。raffic不应在web和数据库层之间流动
+您应该如何配置网络？
+A.将每层添加到不同的子网络
+B.在单个虚拟机上设置基于软件的防火墙
+C.为每层添加标签，并设置路线以允许所需的交通流
+D.给每一层添加了Aad标签，并设置防火墙规则，以减少所需的流量
+正确答案：D
+谷歌云平台（GCP）通过规则和标签实施防火墙规则。GCP规则和标记可以定义一次并在所有应用程序中使用
+参考
+https://cloud.google.com/docs/compare/openstack/
+https://aws.amazon.com/it/blogs/aws/building-three-tier-architectureswith-security-groups/
+
+////////////////////////////////////////////////////////////////////////////////////
+Your development team has installed a new Linux kernel module on the batch servers in Google Compute Engine(GCE)virtual machines(VMS)to speed up the nightly batch pocess.
+Two days after e instalation 50% the batch sees failed e ghy batch run. You want to collect details on the failure to pass back to the development team.
+Which three actions should you take? (Choose three
+A Use Stackdriver Logging to search for the module log entries
+B Read the debug GCE Activity log using the API or Cloud Console
+C Use cloud or Cloud Console to connect to the serial console and observe the logs
+D Identify whether a live migration event of the failed server occurred, using in the activity log
+E. Adjust the Google Stackdriver timeline to match the failure time, and observe the batch server metrics
+F Export a debug M into an image, and run the image on a local server where kemel log messages will be displayed on the native screen
+Correct Answer: ACE
+您的开发团队已经在Google Compute Engine（GCE）虚拟机（VM）的批处理服务器上安装了一个新的Linux内核模块，以加速临近的批处理过程。安装50f后两天，批处理发现e ghy批处理运行失败。您希望收集有关未能传递回开发团队的详细信息。
+你应该采取哪三种行动？（选择三个
+A 使用Stackdriver日志来搜索模块日志条目
+B 使用API或云控制台读取调试GCE活动日志
+C 使用云或云控制台连接到串行控制台并观察日志
+D 在活动日志中使用标识是否发生了故障服务器的实时迁移事件
+E.调整Google Stackdriver时间表以匹配故障时间，并观察批处理服务器指标
+F 将调试M导出到映像中，并在本地服务器上运行映像，本地屏幕上将显示kemel日志消息
+正确答案：ACE
+////////////////////////////////////////////////////////////////////////////////////
+Your company wants to try out the cloud with low risk. They want to archive approximately 100 TB of their log data to the cloud and test the analytics features available to them there,
+while also retaining that data as a long-term disaster recovery backup
+Which two steps should you take?(Choose two.
+A. Load logs into Google Bigquery
+B. Load logs into Google Cloud SQL
+C. Import logs into Google Stackdriver
+D. Insert logs into Google Cloud Bigtable
+E. Upload log files into Google Cloud Storage
+Correct Answer: AE
+您的公司希望尝试低风险的云。他们希望将大约100 TB的日志数据归档到云中，并测试云中可用的分析功能，同时将这些数据保留为长期灾难恢复备份
+你应该采取哪两个步骤？（选择两个。
+A.将日志加载到Google Bigquery中
+B将日志加载到谷歌云SQL中
+将日志导入GoogleStackDriver
+D将日志插入Google Cloud Bigtable
+E.将日志文件上传到谷歌云存储
+正确答案：AE
+////////////////////////////////////////////////////////////////////////////////////
+You created a pipeline that can deploy your source code changes to your infrastructure in instance groups for self-healing.
+One of the changes negatively affects your key performance indicator. You are not sure how to fix it, and investigation could take up to a week.
+What should you do?
+A Log in to a server, and iterate on the fox locally
+B Revert the source code change, and rerun the deployment pipeline
+C Log into the servers with the bad code change, and swap in the previous code
+D Change the instance group template to the previous one, and delete all instances
+Correct Answer: B
+您创建了一个管道，可以将源代码更改部署到实例组中的基础结构中，以实现自我修复。其中一个变化会对您的关键绩效指标产生负面影响。你不知道如何修复它，调查可能需要一周的时间。
+你该怎么办？
+A 登录到服务器，并在fox上进行本地迭代
+B 还原源代码更改，然后重新运行部署管道
+C 登录到更改了错误代码的服务器，并在以前的代码中进行交换
+D 将实例组模板更改为上一个模板，并删除所有实例
+正确答案：B
+////////////////////////////////////////////////////////////////////////////////////
+Your organization wants to control IAM policies for different departments independently, but centrally
+Which approach should you take?
+A. Multiple Organizations with multiple Folders
+B. Multiple Organizations, one for each department
+C. A single Organization with Folders for each department
+D. A single Organization with multiple projects, each with a central owner
+Correct Answer: C
+Folders are nodes in the Cloud Platform Resource Hierarchy. A folder can contain projects, other folders, or a combination of both. You can use folders to group projects under an organization in a hierarchy For example, your organization might contain multiple departments, each with its own set of GCP resources. Folders allow you to group these resources on a per-department basis. Folders are used to group resources that share common IAM policies. While a folder can contain multiple folders or resources, a given folder or resource can have exactly one parent.
+Reference
+https://cloud.google.com/resource-manager/docs/creating-managing-folders
+
+您的组织希望独立但集中地控制不同部门的IAM策略
+你应该采取哪种方法？
+A.具有多个文件夹的多个组织
+B多个组织，每个部门一个
+C.每个部门都有文件夹的单一组织
+D.具有多个项目的单一组织，每个项目都有一个中央所有者
+正确答案：C
+文件夹是云平台资源层次结构中的节点。文件夹可以包含项目、其他文件夹或两者的组合。
+您可以使用文件夹对层次结构中某个组织下的项目进行分组。例如，您的组织可能包含多个部门，
+每个部门都有自己的GCP资源集。文件夹允许您按部门对这些资源进行分组。文件夹用于对共享通用IAM策略的资源进行分组。虽然文件夹可以包含多个文件夹或资源，但给定的文件夹或资源只能有一个父文件夹或资源。
+参考
+https://cloud.google.com/resource-manager/docs/creating-managing-folders
+////////////////////////////////////////////////////////////////////////////////////
+You deploy your custom Java application to Google App Engine. It fails to deploy and gives you the following stack trace
+What should you do?
+java. lang Securityexception: SHAL digest error for com/Altostrat/cloakedservlet class
+at com. google. appengine runtime Request proces
+-d36f818a24b8cfld (Request. java)
+sun. security util. Manifestentryverifler verify (Manifestentryverifler java: 210
+at java util.jar. Jarverifier. processentry (Jarverifierjava: 218)
+at java util.jar. Jarverifier update
+(Jarveritler java: 205)
+at
+ava.util. jar. Jarveriflersverlfierst
+Sarver1ェュer.ava:428)
+misc.Resource getbytes
+Resource. java: 124)
+at java. net. URL Classloader.defineclass (Uriclassloader lava: 273
+t sun.refect. Generatedmethodaccessor5 invok
+(Unknown Source)
+sun reflect. Delegatingmethodaccessorimpl invoke (Delegatingmethodaccessorimpl java: 43)
+at java. lang reflectMethod. invoke (Method. java: 616)
+at java. lang Classloader loadclass
+
+A. Upload missing JAR files and redeploy your application.
+B. Digitally sign all of your JAR files and redeploy your application
+C Recompile the Cloakedservlet class using and MD5 hash instead of SHA1
+Correct Answer: B
+
+将自定义Java应用程序部署到Google App Engine。它无法部署，并提供以下堆栈跟踪
+你该怎么办？
+A 上传丢失的JAR文件并重新部署应用程序。
+B 对所有JAR文件进行数字签名并重新部署应用程序
+C使用和MD5散列而不是SHA1重新编译隐形servlet类
+正确答案：B
+////////////////////////////////////////////////////////////////////////////////////
+You are designing a mobile chat application. You want to ensure people cannot spoof chat messages, by providing a message were sent by a speclfic user.
+What should you do
+A. Tag messages client side with the originating user identifier and the destination user
+B. Encrypt the message client side using block-based encryption with a shared key
+C. Use public key infrastructure(PK)to encrypt the message client side using the originating users private key
+D. Use a trusted certificate authority to enable SSL connectivity between the client application and the server.
+Correct Answer: C
+
+您正在设计一个移动聊天应用程序。您希望通过提供由特定用户发送的消息，确保人们不会伪造聊天消息。
+你该怎么办
+A.使用原始用户标识符和目标用户标记消息客户端
+B.使用基于块的加密和共享密钥对消息客户端进行加密
+C.使用公钥基础设施（PK）使用原始用户私钥对消息客户端进行加密
+D.使用可信证书颁发机构启用客户端应用程序和服务器之间的SSL连接。
+正确答案：C
+////////////////////////////////////////////////////////////////////////////////////
+As part of implementing their disaster recovery plan, your company is trying to replicate their production MYSQL database from their private data center to their
+GCP project using a Google loud PN connection. They are expending latency issues and a small amount of packet loss that is disrupting the replication.
+What should they do?
+A. Configure their replication to use UDP.
+B. Configure a Google Cloud Dedicated Interconnect.
+C. Restore their database daily using Google Cloud SQL.
+D. Add additional VPN connections and load balance them
+E. Send the replicated transaction to Google Cloud Pub/Sub
+Correct Answer: B
+作为实施其灾难恢复计划的一部分，我们公司正试图将其生产MYSQL数据库从其专用数据中心复制到其
+使用Google loud VPN连接的GCP项目。正在扩展延迟问题和少量数据包丢失，这会中断复制。
+他们该怎么办？
+A.将其复制配置为使用UDP。
+B配置谷歌云专用互连。
+C使用谷歌云SQL每天恢复他们的数据库。
+D添加额外的VPN连接并对其进行负载平衡
+E.将复制的事务发送到谷歌云发布/订阅
+正确答案：B
+////////////////////////////////////////////////////////////////////////////////////
+Your customer support tool logs all email and chat conversations to Cloud Bigtable for retention and analysis. What is the recommended approach for sanitizing this data of personally
+identifiable information or payment card information before initial storage?
+A. Hash all data using SHA256
+B. Encrypt all data using elliptic curve cryptography
+C. De-identify the data with the Cloud Data Loss Prevention Apl
+D. Use regular expressions to find and redact phone numbers, email addresses, and credit card numbers
+Correct Answer: C
+Reference
+https://cloud.google.com/solutions/pci-dss-compliance-in-gcpusing_data_loss_prevention_apitosanitize_data
+
+您的客户支持工具将所有电子邮件和聊天记录到Cloud Bigtable，以便保留和分析。在初始存储之前，建议采用什么方法对个人识别信息或支付卡信息的数据进行消毒？
+A.使用SHA256散列所有数据
+B.使用椭圆曲线密码加密所有数据
+C.使用云数据丢失预防Apl取消识别数据
+D.使用正则表达式查找并编辑电话号码、电子邮件地址和信用卡号码
+正确答案：C
+参考
+https://cloud.google.com/solutions/pci-dss-compliance-in-gcpusing_data_loss_prevention_apitosanitize_data
+////////////////////////////////////////////////////////////////////////////////////
+You are using Cloud Shell and need to install a custom utility for use in a few weeks. Where can you store the file so it is in the default execution
+path and persists across sessions?
+A ~/bin
+B Cloud Storage
+C /google/scripts
+D /usr/local/bin
+Correct Answer: A
+
+ Cloud Shell，需要安装一个自定义实用程序，以便在几周内使用。在哪里可以存储文件，使其处于默认执行状态
+跨会话的路径和持久性？
+A ~/bin
+B 云存储
+C/google/scripts
+D/usr/local/bin
+正确答案：A
+////////////////////////////////////////////////////////////////////////////////////
+You want to create a private connection between your instances on Compute Engine and your on-premises data center. You require a connection of at least 20
+Gbps. You want to follow Google-recommended practices How should you set up the connection?
+A. Create a VPC and connect it to your on-premises data center using Dedicated Interconnect
+B. Create a VPC and connect it to your on-premises data center using a single Cloud VPN
+C Create a Cloud Content Delivery Network(Cloud CDN)and connect it to your on-premises data center using Dedicated Interconnect
+D. Create a Cloud Content Delivery Network(Cloud CDN)and connect it to your on-premises datacenter using a single Cloud VPN
+Correct Answer: A
+您希望在计算引擎上的实例和本地数据中心之间创建专用连接。您需要至少20的连接
+英镑。你想遵循谷歌推荐的做法，你应该如何设置连接？
+A.创建专有网络，并使用专用互连将其连接到本地数据中心
+B.创建VPC，并使用单个云VPN将其连接到您的本地数据中心
+C创建一个云内容交付网络（Cloud CDN），并使用专用互连将其连接到您的本地数据中心
+D.创建云内容交付网络（Cloud CDN），并使用单个云VPN将其连接到您的本地数据中心
+正确答案：A
+////////////////////////////////////////////////////////////////////////////////////
+You are analyzing and defining business processes to support your startup.strial usage of GCP and you don t yet know what consumer demand for your product will be.
+Your manager requires you to minimize GCP service costs and adhere to Google best practices. What should you
+A. Utilize free tier and sustained use discounts. Provision a staff position for service cost managemen
+B. Utilize free tier and sustained use discounts. Provide training to the team about service cost management
+C. Utilize free tier and committed use discounts. Provision a staff position for service cost management
+D. Utilize free tier and committed use discounts. Provide training to the team about service cost management
+Correct Answer: B
+您正在分析和定义业务流程，以支持您的初创公司试用GCP，但您还不知道消费者对您产品的需求。您的经理要求您将GCP服务成本降至最低，并遵守谷歌的最佳实践。你应该做什么
+A.利用免费和持续使用折扣。为服务成本管理提供员工职位
+B.利用免费和持续使用折扣。为团队提供有关服务成本管理的培训
+C.使用免费层和承诺使用折扣。为服务成本管理提供一个工作人员职位
+D.使用免费层和承诺使用折扣。为团队提供有关服务成本管理的培训
+正确答案：B
+////////////////////////////////////////////////////////////////////////////////////
+You are building a continuous deployment pipeline for a project stored in a Git source repository and want to ensure that code changes can be verified before deploying to production.
+What should you do?
+A. Use Spinnaker to deploy builds to production using the red/black deployment strategy so that changes can easily be rolled back
+B. Use Spinnaker to deploy builds to production and run tests on production deployments
+C. Use Jenkins to build the staging ranches and the master branch Build and deploy changes to production for 10%of users before doing a complete rollout.
+D. Use Jenkins to monitor tags in the pastor Deploy staging tags to a stain envionment for testing. After testing tag the repository for production and deploy that to the production environment
+Correct Answer: C
+Reference
+https://githubcom/googlecloudplatform/contnuous-deploment-on-kubemetes/blob/master/readmemd
+
+您正在为存储在Git源存储库中的项目构建连续部署管道，并希望确保在部署到生产环境之前可以验证代码更改。你该怎么办？
+A.使用Spinnaker使用红/黑部署策略将构建部署到生产环境中，以便可以轻松回滚更改
+B.使用Spinnaker将构建部署到生产环境中，并在生产环境中运行测试
+C.使用Jenkins为10%的用户构建暂存牧场和主分支构建并部署对生产的更改，然后再进行完整的部署。
+D.使用Jenkins监控pastor中的标记，将分期标记部署到染色环境中进行测试。测试后，为生产标记存储库并将其部署到生产环境
+正确答案：C
+参考
+https://githubcom/googlecloudplatform/contnuous-deploment-on-kubemetes/blob/master/readmemd
+////////////////////////////////////////////////////////////////////////////////////
+You have an outage in your Compute Engine managed instance group: all instances keep restarting after 5 seconds.
+You have a health check configured, but autoscaling is disabled. Your colleague, who is a Linux expert, offered to look into the issue.
+You need to make sure that he can access the VMS. What should you do?
+A. Grant your colleague the IAM role of project Viewer
+B. Perform a rolling restart on the instance group
+C. Disable the health check for the instance group. Add his SSH key to the project-wide SSH Keys
+D. Disable autoscaling for the instance group. Add his SSH key to the project-wide SSH Keys
+Correct Answer: C
+您的Compute Engine托管实例组中断：所有实例在5秒后继续重新启动。您已配置运行状况检查，但已禁用自动缩放。您的同事是Linux专家，他主动提出调查这个问题。您需要确保他可以访问虚拟机。你该怎么办？
+A.授予您的同事项目查看器的IAM角色
+B.对实例组执行滚动重启
+C.禁用实例组的运行状况检查。将他的SSH密钥添加到项目范围的SSH密钥
+D.禁用实例组的自动缩放。将他的SSH密钥添加到项目范围的SSH密钥
+正确答案：C
+////////////////////////////////////////////////////////////////////////////////////
+
+Your company is migrating its on-premises data center into the cloud. As part of the migration you want to
+integrate Google Kubemetes Engine (GKE)for workload orcheston. Parts of your architecture must also be PCI Dss-comlan Which of the following is most accurate?
+A. App Engine is the only compute platform on GCP that is certified for PCI DSS hostin
+B. GKE cannot be used under PCI DSS because it is considered shared hosting
+C. GKE and GCP provide the tools you need to build a PCI Dss-compliant environment
+D. All Google Cloud services are usable because Google Cloud Platform is certifed Pcl-compliant
+Correct Answer: C
+
+您的公司正在将其内部数据中心迁移到云中。作为迁移的一部分，您希望为workload orcheston集成Google Kubemetes引擎（GKE）。我们的achie部分也必须是PCI Dss comlan，以下哪项最准确？
+A. App Engine是GCP上唯一经PCI DSS主机认证的计算平台
+B. GKE不能在PCI DSS下使用，因为它被视为共享主机
+C. GKE和GCP提供了构建PCI Dss兼容环境所需的工具
+D. 所有谷歌云服务都是可用的，因为谷歌云平台符合Pcl认证
+正确答案：C
+////////////////////////////////////////////////////////////////////////////////////
+Your company has multiple on-premises systems that serve as sources for reporting. The data has not been maintained well and has become degraded over time.
+You want to use Google-recommended practices to detect anomalies in your company data. What should you do?
+A. Upload your files into Cloud Storage Use Cloud Datalab to explore and clean your data
+B. Upload your files into Cloud Storage Use Cloud Dataprep to explore and clean your data
+C. Connect Cloud Datalab to your on-premises systems Use Cloud Datalab to explore and clean your data
+D. Connect Cloud Dataprep to your on-premises systems. Use Cloud Dataprep to explore and clean your data
+Correct Answer: B
+
+您的公司有多个内部部署系统作为报告来源。数据没有得到很好的维护，并且随着时间的推移，数据已降级。
+您希望使用谷歌推荐的做法来检测公司数据中的异常情况。你该怎么办？
+A.将您的文件上载到云存储中使用云数据实验室来浏览和清理您的数据
+B.将您的文件上载到云存储中使用Cloud Dataprep来浏览和清理您的数据
+C.将云数据实验室连接到您的内部部署系统使用云数据实验室来探索和清理您的数据
+D.将Cloud Dataprep连接到您的内部部署系统。使用Cloud Dataprep来浏览和清理数据
+正确答案：B
+////////////////////////////////////////////////////////////////////////////////////
+Google Cloud Platform resources are managed hierarchically using organization, folders, and projects. When Cloud dentity and Access
+Management(AM)policies exist at these different levels, what  is the effective policy at a paricular node of the hierarchy?
+A. The effective policy is determined only by the policy set at the node
+B. The effective policy is the policy set at the node and restricted by the policies of its ancestors
+C. The effective policy is the union of the policy set at the node and policies inherited from its ancestors
+D. The effective policy is the intersection of the policy set at the node and policies inherited from its ancestors
+Correct Answer: C
+Reference
+https:/cloud.googlecom/resource-manager/docs/cloud-platform-resource-hierarchy
+Google云平台资源使用组织、文件夹和项目进行分层管理。当云的身份和访问
+管理（AM）策略存在于这些不同的级别，在层次结构的特定节点上有效的策略是什么？
+A.有效策略仅由节点上设置的策略决定
+B.有效策略是在节点上设置的策略，受其祖先的策略限制
+C.有效策略是节点上设置的策略和从其祖先继承的策略的联合
+D.有效策略是节点上的策略集与从其祖先继承的策略的交集
+正确答案：C
+参考
+https:/cloud.googlecom/resource-manager/docs/cloud-platform-resource-hierarchy
+////////////////////////////////////////////////////////////////////////////////////
+You are migrating your on-premises solution to Google Cloud in several phases. You will use Cloud VPN to maintain a connection between
+you premises systems and Google Cloud until the migration is completed. You want to make sure all your on-premise systems remain reachable this period.
+How should you organize your networking in Google Cloud?
+A. Use the same IP range on Google Cloud as you use on-premises
+B. Use the same IP range on Google Cloud as you use on-premises for our primary P range and use a secondary range that does not overlap with the range you use on-premises
+C Use an IP range on Google Cloud that does not overlap with the range you use on-premises
+D Use an IP range on Google Cloud that does not overlap with the range you use on-premises for our primary P range and use a secondary range with the same IP range as you use on-premises
+Correct Answer: D
+您正在分几个阶段将内部部署解决方案迁移到Google云。在迁移完成之前，您将使用云VPN在您的楼宇系统和Google Cloud之间保持连接。您希望确保在此期间所有内部部署系统都保持可访问性。你应该如何在谷歌云中组织你的网络？
+A.在谷歌云上使用与您在本地使用相同的IP范围
+B.在谷歌云上使用与您在本地使用的IP范围相同的IP范围作为我们的主P范围，并使用与您在本地使用的范围不重叠的辅助范围
+C.在谷歌云上使用一个IP范围，该范围与您在本地使用的范围不重叠
+D.在Google loud上使用一个IP范围，该范围与您在本地使用的主P范围不重叠，并使用一个与您在本地使用的IP范围相同的辅助范围
+正确答案：D
+////////////////////////////////////////////////////////////////////////////////////
+you have founderror in your App Engine application caused by missing Cloud Datastore indexes. You have created a YAML file with the
+equired indexes and want to deploy these new indexes to Cloud Datastore. What should you do?
+A. Point cloud datastore create-indexes to your configuration file
+B. Upload the configuration file to App Engines default Cloud Storage bucket, and have App Engine delete the new indexes
+C In the GCP Console, use Datastore Admin to delete the curent indexes and upload the new configuration file
+D Createan HTTP request to theb uilt-inpython module to send the index confguration to your applicatio
+Correct Answer: A
+
+您在App Engine应用程序中发现了由于缺少云数据存储索引而导致的错误。您已使用创建了一个YAML文件
+需要索引，并希望将这些新索引部署到云数据存储。你该怎么办？
+A.点云数据存储为配置文件创建索引
+B.将配置文件上传至App Engines默认云存储桶，并让App Engine删除新索引
+C.在GCP控制台中，使用Datastore Admin删除当前索引并上载新的配置文件
+D. 创建一个内置Inpython模块的前驱，以将IndExclution添加到应用程序中
+////////////////////////////////////////////////////////////////////////////////////
+you have an application that will run on Compute Engine. You need to design an architecture that takes into account a disaster recovery plan that requires your application to fail over to another region in case of a regional outage. What should you do?
+A Deploy the application on two Compute Engine instances in the same project but in a different egion. Use the first instance to serve traffic indusetheHTTPloadbalancingservicetofailovertothestandbyinstanceincaseofadisaster
+B Deploy the application on a ComputeEngine instance use the instance to serve traffic and use the HTTP loadbalancing service to fail over 0 an instance on your premises in case of a disaster.
+C Deploy the appl ication on two Compute Engine instance groups, each in the same project but in a different region. Use the first instance grouptoservetraficandusetheHTTPloadbalancingservicetofailovertothestandbyinstancegroupincaseofadisaster
+D. Deploy the application on two Compute Engine instance groups, each in a separate project and a different region. Use the first instance grouptoservetrafficandusetheHTTPloadbalancingservicetofailovertothestandbyinstancegroupincaseofadisaster
+Correct Answer: C
+您有一个将在计算引擎上运行的应用程序。您需要设计一个考虑灾难恢复计划的体系结构，该计划要求您的应用程序在发生区域中断时故障转移到另一个区域。你该怎么办？
+将应用程序部署在同一项目中但位于不同区域的两个计算引擎实例上。使用第一个实例为HttpLoadBalancingServiceToFailovertheStarts和ByInstanceInCaseOfaDisaster提供流量服务
+b部署应用程序组件引擎实例使用instance to ServetAffication，并使用HttpLoadBalanced服务在发生灾难时在您的场所中0一个实例。
+C.在两个计算引擎实例组上部署应用程序，每个实例组位于同一项目中，但位于不同的区域。在发生灾难时，使用第一个实例组来服务eTraFicandUsetHttpLoadBalancingServiceToFailovertheStates和ByInstanceGroup
+D.在两个计算引擎实例组上部署应用程序，每个实例组位于单独的项目和不同的区域。在发生灾难时，使用first instance Group To ServetRaffice并使用Http Load Balancing Service ToFailover Test和By instance Group
+正确答案：C
+////////////////////////////////////////////////////////////////////////////////////
+You are deploying an application on App Engine that needs to negate with an on-premises database. For security purposes, your on-premises database must not be accessible through the public internet. What should you do?
+A Deploy your application on App Engine standard environment and use App Engine firewall rules to limit access to the open on-premises database
+B. Deploy your application on App Engine standard environment and use Cloud PN to limit access to the on-premises database
+C Deploy your application on App Engine flexible environment and use App Engine firewall rules to imt access to the on-premises database
+Deploy your application on App Engine flexible environment and use Cloud VPN to limit access to the on-premises database
+Correct Answer: D
+您正在App Engine上部署一个应用程序，该应用程序需要使用本地数据库进行否定。出于安全目的，不得通过公共互联网访问您的内部数据库。你该怎么办？
+A.在App Engine标准环境中部署应用程序，并使用App Engine防火墙规则限制对开放的本地数据库的访问
+B.在App Engine标准环境中部署应用程序，并使用云PN限制对本地数据库的访问
+C.在App Engine灵活环境中部署应用程序，并使用App Engine防火墙规则来imt访问本地数据库
+D.在App Engine灵活的环境中部署应用程序，并使用云VPN限制对本地数据库的访问
+正确答案：D
+////////////////////////////////////////////////////////////////////////////////////
+you are working
+secured environment where public Intemet access from the Compute Engine VMs is not allowed. You do not yet hava a
+VPN connection to access an on-premises file server. You need to install speci software on a Compute Engine instance. How should you instal
+the software
+A. Upload the required installation files to Cloud Storage. Configure the M on a subnet with a Private Google Access subnet Assign only an ternal P address to the VM. Download the installation files to the VM using guti
+B. Upload the required installation files to Cloud Storage and use firewall rules to all traffic except the IP address
+for cloud Storage. Download the files to the VM using gsutil.
+C. Upload the required installation files to Cloud Source Repositories. Configure the M on a subnet with a Private Google Access subnet.
+Assign only an internal P address to the VM. Download the installation files to the VM using cloud
+D Upload the required installation files to loud ouce Repositories and use firewall rules to block all traffic except the IP address range for
+Cloud Source Repositories. Download the files to the VM using sutil
+Correct Answer: B
+你在工作
+不允许从计算引擎VM进行公共互联网访问的安全环境。你还没有一个
+访问本地文件服务器的VPN连接。您需要在计算引擎实例上安装speci软件。你应该如何安装
+软件
+A.将所需的安装文件上载到云存储。在具有专用Google访问子网的子网上配置M只为VM分配一个内部P地址。使用guti将安装文件下载到VM
+B将所需的安装文件上传到云存储并使用防火墙
+除IP地址外的外国金融机构
+存储使用gsutil将文件下载到VM。
+C.将所需的安装文件上载到云源存储库。在具有专用Google访问子网的子网上配置M。
+仅为VM分配一个内部P地址。使用云将安装文件下载到VM
+D将所需的安装文件上载到loud ouce存储库，并使用防火墙规则阻止所有通信，但IP地址范围除外
+云源存储库。使用sutil将文件下载到VM
+正确答案：B
+////////////////////////////////////////////////////////////////////////////////////
+Your company is moving 75 TB of data into Google Cloud. You want to use Cloud Storage and follow Google-recommended practices What should you do?
+A. Move your data onto a Tansfer Appliance Use a Tansfer Appliance Rehydrator to decrypt the data into Cloud Storage
+B. Move your data onto a Transfer Appliance. Use Cloud Dataprep to decrypt the data into Cloud Storage
+C Install gsutil on each server that contains data Use resumable transfers to upload the
+to Cloud Storage
+D Install gsutil on each server containing data. Use streaming transfers to upload the data into Cloud Storage
+Correct Answer: A
+您的公司正在将75 TB的数据移动到谷歌云中。如果你想使用云存储并遵循谷歌推荐的做法，你应该怎么做？
+A.将数据移动到Tansfer设备上使用Tansfer设备补液器将数据解密到云存储中
+B.将数据移动到传输设备上。使用Cloud Dataprep将数据解密到云存储中
+C在每个包含数据的服务器上安装gsutil，并使用可恢复传输上载数据
+到云存储
+D在每个包含数据的服务器上安装gsutil。使用流式传输将数据上传到云存储
+正确答案：A
+
+////////////////////////////////////////////////////////////////////////////////////
+you have an application deployed on Google Kubenetes Engin using a deployment named  echo-deployment.The departments is exposed using a
+Service called echo-service. You need to perform an update to the application with minimal downtime to the application. hat should you do?
+A Use kubectl set image deployment/echo-deployment <new-image>
+B Use the rolling update functionality of the Instance Group behind the Kubernetes cluster
+C Update the deployment yam file with the new container image. Use kubectl delete deploymenecho-deployment and kubectl create f
+D update the service yaml file which the new container image. Use kube delete service/echo-service and kubectl create f syaml-file
+
+A
+您使用名为echo-deployment的部署在Google Kubenetes Engine上部署了一个应用程序。这些部门使用
+服务称为回音服务。您需要在应用程序停机时间最少的情况下执行应用程序更新。你该怎么办？
+A 使用kubectl设置映像部署/回显部署<新建映像>
+B 使用Kubernetes集群后面的实例组的滚动更新功能
+C 使用新的容器映像更新部署yam文件。使用kubectl delete deploymenecho部署和kubectl create f
+D 更新包含新容器映像的服务yaml文件。使用kube delete service/echo service和kubectl create f syaml文件
+////////////////////////////////////////////////////////////////////////////////////
+Your company is using Bigquery as its enterprise data warehouse. Data is distributed over several Google loud projects.
+All queries on Bigquery need to be billed on a single project. You want to make sure that no query costs are incurred on the projects that contain the data Users should be able to query the datasets, but not edit them
+How should you configure users access roles?
+A. Add all users to a group. Grant the group the role of Bigquery user on the billing project and Bigquery dataviewer on the projects that contain the data
+Add all users to a group. Grant the group the roles of Bigquery datavewer on the billing project and Bigquery user on the projects that
+e data
+C Add all users to a group. Grant the group the roles of Bigquery jobuser on the billing project and Bigquery dataviewer on the projects that contain the data
+D. Add all users to a group. Grant the group the roles of Bigquery datavewer on the billing project and Bigquery jobuser on the projects that contain the data
+Correct Answer: C
+您的公司正在使用Bigquery作为其企业数据仓库。数据分布在几个GoogleLoud项目上。Bigquery上的所有查询都需要在单个项目上计费。您希望确保在包含数据的项目上不会产生查询成本。用户应该能够查询数据集，但不能编辑数据集
+您应该如何配置用户访问角色？
+A.将所有用户添加到组中。在计费项目上授予组Bigquery用户角色，在包含数据的项目上授予组Bigquery dataviewer角色
+将所有用户添加到组中。在计费项目上为组授予Bigquery datavewer角色，在执行的项目上为组授予Bigquery用户角色
+电子数据
+C将所有用户添加到组中。在计费项目上授予组Bigquery jobuser角色，在包含数据的项目上授予组Bigquery dataviewer角色
+D.将所有用户添加到组中。在计费项目上授予组Bigquery datavewer角色，在包含数据的项目上授予组Bigquery jobuser角色
+正确答案：C
+////////////////////////////////////////////////////////////////////////////////////
+You have developed an application using Cloud M Engine that recognizes famous paintings from uploaded images
+You want to test th application and allow specific people to upload images for the next 24 hours.
+Not all users have a Google Account. How should you have users upload images?
+A. Have users upload the images to Cloud Storage. Protect the bucket with a password that expires after 24 hours
+B Have users upload the images to Cloud Storage using a signed URL that expires after 24 hours
+C Create an App Engine web application where users can upload images. Configure App Engine to disable the application after 24 hours
+Authenticate users via Cloud Identity
+D. Create an App Engine web application where users can upload images for the next 24 hours. Authenticate users via Cloud Identity
+Correct Answer: B
+您已经使用Cloud M Engine开发了一个应用程序，该应用程序可以从上传的图像中识别出名画，您希望测试该应用程序，并允许特定人员在接下来的24小时内上传图像。并非所有用户都有谷歌账户。你应该如何让用户上传图片？
+A.让用户将图像上传到云存储。使用24小时后过期的密码保护存储桶
+B 让用户使用24小时后过期的签名URL将图像上传到云存储
+C创建一个应用程序引擎web应用程序，用户可以在其中上载图像。将应用程序引擎配置为在24小时后禁用应用程序
+通过云身份验证用户
+D.创建一个App Engine web应用程序，用户可以在其中上传未来24小时的图像。通过云身份验证用户
+正确答案：B
+
+////////////////////////////////////////////////////////////////////////////////////
+Your web application must comply with the requirements of the European Unions General Data Protection Regulation(GDPR). You are esponsible for the technical architecture of your web application. What should you do?
+A. Ensure that your web application only uses native features and services of Google Cloud Platform, because Google already has various
+les atpass-onnt compliance when you use native features
+B. Enable the relevant GDPR compliance setting within the Gcpconsole for each of the services in use within your application
+Ensure that Cloud Security Scanner is part of your test planning strategy in order to pick up any compliance gaps.
+D. Define a design for the security of data in your web application that meets GDPR requirements
+Correct Answer: D
+Reference:
+https://www.mobiloud.com/blog/gdpr-compliant-mobile-app/
+
+您的web应用程序必须符合欧盟通用数据保护条例（GDPR）的要求。您负责web应用程序的技术架构。你该怎么办？
+A.确保您的web应用程序只使用Google云平台的本机功能和服务，因为Google已经有了各种
+使用本机功能时遵守les atpass onnt
+B.在Gcpconsole中为应用程序中使用的每个服务启用相关的GDPR符合性设置
+确保云安全扫描器是测试规划策略的一部分，以弥补任何法规遵从性差距。
+D.为满足GDPR要求的web应用程序中的数据安全性定义设计
+正确答案：D
+参考：
+https://www.mobiloud.com/blog/gdpr-compliant-mobile-app/
+////////////////////////////////////////////////////////////////////////////////////
+You need to set up Microsoft SQL Server on GCP Managemen requies at thee no downtime in case of a data center outage in any of the
+GCP region. What should you do?
+A. Configure a Cloud SQL instance with high availability enabled
+B Configure a Cloud Spanner instance with a regional instance configuration
+C Set up SQL Server on Compute Engine, using Always n Availabili Groups using Windows Failover Clustering. Place nodes in different
+D Setup al Server Always On Avalability Groups using Windows Failover Clustering, Place nodes n dlferentzomes.
+Correct Answer: D
+您需要在GCP管理器上设置Microsoft SQL Server，以便在以下任何情况下数据中心停机时不停机：
+GCP区域。你该怎么办？
+A.配置启用高可用性的云SQL实例
+B使用区域实例配置配置云扳手实例
+C在计算引擎上设置SQL Server，使用Windows故障转移群集，使用Always n Availabili组。将节点放置在不同的位置
+D使用Windows故障转移群集将所有服务器始终设置在可用组上，将节点放置在不同的服务器上。
+正确答案：D
+////////////////////////////////////////////////////////////////////////////////////
+The development team has provided you with a Kubernetes Deployment file. You have no infrastructure yet and need to deploy the application
+What should you do?
+A Use cloud to create a Kubernetes cluster Use Deployment Manager to create the deployment se cloud to create a Kubernetes cluster. Use kubectl to create the deployment
+C Use kubectl to create a Kubernetes cluster. Use Deployment Manager to create the deployment
+D Use kubectl to create a Kubernetes cluster. Use kubectl to create the deployment
+Correct Answer: B
+开发团队为您提供了Kubernetes部署文件。您还没有基础设施，需要部署应用程序
+你该怎么办？
+使用云创建Kubernetes群集使用部署管理器创建部署se云创建Kubernetes群集。使用kubectl创建部署
+C使用kubectl创建Kubernetes集群。使用部署管理器创建部署
+D使用kubectl创建Kubernetes群集。使用kubectl创建部署
+正确答案：B
+////////////////////////////////////////////////////////////////////////////////////
+You need to evaluate your team readiness for a new GCP project. You must perform the evaluation and create a skills gap plan which incorporates the business goal of cost optimization. Your team has deployed two GCP projects successfully to date. What should you do?
+I A Alocate budget for team training Set a deadine for the new GCP prolect.
+B. Allocate budget for team training. Create a roadmap for your team to achieve Google Cloud certification based on job role
+C Allocate budget to hire skilled external consultants. Set a deadline for the new GCP project
+Allocate budget to hire skilled external consultants. Create a roadmap for your team to achieve Google Cloud certification based on job
+Correct Answer: A
+
+您需要评估您的团队对新GCP项目的准备情况。您必须执行评估并创建一个技能差距计划，该计划包含成本优化的业务目标。迄今为止，您的团队已成功部署了两个GCP项目。你该怎么办？
+我为团队培训制定了合理的预算，为新的GCP项目设定了死线。
+B.分配团队培训预算。为您的团队创建基于工作角色的谷歌云认证路线图
+C分配预算以雇佣熟练的外部顾问。为新的GCP项目设定最后期限
+分配预算以雇佣熟练的外部顾问。为您的团队创建一个路线图，以实现基于作业的谷歌云认证
+正确答案：A
+////////////////////////////////////////////////////////////////////////////////////
+You are designing an application for use only during business hours. For the minimum viable product release, youne"d like to use a managed product that automatically aescales to zerone so you donie t incur costs when there is no activity
+Which primary compute resource should you choose?
+A Cloud Functions
+B Compute Engin
+C. Google Kubernetes Engine
+Appengine flexible environment
+Correct Answer: A
+
+您正在设计仅在工作时间使用的应用程序。对于最低可行的产品发布，您可能希望使用一种管理产品，该产品可以自动调整为zerone，这样您就不会在没有活动的情况下产生成本
+您应该选择哪个主要计算资源？
+云起作用
+计算机引擎
+C.谷歌Kubernetes引擎
+Appengine柔性环境
+正确答案：A
+////////////////////////////////////////////////////////////////////////////////////
+You are creating an App Engine applicaton that uses loud Datastore as its persistence layer. You need to retrieve several root entities for which you have the identifers. You want to minimize the overhead in operations performed by Cloud Datastore. What should you do?
+A. Create the Key object for each Entity and run a batch get operation
+B. Create the Key object for each Entity and run multiple get operations, one operation for each entity
+C. Use the identifiers to create a query filter and run a batch query operation
+D. Use the identifiers to create a query flter and run multiple que
+ry operations, one operation for each entity
+Correct Answer: A
+您正在创建一个应用程序引擎应用程序，它使用loud数据存储作为持久层。您需要检索具有标识的多个根实体。您希望将云数据存储执行的操作的开销降至最低。你该怎么办？
+A.为每个实体创建密钥对象，并运行批处理获取操作
+B.为每个实体创建键对象，并运行多个get操作，每个实体一个操作
+C.使用标识符创建查询筛选器并运行批查询操作
+D.使用标识符创建查询过滤器并运行多个查询
+ry操作，每个实体一个操作
+正确答案：A
+////////////////////////////////////////////////////////////////////////////////////
+You need to upload files from your on-premises envionment o Cloud Storage. You want the les to be encrypted on Cloud Storage using customer-supplied encryption keys. What should you do?
+A. Supply the encryption key in a boto configuration file. Use sutil to upload the files
+B Supply the encryption key using cloud config. Use sutil to upload the files to that bucket.
+C Use sutil to upload the files, and use the flag-encryption-key to supply the encryption key
+D. Use sutil to create a bucket, and use the flag-ncryption-key to supply the encryption key. Use sutil to upload the files to that bucket
+Correct Answer: A
+
+您需要从云存储的本地环境上载文件。您希望使用客户提供的加密密钥在云存储上加密les。你该怎么办？
+A.在boto配置文件中提供加密密钥。使用sutil上传文件
+B使用云配置提供加密密钥。使用sutil将文件上载到该bucket。
+C使用sutil上传文件，并使用标志加密密钥提供加密密钥
+D.使用sutil创建一个bucket，并使用标志ncryption key提供加密密钥。使用sutil将文件上载到该bucket
+正确答案：A
+////////////////////////////////////////////////////////////////////////////////////
+Your customer wants to capture multiple GBS of aggregate real-time key performance indicators(Kpls)from their
+Cloud Platform and monitor the Kps with low latency. How should they capture the Kps?
+A. Store time-series data from the game servers in Google Bigtable, and view it using Google Data Studio
+B. Output custom metrics to Stackdriver from the game servers, and create a Dashboard in Stackdriver Monitoring Console to view them
+C. Schedule Bigquery load jobs to ingest analytics files uploaded to Cloud Storage every ten minutes, and visualize the results in Google Data
+Studio
+Insert the Kpls into Cloud Datastore entities, and run ad hoc analysis and visualizations of them in Cloud Datalab
+Correct Answer: A
+Reference
+https://cloud.google.com/solutions/data-lifecycle-cloud-platform
+
+您的客户希望从他们的系统中捕获多个GB的聚合实时关键性能指标（KPL）
+云平台，以低延迟监控Kps。他们应该如何获取Kps？
+A.将来自游戏服务器的时间序列数据存储在Google Bigtable中，并使用Google data Studio进行查看
+B.从游戏服务器向Stackdriver输出自定义指标，并在Stackdriver监控控制台中创建仪表板以查看这些指标
+C.安排Bigquery加载作业，每十分钟接收上传到云存储的分析文件，并在Google数据中可视化结果
+演播室
+将KPL插入到云数据存储实体中，并在云数据实验室中对其进行即席分析和可视化
+正确答案：A
+参考
+https://cloud.google.com/solutions/data-lifecycle-cloud-platform
+////////////////////////////////////////////////////////////////////////////////////
+You have a Python web application with many dependencies that requires 0.1 CPU cores and 128 MB of memory to operate in production. You want to monitor and maximize machine utilization You also want to reliably deploy new versions of the application Which set of steps should you take
+A Perform the following: 1. reate a managed instance group with f1-micro type machines. 2. Use a startup script to clone the repository, check out the production branch install the dependencies, and start the Python app. 3. Restart the instances to automatically deploy new
+B Perform the following: 1. Create a managed instance group with n-standar-1 type machines. 2. Build a Compute Engine image from the
+tically starts the Python app
+update the instance template to deploy new production releases
+C Perform the following: 1. Create a Google Kubenetes Engine(GKE)cluster w -sandar- pe machines Build a Docker image om the production branch with all of the dependencies, and tag it with the version number. 3. Create a Kubernetes Deployment with the imagepulpolicy set to Tfnotresent n the staging namespace, and then promote it to the production namespace after testing
+D Perform the following: 1. Create a GKE cluster with n1-standard-4 type machines. 2. Build a Docker image from the master branch with all of the dependencies, and tag it with'latest 3 Create a Kubemnetes Deployment in the default namespace with the imagepullpolicy set to
+Always. Restart the pods to automatically deploy new production releases
+Correct Answer: B
+
+您有一个Python web应用程序，它具有许多依赖项，需要0.1个CPU内核和128 MB内存才能在生产环境中运行。您希望监控并最大限度地提高机器利用率您还希望可靠地部署应用程序的新版本您应该采取哪些步骤
+A执行以下操作：1。使用f1微型计算机创建托管实例组。2.使用启动脚本克隆存储库，签出生产分支，安装依赖项，然后启动Python应用程序。3.重新启动实例以自动部署新实例
+B执行以下操作：1。使用n-standar-1类型的计算机创建托管实例组。2.从
+启动Python应用程序
+更新实例模板以部署新的生产版本
+C执行以下操作：1。创建一个GoogleKubenetes引擎（GKE）集群w-sandar-pe机器从生产分支构建一个Docker映像，包含所有依赖项，并用版本号标记它。3.将KutFallImageN和staging设置为在产品名称空间之后创建名称空间，然后将其升级为生产名称空间
+D执行以下操作：1。使用n1-standard-4型机器创建GKE集群。2.从具有所有依赖项的主分支构建Docker映像，并使用“最新3在默认命名空间中创建Kubemnetes部署”，并将imagepullpolicy设置为
+总是重新启动POD以自动部署新的生产版本
+正确答案：B
+////////////////////////////////////////////////////////////////////////////////////
+Your company wants to start using Google loud resources but wants to retain the o-pemises Active Directory domain controller for identity management
+What should you do
+A. Use the Admin Directory AP to authenticate against the Active Directory domain controller.
+B. Use Google Cloud Directory Sync to synchronize Active Directory usernames with cloud identities and configure SAML SSO
+C Use Cloud Identity-aware Proxy configured to use the on-premises Active Directory domain controller as an identity provid
+D Use Compute Engine to create an Active Directory(AD)domain controller that is a replica of the on-premises AD domain controller using
+Google Cloud Directory Sync
+Correct Answer: B
+
+您的公司希望开始使用Google loud资源，但希望保留用于身份管理的o-Pemise Active Directory域控制器
+你该怎么办
+A.使用管理目录AP对Active Directory域控制器进行身份验证。
+B.使用Google Cloud Directory Sync将Active Directory用户名与云标识同步，并配置SAML SSO
+C使用云身份感知代理，配置为使用本地Active Directory域控制器作为身份提供
+D使用计算引擎创建Active Directory（AD）域控制器，该域控制器是使用的本地AD域控制器的副本
+谷歌云目录同步
+正确答案：B
+
+////////////////////////////////////////////////////////////////////////////////////
+You are running a cluster on Kubernetes Engin(GKE o serve a web applicaton Users a oin hat a speci part of the application is not responding anmore. You notice that all pods of our deloyment keep restart afer secon. The applcaton writes logs to standard output
+You want to inspect the logs to find the cause of the issue Which approach can you take?
+A. Review the Stackdriver logs for each Compute Engine instance that is serving as a node in the cluster
+C. Connect to the cluster using cloud credentials and connect to a container in one of the pods to read the logs.
+D Review the Serial Port logs for each Compute Engine instance that is serving as a node in the cluste
+Correct Answer: B
+您正在Kubernetes Engine（GKE）上运行群集，以便为web应用程序用户提供服务，但应用程序的某个特定部分不再响应。您注意到，我们的deloyment的所有POD都会在秒后重新启动。applcaton会将日志写入标准输出
+您想检查日志以找出问题的原因，您可以采取哪种方法？
+A.查看集群中用作节点的每个计算引擎实例的Stackdriver日志
+C.使用云凭据连接到集群，并连接到其中一个pod中的容器以读取日志。
+D查看作为cluste中节点的每个计算引擎实例的串行端口日志
+正确答案：B
+
+////////////////////////////////////////////////////////////////////////////////////
+are using a single loud SQL instance to serve your application from a specific zone. You want to introduce high availability. What should you
+A. Create a read replica instance in a different region
+B Create a failover replica instance in a different region
+C. Create a read replica instance in the same region, but in a different zone
+D. Create a failover replica instance in the same region, but in a different zone
+Correct Answer: D
+正在使用单个loud SQL实例从特定区域为应用程序提供服务。您希望引入高可用性。你应该做什么
+A.在不同区域中创建读取副本实例
+B在不同区域中创建故障转移副本实例
+C.在同一区域中，但在不同区域中创建读取副本实例
+D.在同一区域但在不同区域中创建故障转移副本实例
+正确答案：D
+
+////////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////////

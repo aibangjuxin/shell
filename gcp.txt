@@ -1,15 +1,22 @@
 gcp.sh
-////////////////////////////////////////////////////////////////////////////////
+1 ////////////////////////////////////////////////////////////////////////////////
 Your company has decided to make a major revision of their API in order to create better experiences for their developers. They need to keep the old version of the Apl available and deployable, while allowing new customers and testers to try out the new API. They want to keep the same SSL and DNS records in place to serve both APIS.
 What should they do?
+A.Configure a new load balancer for the new version of the AP
+B.Reconfigure old clients to use a new end point for the new API
+C.Have the old API forward traffic to the new API based on the path
+D.Use separate backend pools for each API path behind the load balance
 Use separate backend pools for each API path behind the load balancer
 贵公司已决定对其 API 进行重大修订，以便为其开发人员创造更好的体验。 他们需要保持旧版本的 Apl 可用和可部署，同时允许新客户和测试人员试用新 API。 他们希望保留相同的 SSL 和 DNS 记录来为这两个 APIS 提供服务。
 他们应该怎么做？
 为负载均衡器后面的每个 API 路径使用单独的后端池
-////////////////////////////////////////////////////////////////////////////////
+D是正确的,因为前提是基于API路径,也不涉及兼容性而是
+保留老的版本
+2 ////////////////////////////////////////////////////////////////////////////////
 your company plans to migrate a multi-peta byte data set to the cloud. The data set must be available 24hrs a day. Your business analysts have experience only with using a SQL interface
 How should you store the data to optimize it for ease of analysis?
 Correct Answer: A
+
 Bigquery is Google's serverless, highly scalable, low cost enterprise data warehouse designed to make all your data analysts productive
 Because there is no infrastructure to manage, you can focus on analyzing data to find meaningful insights using familiar SQL and you dont need a database administrator
 Bigquery enables you to analyze all your data by creating a logical data warehouse over managed, columnar storage as well as data from object storage, and spreadsheets.
@@ -36,7 +43,7 @@ BigQuery BI Engine
 BigQuery BI Engine 是内置于 BigQuery 中的内存中分析服务，允许用户以互动方式分析大型复杂数据集，具备亚秒级查询响应时间，并且支持高并发操作。BI Engine 天然与 Google 的数据洞察集成，另外通过 ODBC/JDBC 与 Looker、关联工作表及我们所有的商业智能合作伙伴解决方案相集成（目前处于预览阶段）。了解详情并注册 BI Engine 的预览版。
 BigQuery GIS
 BigQuery GIS 独一无二地兼具 BigQuery 的无服务器架构和对地理空间分析的原生支持，您可以使用位置信息来增强分析工作流程。BigQuery GIS 支持采用常见地理空间数据格式的任意点、线、多边形和多重多边形，可帮助您简化分析，以全新方式查看空间数据，以及发掘全新的业务线。
-////////////////////////////////////////////////////////////////////////////////
+3 ////////////////////////////////////////////////////////////////////////////////
 The operations manager asks you for a list of recommended practices that she should consider when migrating a J2EE application to the cloud
 Which three practices should you recommend? (Choose three
 A Port the application code to run on Google App Engine
@@ -57,15 +64,19 @@ D. 选择一个自动化框架来可靠地供应云基础设施
 E 在临时环境中部署具有自动化测试的持续集成工具
 F 从 MYSQL 迁移到托管的 NOSQL 数据库，如 Google Cloud Datastore 或 Bigtable
 正确答案：ADE
+C和D相比较,D是更好的practice J2EE在APP engine默认开启的不需要配
 参考：
 https://cloud.google.com/appengine/docs/standard/java/tools/uploadinganapp https://cloud.google.com/appengine/docs/standard/java/building-app/cloud-sql
-////////////////////////////////////////////////////////////////////////////////
+4 ////////////////////////////////////////////////////////////////////////////////
 A news feed web service has the following code running on Google App Engine. During peak load, users report that they can see news articles they already viewed.
 What is the most likely cause of this problem?
 A. The session variable is local to just a single instance
+B. The session variable is being overwritten in Cloud Datastore
+C.The URL of the API needs to be modified to prevent caching
+D.the HTTPExpiresheaderneedstobesetto-1stopcaching
 新闻提要 Web 服务具有在 Google App Engine 上运行的以下代码。 在高峰负载期间，用户报告说他们可以看到他们已经看过的新闻文章。
 这个问题最可能的原因是什么？
-A. session 变量对于单个实例是本地的
+A. session 变量对于单个实例是本地的 题目并没有提及任何跟datastore相关的
 ////////////////////////////////////////////////////////////////////////////////
 An application development team believes their current logging tool will not meet their needs for their new cloud-based product. They want a better tool to capture errors and help them analyze their historical log data. You want to help them find a solution that meets their needs
 What should you do?
@@ -106,6 +117,7 @@ D. Use Google Bigquery billing export and labels to associate cost to groups
 E. Store all state into local SSD, snapshot the persistent disks, and terminate the VM
 F. Store all state in Google Cloud Storage, snapshot the persistent disks, and terminate the VM
 C E
+题目中涉及cost estimation 所以要从低成本的角度 考量答案而不是单从技术可行和开发角度
 这个需求应该是需要保留数据的，所以选择了E 另外需要给财务报表的，所以选择了C
 为了降低成本，工程总监要求所有开发人员将他们的开发基础架构资源从本地虚拟机 (VMS) 转移到 Google Cloud Platform。 这些资源在白天经历多个启动/停止事件，并且需要状态保持。 您被要求设计在 GCP 中运行开发环境的流程，同时向财务部门提供成本可见性。
 你应该采取哪两个步骤？（选择两项）
@@ -156,6 +168,8 @@ B Assign a public P to each instance and configure a firewall rule to allow the 
 C. Ensure that a firewall rule exists to allow load balancer health checks to reach the instances in the instance group
 D. Create a tag on each instance with the name of the load balancer. Configure a firewall rule with the name of the load balancer as the source and the instance tag as the destination
 Correct Answer: C
+A.不需要防火墙规则来访问LB 参考 Products and Services | Google Cloud B.LB不需要公共IP来访问VM。
+D.不需要tag，只需要打开端口即可从LB到达VM。
 The best practice when configuration a health check is to check health and serve traffic on the same port. However, it is possible to perform health checks on one port, but serve traffic on another. If you do use two different ports, ensure that firewall rules and services running on instances are configured appropriately. If you run health checks and serve traffic on the same port, but decide to switch ports at some point, be sure to update both the backend service and the health check
 Backend services that do not have a valid global forwarding rule referencing it will not be health checked and will have no health status
 Reference
@@ -184,6 +198,7 @@ B. Run your script on a new virtual machine with the Bigquery access scope enabl
 C. Create a new service account with Bigquery access and execute your script with that user
 D. Install the bg component for cloud with the command cloud components install bq
 Correct Answer: C
+从题目角度BC都可以 但并不都需要create新的VM 推荐C
 您编写了一个 Python 脚本来从 Google Compute Engine 虚拟机连接到 Google Bigquery。 该脚本正在打印无法连接到的错误
 大查询
 你应该怎么做来修复脚本？
@@ -206,6 +221,9 @@ B. Federate authentication via SAML 2.0 to the existing Identity Provider
 C. Provision users in Google using the Google Cloud Directory Sync tool
 D. Ask users to set their Google password to match their corporate password
 Correct Answer: C
+A不存在的做法
+B是做 SSO 单点登录，不是迁移
+D 错误
 您的客户正在将现有的企业应用从本地数据中心迁移到 Google Cloud Platform。 企业主需要最小的用户干扰。 对存储密码有严格的安全团队要求
 他们应该使用什么身份验证策略？
 A. 使用 G Suite Password Sync 将密码复制到 Google
@@ -404,6 +422,7 @@ B. Write a lifecycle management rule in JSON and push it to the bucket with gsut
 C. Schedule a cron script using gsutil Is E" Ir gs: /backups/* to find and remove items older than 90 days
 D. Schedule a cron script using gsutil Is g: acks/*to find and remove items older than 90 days and schedule it with cron
 Correct Answer: B
+标准做法:Cloud storage&Lifecycle management: 启用对象版本控制，管理对象生命周期 (gsutil+JSON Config file)
 您正在创建一个解决方案，用于从备份 Cloud Storage 存储分区中删除超过 90 天的备份文件。 您想持续优化
 云存储支出
 你该怎么办？
@@ -444,6 +463,8 @@ C. Dynamically resize the SSD persistent disk to 500 GB
 D. Migrate their performance metrics warehouse to Bigquery
 E.Modify all of their batch jobs to use bulk inserts into the database
 答案是 C，因为永久性磁盘性能取决于附加到实例的永久性磁盘总容量和实例具有的 vCPU 数量。 增加永久性磁盘容量将增加其吞吐量和 IOPS，从而提高 MySQL 的性能。
+动态扩容 SSD 到 500 GB。永久性磁盘性能随磁盘大小和虚拟机实例上的 vCPU 数量而扩增。性能会一 直扩增，直至达到磁盘限制或挂接到磁盘的虚拟机实例数上限。
+● https://cloud.google.com/compute/docs/disks/performance#size_price_performance
 Answer is C because persistent disk performance is based on the total persistent disk capacity attached to an instance and the number of vCPUs that the instance has. Incrementing the persistent disk capacity will increment its throughput and IOPS, which in turn improve the performance of MySQL.
 998 / 5000
 Translation results
