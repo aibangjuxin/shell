@@ -1,0 +1,238 @@
+学习下shell如何逐行读取文件，并分析下效率。还有几个实际的简单的例子
+
+方法1：while循环中执行效率最高，最常用的方法。
+
+while read line
+do
+echo $line
+done  < filename
+注释：这种方式在结束的时候需要执行文件，就好像是执行完的时候再把文件读进去一样。
+
+方法2 ： 管道法: cat $FILENAME | while read LINE
+
+cat filename | while read line
+do
+echo $line
+done
+注释：当遇见管道的时候管道左边的命令的输出会作为管道右边命令的输入然后被输入出来。
+
+方法3 for循环
+
+for  line  in  `cat filename`
+do
+echo ${line}
+done
+下面是我测试的一个例子：我随机搞数据到一个临时文件，然后看下执行效率
+
+seq 1 50000000 > /tmp/loop.txt
+➜  wc -l /tmp/loop.txt
+500000 /tmp/loop.txt
+对上面这个文件/tmp/loop.txt测试下三种方式的读效率
+
+#!/bin/bash
+FILENAME="$1"
+TIMEFILE="/tmp/loop.txt" > $TIMEFILE
+SCRIPT=$(basename $0)
+
+function usage(){
+echo "USAGE: $0 filename"
+  echo "Examples:"
+  echo "  $0 loop filename"
+exit 1
+}
+
+function while_read_bottm(){
+while read LINE
+do
+echo $LINE
+done < $FILENAME
+}
+
+function while_read_cat_line(){
+cat $FILENAME | while read LINE
+do
+echo $LINE
+done
+}
+
+function for_in_file(){
+for i in  `cat $FILENAME`
+do
+echo $i
+done
+}
+
+if [ $# -lt 1 ] ; then
+usage
+fi
+echo -e " \n time the script \n"
+echo -e "method 1:"
+echo -e "function while_read_bottm"
+time while_read_bottm >> $TIMEFILE
+echo -e "\n"
+
+echo -e "method 2:"
+echo -e "function while_read_cat_line"
+time while_read_cat_line >> $TIMEFILE
+
+echo -e "\n"
+echo -e "method 3:"
+echo -e "function  for_in_file"
+time  for_in_file >> $TIMEFILE
+下面是执行的结果：
+
+./loop-test.sh /tmp/loop.txt
+time the script
+method 1:
+function while_read_bottm
+
+real	0m0.001s
+user	0m0.000s
+sys	0m0.000s
+
+method 2:
+function while_read_cat_line
+
+real	0m0.005s
+user	0m0.002s
+sys	0m0.002s
+
+method 3:
+function  for_in_file
+
+real	0m0.005s
+user	0m0.001s
+sys	0m0.002s
+个人的一些理解：
+
+####
+
+个人感觉的理解，可能不可靠。
+
+第一种方式，干脆直接，去逐行读文件内容 打印
+
+第二种方式，先要cat文件这个如果很大，本身就慢了，再加上管道，可想而知
+
+第三种类似第二个，所以效率第一个最高,貌似第三个更好看 哈
+
+类似cat /tmp/bigfile.txt|grep www.baidu.com
+
+肯定不如cat /tmp/bigfile.txt|fgrep www.baidu.com
+
+下面这个应该更好一些fgrep www.baidu.com /tmp/bigfile.txt
+
+其他的一些例子：
+
+通过 -r 选项传递给 read 命令以防止阻止解释其中的反斜杠转义符。
+
+在 read 命令之前添加 IFS= 选项，来防止首尾的空白字符被去掉
+
+如果是read -ra:
+
+read -ra : 分配给新的数组 fn
+
+-r：不允许反斜杠来转义任何字符
+
+-a array：把输入内容按分隔符(空格或者跳格之类)分配给数组 这里是 IFS=','
+
+cat domain-ip.txt
+www.baidu.com 14.215.177.39
+www.sohu.com 14.18.240.29
+测试 read -ra : 分配给新的数组 fn
+
+IFS=' '
+while read -r domain ip
+     do
+         echo $domain
+         echo $ip
+ done < "/Users/lex/shell/domain-ip.txt"
+echo "+++++++++++++++++++++++++++++++++++++++++++++++++"
+
+while IFS=' ' read -ra line
+    do
+        #echo $line
+        echo ${line[0]}
+        echo ${line[1]}
+done < /Users/lex/shell/domain-ip.txt
+
+echo "+++++++++++++++++++++++++++++++++++++++++++++++++"
+##下面也是一个类似的嵌套循环 比较拿到不同的
+while IFS=' ' read -ra collectline
+do
+#    echo ${collectline[0]}
+#    echo ${collectline[1]}
+    while IFS=' ' read -ra clouddnsline
+    do
+#       echo ${clouddnsline[0]}
+#       echo ${clouddnsline[1]}
+        if [[ "${collectline[0]}" == "${clouddnsline[0]}" && "${collectline[1]}" !=  "${clouddnsline[1]}" ]];then
+            echo "different"
+            echo  "${collectline[0]}" "${collectline[1]}"
+            echo  "${clouddnsline[0]}" "${clouddnsline[1]}"
+        else
+            echo "" > /dev/null
+        fi
+    done < /Users/lex/shell/domain-ip.txt
+done < /Users/lex/shell/domain-ip-collect.txt
+说明：
+
+/dev/null 文件
+
+如果希望执行某个命令，但又不希望在屏幕上显示输出结果，那么可以将输出重定向到 /dev/null：
+
+$ command > /dev/null
+
+测试请求一些URL 这里可以看下count的用法
+
+#!/bin/bash
+
+urls="
+https://www.baidu.com
+https://www.taobao.com
+https://www.jd.com/abc
+https://www.12306.cn/index/
+192.168.1.111
+"
+echo $urls
+for url in $urls;do
+    count=0
+    while [ $count -lt 3 ];do
+       STATUS=$(curl -I -m 10 -o /dev/null -s -w %{http_code} $url)
+
+       if [ $STATUS -eq 200 ];then
+          echo "$url  OK"
+          break 1
+       fi
+       count=$(($count+1))
+    done
+    if [ $count -eq 3 ];then
+       echo "$url Error"
+    fi
+done
+
+break命令是退出循环的一个简单方法。可以用break命令来退出任意类型的循环，包括while和until
+
+同样道理，比如我要搞脚本之前，要尝试下网络是否OK的？
+
+function check_metadata_is_available() {
+  local count=0
+  local flag=$(curl -I -m 10 -o /dev/null -s -w %{http_code} http://www.baidu.com)
+  if [ -z $flag ]; then
+    while [ $count -lt 3 ]; do
+      echo "30 seconds sleep and try again ..."
+      sleep 30
+      flag=$(curl -I -m 10 -o /dev/null -s -w %{http_code} http://www.baidu.com)
+      [ $flag ] && break
+      count=$(($count+1))
+    done
+  fi
+  echo "The number of attempts to run check_metadata_is_available function: $count"
+  echo "The flag: $flag"
+  [ $flag ] && echo "The metadata is available" || echo "The metadata is unavailable"
+}
+check_metadata_is_available
+综上。
+
+参考：
+
+https://www.cyberciti.biz/faq/unix-howto-read-line-by-line-from-file/
