@@ -141,7 +141,7 @@ TIME-WAIT 12
 用了三个的
 awk -F"\\\] \\\[" '{print $3}' a.sh
 
-awk -F"\\\] \\\[" '$3 ~ /200/ && $4 >=$(NF-2)' 2014-04-01-0000-2330_dl.oupeng.com.cn.log > 0401OK
+awk -F"\\\] \\\[" '$3 ~ /200/ && $4 >=$(NF-2)' 2014-04-01-0000-2330_dl.op.com.cn.log > 0401OK
 
 
 日志中访问量最大的前十个IP及其访问次数。
@@ -152,12 +152,12 @@ awk -F"\\\] \\\[" '$3 ~ /200/ && $4 >=$(NF-2)' 2014-04-01-0000-2330_dl.oupeng.co
 
 
 ➜  Downloads  cat a.sh
-[2014-03-25T14:49:40+08:00] [218.92.221.151] [200] [14275] [-] [opdl_uid=D671973B042731535D21F66902CD0A03] [220.181.157.196] [dl-src.oupeng.com] [GET /lite/w/oupenglite.jar HTTP/1.1] [http://dl.oupeng.com/lite/w/oupenglite.jar] [Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US) AppleWebKit/532.0 (KHTML, like Gecko) Chrome/3.0.195.32 Safari/532.0] [-] [14275] [-] [-]
+[2014-03-25T14:49:40+08:00] [218.92.221.151] [200] [14275] [-] [opdl_uid=D671973B042731535D21F66902CD0A03] [220.181.157.196] [dl-src.op.com] [GET /lite/w/oplite.jar HTTP/1.1] [http://dl.op.com/lite/w/oplite.jar] [Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US) AppleWebKit/532.0 (KHTML, like Gecko) Chrome/3.0.195.32 Safari/532.0] [-] [14275] [-] [-]
 
-awk -F"\\\] \\\[" '$5!="-" && $6!="-"' 2014-04-11-0000-2330_dl.oupeng.com.cn.log
+awk -F"\\\] \\\[" '$5!="-" && $6!="-"' 2014-04-11-0000-2330_dl.op.com.cn.log
 
 ➜  Downloads  awk '$3 ~ /200/ && $4==$(NF-2)' a.sh
-[2014-03-25T14:49:40+08:00] [218.92.221.151] [200] [14275] [-] [opdl_uid=D671973B042731535D21F66902CD0A03] [220.181.157.196] [dl-src.oupeng.com] [GET /lite/w/oupenglite.jar HTTP/1.1] [http://dl.oupeng.com/lite/w/oupenglite.jar] [Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US) AppleWebKit/532.0 (KHTML, like Gecko) Chrome/3.0.195.32 Safari/532.0] [-] [14275] [-] [-]
+[2014-03-25T14:49:40+08:00] [218.92.221.151] [200] [14275] [-] [opdl_uid=D671973B042731535D21F66902CD0A03] [220.181.157.196] [dl-src.op.com] [GET /lite/w/oplite.jar HTTP/1.1] [http://dl.op.com/lite/w/oplite.jar] [Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US) AppleWebKit/532.0 (KHTML, like Gecko) Chrome/3.0.195.32 Safari/532.0] [-] [14275] [-] [-]
 
 
 在awk编程中,
@@ -207,7 +207,7 @@ ORS 输出记录分隔符
 awk '/\postfix\/smtpd/ && $11 ~"450" {print$0}' maillog
 
 
-awk '$8 ~/"404"/ && $10 ~/oupeng.com/ {print "http://r.oupeng.com"$6$10}' /usr/local/nginx/logs/r2.access.log${DATE}.log|grep -v '"-"$'
+awk '$8 ~/"404"/ && $10 ~/op.com/ {print "http://r.op.com"$6$10}' /usr/local/nginx/logs/r2.access.log${DATE}.log|grep -v '"-"$'
 
 
 $0变量：它指的是整条记录。如$ awk '{print $0}' test将输出test文件中的所有记录。
@@ -277,7 +277,7 @@ awk '{if($5==12)print$0;else print$1,$2,$3,$4,"ABC",$6}'
 /101/{print "\047 Hello! \047"} --遇到匹配行以后打印 ' Hello! '.\047代表单引号。
 {print $1,$2}                   --因为没有模式控制，打印每一行的前两个域。
 6、awk '$1 ~ /101/ {print $1}' file 显示文件中第一个域匹配101的行（记录）
-awk '$8 ~/"404"/ && $10 ~/oupeng.com/ {print "http://r.oupeng.com"$6$10}' /usr/local/nginx/logs/r2.access.log${DATE}.log|grep -v '"-"$'
+awk '$8 ~/"404"/ && $10 ~/op.com/ {print "http://r.op.com"$6$10}' /usr/local/nginx/logs/r2.access.log${DATE}.log|grep -v '"-"$'
 第八个域 匹配404的行
 
  用来在记录或者域内匹配正则表达式。
