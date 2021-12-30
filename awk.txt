@@ -1605,3 +1605,20 @@ awk '$6 ~ /POST/ && $9 !~ /200/' /usr/local/nginx/logs/login_intra_access.log|fg
 netstat -n | awk '/^tcp/ {++S[$NF]} END {for(a in S) print a, S[a]}'
 
 ss -ant | awk 'NR>1 {++s[$1]} END {for(k in s) print k,s[k]}'
+
+
+$ cat /tmp/domain_ip/clouddns_nhf_ip.txt
+app-dynamics-proxy. 10.235.20.3
+cap-ppt-pgb. 10.98.14.88
+www.baidu.com. 128.164.241.42
+www.baidu.com. 128.164.241.43
+www.baidu.com. 128.164.241.44
+ipc-dev-pgb. 10.98.33.154
+
+这个样子的，想要第一列相当的情况下 转化为
+app-dynamics-proxy. 10.235.20.3
+cap-ppt-pgb. 10.98.14.88
+www.baidu.com. 128.164.241.42 128.164.241.43 128.164.241.44
+ipc-dev-pgb. 10.98.33.154
+
+cat /tmp/domain_ip/clouddns_nhf_ip.txt  | awk '{S[$1]=$2","S[$1]} END {for(i in S) print i,S[i]}' | sed 's/,$//g'
