@@ -1607,18 +1607,34 @@ netstat -n | awk '/^tcp/ {++S[$NF]} END {for(a in S) print a, S[a]}'
 ss -ant | awk 'NR>1 {++s[$1]} END {for(k in s) print k,s[k]}'
 
 
-$ cat /tmp/domain_ip/clouddns_nhf_ip.txt
+$ cat /tmp/domain_ip/nnf_ip.txt
 app-dynamics-proxy. 10.235.20.3
-cap-ppt-pgb. 10.98.14.88
-www.baidu.com. 128.164.241.42
-www.baidu.com. 128.164.241.43
-www.baidu.com. 128.164.241.44
+ccc-ppt-pgb. 10.98.14.88
+www.baidu.com. 100.100.102.42
+www.baidu.com. 100.100.102.43
+www.baidu.com. 100.100.102.44
 ipc-dev-pgb. 10.98.33.154
 
 这个样子的，想要第一列相当的情况下 转化为
 app-dynamics-proxy. 10.235.20.3
-cap-ppt-pgb. 10.98.14.88
-www.baidu.com. 128.164.241.42 128.164.241.43 128.164.241.44
+ccc-ppt-pgb. 10.98.14.88
+www.baidu.com. 100.100.102.42 100.100.102.43 100.100.102.44
 ipc-dev-pgb. 10.98.33.154
 
-cat /tmp/domain_ip/clouddns_nhf_ip.txt  | awk '{S[$1]=$2","S[$1]} END {for(i in S) print i,S[i]}' | sed 's/,$//g'
+cat /tmp/domain_ip/nnf_ip.txt  | awk '{S[$1]=$2","S[$1]} END {for(i in S) print i,S[i]}' | sed 's/,$//g'
+
+
+
+01
+02;
+03
+04
+05;
+06
+07;
+弄成
+01 02；
+03 04 05；
+06 07；
+
+awk '{if ($0~/;$/) printf("%s\n", $0);else printf("%s ",$0)}'
