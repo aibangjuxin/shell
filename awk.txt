@@ -1656,3 +1656,15 @@ $ cat /tmp/test-zone-domain-file.txt
 wgdc-drn-03.cloud.zone.domain. 300 IN A 10.171.192.156
 apps.cf.wgdc-drn-03.cloud.zone.domain. 300 IN A 10.171.192.156
 04.cloud.zone.domain. 300 IN A 11.192.159.23
+
+
+打印第一列为空或者不为空
+➜  shell cat /tmp/a.txt
+www.baidu.com|14.215.177.39
+www.sohu.com|14.18.240.29
+|www.sohu.com|14.18.240.29
+➜  shell cat /tmp/a.txt|awk -F"|" '$1 ~/^$/{print$0}'
+|www.sohu.com|14.18.240.29
+➜  shell cat /tmp/a.txt|awk -F"|" '$1 !~/^$/{print$0}'
+www.baidu.com|14.215.177.39
+www.sohu.com|14.18.240.29
