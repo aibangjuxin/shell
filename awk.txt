@@ -1638,3 +1638,21 @@ cat /tmp/domain_ip/nnf_ip.txt  | awk '{S[$1]=$2","S[$1]} END {for(i in S) print 
 06 07；
 
 awk '{if ($0~/;$/) printf("%s\n", $0);else printf("%s ",$0)}'
+
+
+将如下文本按第一列为主key，将相同的第五列值追加到同一行
+awk '{a[$1]=a[$1]"|"$5}END{for (i in a) {print i,a[i]"|"}}' /tmp/test-zone-test-private-access-hardcode.txt /tmp/test-zone-domain-file.txt
+awk '{S[$1]=$5","S[$1]}END{for (a in S) print a, S[a]}' /tmp/test-zone-test-private-access-hardcode.txt /tmp/test-zone-domain-file.txt
+awk '{S[$1]=$5","S[$1]}END{for (a in S) print a, S[a]}' /tmp/test-zone-test-private-access-hardcode.txt /tmp/test-zone-domain-file.txt|sed 's/,$//g'
+awk '{S[$1]=$5","S[$1]} END {for(a in S) print a, S[a]}'  /tmp/test-zone-test-private-access-hardcode.txt /tmp/test-zone-domain-file.txt|sed 's/,$//g'
+
+[d5145841@hkl20111021 ~]$ cat /tmp/test-zone-test-private-access-hardcode.txt
+wgdc-drn-03.cloud.zone.domain. 300 IN A 192.168.192.13
+apps.cf.wgdc-drn-03.cloud.zone.domain. 300 IN A 192.168.192.197
+04.cloud.zone.domain. 300 IN A 192.168.192.222
+
+
+$ cat /tmp/test-zone-domain-file.txt
+wgdc-drn-03.cloud.zone.domain. 300 IN A 10.171.192.156
+apps.cf.wgdc-drn-03.cloud.zone.domain. 300 IN A 10.171.192.156
+04.cloud.zone.domain. 300 IN A 11.192.159.23
