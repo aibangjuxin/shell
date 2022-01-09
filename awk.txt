@@ -1668,3 +1668,103 @@ www.sohu.com|14.18.240.29
 ➜  shell cat /tmp/a.txt|awk -F"|" '$1 !~/^$/{print$0}'
 www.baidu.com|14.215.177.39
 www.sohu.com|14.18.240.29
+
+
+将如下文本按第一列为主key，将相同的第五列值追加到同一行
+awk '{a[$1]=a[$1]"|"$5}END{for (i in a) {print i,a[i]"|"}}' /tmp/dev-xu-dev-private-access-hardcode.txt /tmp/dev-xu-domain-file.txt
+awk '{a[$1]=a[$1]" "$5}END{for (i in a) {print i,a[i]}}' /tmp/dev-xu-dev-private-access-hardcode.txt /tmp/dev-xu-domain-file.txt
+awk '{S[$1]=$5","S[$1]}END{for (a in S) print a, S[a]}' /tmp/dev-xu-dev-private-access-hardcode.txt /tmp/dev-xu-domain-file.txt
+awk '{S[$1]=$5" "S[$1]}END{for (a in S) print a, S[a]}' /tmp/dev-xu-dev-private-access-hardcode.txt /tmp/dev-xu-domain-file.txt
+awk '{S[$1]=$5","S[$1]}END{for (a in S) print a, S[a]}' /tmp/dev-xu-dev-private-access-hardcode.txt /tmp/dev-xu-domain-file.txt|sed 's/,$//g'
+awk '{S[$1]=$5","S[$1]} END {for(a in S) print a, S[a]}'  /tmp/dev-xu-dev-private-access-hardcode.txt /tmp/dev-xu-domain-file.txt|sed 's/,$//g'
+下面2个仅仅是分隔符号的不同
+awk 'NR==FNR{a[$1]=$5;next} a[$1]{print $0","a[$1]}' /tmp/dev-xu-dev-private-access-hardcode.txt /tmp/dev-xu-domain-file.txt
+awk 'NR==FNR{a[$1]=$5;next} a[$1]{print $0"|"a[$1]}' /tmp/dev-xu-dev-private-access-hardcode.txt /tmp/dev-xu-domain-file.txt
+对file1执行“NR==FNR{…}”第一个循环，建立哈希数组
+FNR The input record number in the current input file. #已读入当前文件的记录数
+NR The total number of input records seen so far. #已读入的总记录数
+
+       FNR  ordinal number of the current record in the current file.
+       FS   regular expression used to separate fields; also settable by option -Ffs.
+       NF   number of fields in the current record.
+       NR   ordinal number of the current record.
+
+NR当前记录的序号。
+
+公共列是1和2,比上面多一个条件，上面第一列为key,下面这个是第一和第二/将相同的第五列值追加到同一行
+awk 'NR==FNR{a[$1,$2]=$5;next} a[$1,$2]{print $0"|"a[$1,$2]}' /tmp/dev-xu-dev-private-access-hardcode.txt /tmp/dev-xu-domain-file.tx
+
+kubectl cp namesapce-kdp-d:/kong_prefix/config.cache.json.gz config.cache.json.gz -n namesapce-kdp
+ 这个站点不错可以学习看看
+https://www.geeksforgeeks.org/paste-command-in-linux-with-examples/
+
+https://gist.github.com/garystafford/4ecefb60901b610248f39f2de1b9b93b
+
+https://gist.github.com/garystafford
+
+将如下文本按第一列为主key，将相同的第五列值追加到同一行
+awk '{a[$1]=a[$1]"|"$5}END{for (i in a) {print i,a[i]"|"}}' /tmp/dev-xu-dev-private-access-hardcode.txt /tmp/dev-xu-domain-file.txt
+awk '{a[$1]=a[$1]" "$5}END{for (i in a) {print i,a[i]}}' /tmp/dev-xu-dev-private-access-hardcode.txt /tmp/dev-xu-domain-file.txt
+
+awk '{S[$1]=$5","S[$1]}END{for (a in S) print a, S[a]}' /tmp/dev-xu-dev-private-access-hardcode.txt /tmp/dev-xu-domain-file.txt
+awk '{S[$1]=$5" "S[$1]}END{for (a in S) print a, S[a]}' /tmp/dev-xu-dev-private-access-hardcode.txt /tmp/dev-xu-domain-file.txt
+
+awk '{S[$1]=$5","S[$1]}END{for (a in S) print a, S[a]}' /tmp/dev-xu-dev-private-access-hardcode.txt /tmp/dev-xu-domain-file.txt|sed 's/,$//g'
+awk '{S[$1]=$5","S[$1]} END {for(a in S) print a, S[a]}'  /tmp/dev-xu-dev-private-access-hardcode.txt /tmp/dev-xu-domain-file.txt|sed 's/,$//g'
+
+$ cat /tmp/dev-xu-dev-private-access-hardcode.txt
+wgdc-drn-03.cloud.xu.domain. 300 IN A 192.168.192.13
+apps.cf.wgdc-drn-03.cloud.xu.domain. 300 IN A 192.168.192.197
+04.cloud.xu.domain. 300 IN A 192.168.192.222
+
+$ cat /tmp/dev-xu-domain-file.txt
+wgdc-drn-03.cloud.xu.domain. 300 IN A 10.171.192.156
+apps.cf.wgdc-drn-03.cloud.xu.domain. 300 IN A 10.171.192.156
+04.cloud.xu.domain. 300 IN A 11.192.159.23
+
+尝试理解上面
+S[$1] 代表对第一列操作
+S[$1]=$5 若第一列内容相同 对5列
+
+awk累加
+1 默认的awk --help
+Examples:
+	awk '{ sum += $1 }; END { print sum }' file
+	awk -F: '{ print $1 }' /etc/passwd
+累加第二列的数值
+方法一（无条件累加）
+cat /tmp/dev-xu-dev-private-access-hardcode.txt|awk '{a=a+$2}END{print a}'
+答案是900
+
+2 如果两个文件行数相同，只是希望逐行合并 ,可以paste -d "" 这里是分隔符号
+2.1 paste -d "\t" /tmp/dev-xu-dev-private-access-hardcode.txt /tmp/dev-xu-domain-file.txt
+2.2 awk 'NR==FNR{a[NR]=$0;nr=NR;}NR>FNR{print a[NR-nr]"\t"$0}' /tmp/dev-xu-dev-private-access-hardcode.txt /tmp/dev-xu-domain-file.txt
+paste -d "|" /tmp/dev-xu-dev-private-access-hardcode.txt /tmp/dev-xu-domain-file.txt
+wgdc-drn-03.cloud.xu.domain. 300 IN A 192.168.192.13|wgdc-drn-03.cloud.xu.domain. 300 IN A 10.171.192.156
+apps.cf.wgdc-drn-03.cloud.xu.domain. 300 IN A 192.168.192.197|apps.cf.wgdc-drn-03.cloud.xu.domain. 300 IN A 10.171.192.156
+04.cloud.xu.domain. 300 IN A 192.168.192.222|04.cloud.xu.domain. 300 IN A 11.192.159.23
+
+3 两个文件之间求记录交集
+需要先去除重复记录 sort uniq
+
+/////////////////////////////////////////////////////////////////////////////////////
+若第三列，第四列内容相同，则累加第二列的数值，并将结果升序输出）
+$ awk '{a[$3,"\t",$4]+=$2}END{for(i in a)printf "%s\t %d\n",i,a[i]}' file|sort
+ 若第三列的内容相同，则累加对应记录的第二列数值）
+awk '{a[$3]+=$2}END{for(i in a) printf "%s\t %d\n",i,a[i]}' file
+若第1列的内容相同，则累加对应记录的第二列数值[a[$1]+=$2}]
+➜  shell git:(main) cat /tmp/dev-xu-dev-private-access-hardcode.txt
+wgdc-drn-03.cloud.xu.domain. 300 IN A 192.168.192.13
+apps.cf.wgdc-drn-03.cloud.xu.domain. 300 IN A 192.168.192.197
+04.cloud.xu.domain. 300 IN A 192.168.192.222
+wgdc-drn-03.cloud.xu.domain. 300 IN A 192.168.192.13
+➜  shell git:(main) awk '{a[$1]+=$2}END{for(i in a) printf "%s\t %d\n",i,a[i]}' /tmp/dev-xu-dev-private-access-hardcode.txt
+wgdc-drn-03.cloud.xu.domain.	 600
+apps.cf.wgdc-drn-03.cloud.xu.domain.	 300
+04.cloud.xu.domain.	 300
+/////////////////////////////////////////////////////////////////////////////////////
+单纯的合并文件而已
+awk 'NR==FNR{a[i]=$0;i++}NR>FNR{print a[j]" "$0;j++}' /tmp/dev-xu-dev-private-access-hardcode.txt /tmp/dev-xu-domain-file.txt
+wgdc-drn-03.cloud.xu.domain. 300 IN A 192.168.192.13 wgdc-drn-03.cloud.xu.domain. 300 IN A 10.171.192.156
+apps.cf.wgdc-drn-03.cloud.xu.domain. 300 IN A 192.168.192.197 apps.cf.wgdc-drn-03.cloud.xu.domain. 300 IN A 10.171.192.156
+
