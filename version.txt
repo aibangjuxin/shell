@@ -1,0 +1,152 @@
+#!/bin/bash
+while IFS='-' read  apache log4j v1 path core version
+    do
+        #echo $line
+        #echo $version
+        if [ x"$version" \< x"2.17.1" ]; then
+            echo $apache-$log4j-$v1-$path-$core-$version
+            #awk '{print$0}'
+        fi
+done < /tmp/log4j.txt
+
+
+
+:<<EOF
+
+防止出现语法错误。如果不写x，只用 if [ “${var}" == “0” ]来判断${var}的值，当${var}为空或未设置时，语句被解释为 if [ == "0" ]，出现语法错误。加上x后，当${var}为空或未设置时，解释为if [ “x" == "x" ] ，依然正确。
+if [ “x${var}" == “x” ]整句的意思是判断${var}是否为空。
+
+
+注意:在[]结构中"<"需要被转义.
+   if [[ "$a" > "$b" ]]
+   if [ "$a" \> "$b" ]
+   注意:在[]结构中">"需要被转义.
+   具体参考Example 26-11来查看这个操作符应用的例子.
+
+
+➜  ~ echo "data-c(kuh-small1);divider-bin-1.4.4;divider-conf-1.3.3-w(1,16);storage-bin-1.5.4;storage-conf-1.5.0-w(1);worker-bin-4.5.1;worker-conf-4.4.1-c(kuh)-win2" | grep -Po '(?<=divider-bin-)[^;]+'
+1.4.4
+➜  ~ echo "data-c(kuh-small1);divider-bin-1.4;divider-conf-1.3.3-w(1,16);storage-bin-1.5.4;storage-conf-1.5.0-w(1);worker-bin-4.5.1;worker-conf-4.4.1-c(kuh)-win2" | grep -Po '(?<=divider-bin-)[^;]+'
+1.4
+
+➜  ~ cat /tmp/log4j.txt |grep -P '(?<=log4j-core-).*(?=.jar)'
+apache-log4j-2.10.0-bin/log4j-core-2.10.0.jar
+apache-log4j-2.11.0-bin/log4j-core-2.11.0.jar
+apache-log4j-2.11.1-bin/log4j-core-2.11.1.jar
+apache-log4j-2.11.2-bin/log4j-core-2.11.2.jar
+apache-log4j-2.12.0-bin/log4j-core-2.12.0.jar
+apache-log4j-2.12.1-bin/log4j-core-2.12.1.jar
+apache-log4j-2.13.0-bin/log4j-core-2.13.0.jar
+apache-log4j-2.13.1-bin/log4j-core-2.13.1.jar
+apache-log4j-2.13.2-bin/log4j-core-2.13.2.jar
+apache-log4j-2.13.3-bin/log4j-core-2.13.3.jar
+apache-log4j-2.14.0-bin/log4j-core-2.14.0.jar
+
+➜  shell ./version.sh
+apache-log4j-2.10.0-bin/log4j-core-2.10.0.jar
+apache-log4j-2.11.0-bin/log4j-core-2.11.0.jar
+apache-log4j-2.11.1-bin/log4j-core-2.11.1.jar
+apache-log4j-2.11.2-bin/log4j-core-2.11.2.jar
+
+➜  ~ echo "Hello, XXXXXXXX world."|grep -P '(?<=Hello, ).*(?= world.)'
+Hello, XXXXXXXX world.
+➜  ~ echo "Hello, XXXXXXXX world."|grep -Po '(?<=Hello, ).*(?= world.)'
+XXXXXXXX
+homebrew安装路径
+默认路径：/usr/local
+查询路径： brew config | grep HOMEBREW
+brew config|grep HOMEBREW
+HOMEBREW_VERSION: 3.3.10-58-g069ab08
+HOMEBREW_PREFIX: /usr/local
+HOMEBREW_BOTTLE_DOMAIN: https://mirrors.aliyun.com/homebrew/homebrew-bottles
+HOMEBREW_CASK_OPTS: []
+HOMEBREW_CORE_GIT_REMOTE: https://github.com/Homebrew/homebrew-core
+HOMEBREW_MAKE_JOBS: 12
+
+ls -al /usr/local/bin/|grep grep
+lrwxr-xr-x    1 lex  admin        29 Jan 15 11:02 gegrep -> ../Cellar/grep/3.7/bin/gegrep
+lrwxr-xr-x    1 lex  admin        29 Jan 15 11:02 gfgrep -> ../Cellar/grep/3.7/bin/gfgrep
+lrwxr-xr-x    1 lex  admin        28 Jan 15 11:02 ggrep -> ../Cellar/grep/3.7/bin/ggrep
+
+➜  ~ ls /usr/local/opt/grep/libexec/gnubin
+egrep  fgrep  grep
+
+➜  ~ /usr/local/opt/grep/libexec/gnubin/grep --version
+grep (GNU grep) 3.7
+Packaged by Homebrew
+Copyright (C) 2021 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Written by Mike Haertel and others; see
+<https://git.sv.gnu.org/cgit/grep.git/tree/AUTHORS>.
+
+OK 现在
+修改vi .zshrc
+alias c='clear'
+alias grep="/usr/local/opt/grep/libexec/gnubin/grep --color=auto"
+alias ls="/usr/local/opt/coreutils/libexec/gnubin/ls --color=auto"
+#gls --color=tty 或者 ls --color=tty
+
+然后source .zshrc
+➜  ~ grep --version
+grep (GNU grep) 3.7
+Packaged by Homebrew
+Copyright (C) 2021 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
+Written by Mike Haertel and others; see
+<https://git.sv.gnu.org/cgit/grep.git/tree/AUTHORS
+
+Reference:
+https://stackoverflow.com/questions/16817646/extract-version-number-from-a-string
+
+cat /tmp/log4j.txt |awk -F"-" '{if($NF ~ /2.17/)print$0}'
+apache-log4j-2.14.1-bin/log4j-core-2.17.1.jar
+apache-log4j-2.14.1-bin/log4j-core-2.17.2.jar
+
+cat /tmp/log4j.txt|awk -F"-" '{if($3 > 2.11.2 ) print$0}'
+apache-log4j-2.12.0-bin/log4j-core-2.12.0.jar
+apache-log4j-2.12.1-bin/log4j-core-2.12.1.jar
+apache-log4j-2.13.0-bin/log4j-core-2.13.0.jar
+
+#对字符串匹配
+cat /tmp/log4j.txt |awk -F"-" '{if($NF ~ /2.17.[1-9].jar/)print$0}'
+取反
+cat /tmp/log4j.txt |awk -F"-" '{if($NF !~ /2.17.[1-9].jar/)print$0}'
+
+cat /tmp/log4j.txt |awk -F"-" '{if($NF ~ /2.17.[1-9]/)print$0}'
+apache-log4j-2.14.1-bin/log4j-core-2.17.1.jar
+apache-log4j-2.14.1-bin/log4j-core-2.17.7.jar
+apache-log4j-2.14.1-bin/log4j-core-2.17.6.jar
+apache-log4j-2.14.1-bin/log4j-core-2.17.3.jar
+apache-log4j-2.14.1-bin/log4j-core-2.17.5.jar
+apache-log4j-2.14.1-bin/log4j-core-2.17.4.jar
+apache-log4j-2.14.1-bin/log4j-core-2.17.3.jar
+
+比如下面是最后一个字段，但是这个是可以精确到渠道最后一个字断的值大小的
+➜  ~ cat /tmp/log4j-1.txt
+core-2.10.0
+core-2.11.0
+core-2.11.1
+core-2.11.2
+core-2.12.0
+core-2.12.1
+core-2.13.0
+core-2.13.1
+core-2.13.2
+core-2.13.3
+core-2.14.0
+core-2.14.1
+core-2.17.1
+core-2.17.2
+➜  ~ cat /tmp/log4j-1.txt|awk -F"-" '{if($NF > 2.13.2)print$0}'
+core-2.14.0
+core-2.14.1
+core-2.17.1
+core-2.17.2
+
+EOF
