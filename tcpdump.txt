@@ -1,0 +1,243 @@
+tcpdump -D 命令列出可以抓包的网络接口
+tcpdump -nn 'tcp[tcpflags] = tcp-syn'
+tcpdump -nn 'tcp[tcpflags] & (tcp-rst) !=0'
+1 tcpdump -w abc.cap
+
+tcpdump
+tshark
+
+
+今天聊聊抓包吧，毕竟也是需要用到的。其实man tcpdump已经很全面了。我这里仅仅简单举例。今天不谈其他的抓包工具比如tshark or wireshark
+复习的原因，客户反馈有rst情况，那就抓包吧
+
+放后台抓包命令如下：
+tcpdump -i any 'tcp[tcpflags] & tcp-rst != 0' -w abc.pcap
+
+# tcpdump -r abc.pcap
+reading from PCAP-NG file abc.pcap
+18:03:26.075862 IP 192.168.31.239.49152 > 192.168.31.92.63655: Flags [R], seq 2304773203, win 0, length 0
+18:03:44.493833 IP tsa01s09-in-f10.1e100.net.https > 192.168.31.92.64055: Flags [R], seq 4293862520, win 0, length 0
+18:03:45.010709 IP tsa01s09-in-f10.1e100.net.https > 192.168.31.92.64056: Flags [R], seq 3606198384, win 0, length 0
+18:04:03.281209 IP tsa01s09-in-f10.1e100.net.https > 192.168.31.92.64054: Flags [R], seq 3764652670, win 0, length 0
+18:04:04.477276 IP tsa01s09-in-f10.1e100.net.https > 192.168.31.92.64057: Flags [R], seq 3262442809, win 0, length 0
+18:04:15.102509 IP tsa01s09-in-f10.1e100.net.https > 192.168.31.92.64064: Flags [R], seq 4156919088, win 0, length 0
+18:04:15.164990 IP tsa01s09-in-f10.1e100.net.https > 192.168.31.92.64065: Flags [R], seq 4137319441, win 0, length 0
+18:04:22.431280 IP tsa01s09-in-f10.1e100.net.https > 192.168.31.92.64062: Flags [R], seq 136333647, win 0, length 0
+18:04:23.556760 IP tsa01s09-in-f10.1e100.net.https > 192.168.31.92.64063: Flags [R], seq 3908194171, win 0, length 0
+
+其他部分整理操作：
+
+tcpdump -r abc.pcap 'tcp[tcpflags] & (tcp-rst) !=0'
+
+
+tcpdump 'tcp[tcpflags] & (tcp-syn|tcp-fin) != 0 and not src and dst net localnet'
+tcpdump  'tcp[tcpflags] & (tcp-rst) !=0'
+tcpdump -i any 'tcp[tcpflags] & tcp-rst != 0'
+
+       Capturing TCP packets with particular flag combinations (SYN-ACK, URG-ACK, etc.)
+
+       There are 8 bits in the control bits section of the TCP header:
+
+              CWR | ECE | URG | ACK | PSH | RST | SYN | FIN
+
+
+       Some offsets and field values may be expressed as names rather than as numeric values. For example tcp[13] may be replaced with tcp[tcpflags].
+       The following TCP flag field values are also available: tcp-fin, tcp-syn, tcp-rst, tcp-push, tcp-act, tcp-urg.
+
+       This can be demonstrated as:
+                   tcpdump -i xl0 'tcp[tcpflags] & tcp-push != 0'
+
+
+
+tcpdump -D 命令列出可以抓包的网络接口
+特殊接口 any 可用于抓取所有活动的网络接口的数据包
+       -D
+       --list-interfaces
+tcpdump -i pktap,lo0,en
+              An interface argument of "all" or "pktap,all" can be used to capture packets from all interfaces, including loopback and tunnel
+              interfaces.
+-c 选项可以用于限制 tcpdump 抓包的数量
+
+-nn 选项显示端口号 如果想要抓域名不要使用这个【通常在网络故障排查中，使用 IP 地址和端口号更便于分析问题；用 -n 选项显示 IP 地址，-nn 选项显示端口号】
+
+使用 -w 选项来保存数据包而不是在屏幕上显示出抓取的数据包，后缀名 pcap 表示文件是抓取的数据包格式
+-w file将原始数据包写入文件，而不是解析并打印出来。以后可以使用-r选项打印它们。如果文件为“-”，则使用标准输出。
+-r 选项参数来阅读该文件中的报文内容
+
+host 参数只抓取和特定主机相关的数据包
+
+可以根据服务类型或者端口号来筛选数据包。例如，抓取和 HTTPS 服务相关的数据包
+dst 就是按目的 IP/主机名来筛选数据包
+用多条件组合来筛选数据包，使用 and 以及 or 逻辑操作符来创建过滤规则
+
+tcpdump 提供了两个选项可以查看数据包内容，-X 以十六进制打印出数据报文内容，-A 打印数据报文的 ASCII 值
+【Print each packet (minus its link level header) in ASCII.  Handy for capturing web pages.】
+tcpdump host 180.97.125.228 and port 443 -A
+
+
+tcpdump -i any port 443
+
+ tcpdump -XX -i en0 -vv port 80 and host weibo.com
+
+       -XX    When parsing and printing, in addition to printing the headers of each packet, print the data of each packet, including its link level
+              header, in hex and ASCII.
+-XX在解析和打印时，除了打印每个数据包的标题外，还应以十六进制和ASCII打印每个数据包的数据，包括其链路级标题。
+
+
+EXAMPLES
+       To print all packets arriving at or departing from sundown:
+              tcpdump host sundown
+
+       To print traffic between helios and either hot or ace:
+              tcpdump host helios and \( hot or ace \)
+
+       To print all IP packets between ace and any host except helios:
+              tcpdump ip host ace and not helios
+
+       To print all traffic between local hosts and hosts at Berkeley:
+              tcpdump net ucb-ether
+
+       To print all ftp traffic through internet gateway snup: (note that the expression is quoted to prevent the shell from (mis-)interpreting the
+       parentheses):
+              tcpdump 'gateway snup and (port ftp or ftp-data)'
+
+       To print traffic neither sourced from nor destined for local hosts (if you gateway to one other net, this stuff should never make it onto your
+       local net).
+              tcpdump ip and not net localnet
+
+       To print the start and end packets (the SYN and FIN packets) of each TCP conversation that involves a non-local host.
+              tcpdump 'tcp[tcpflags] & (tcp-syn|tcp-fin) != 0 and not src and dst net localnet'
+
+       To print all IPv4 HTTP packets to and from port 80, i.e. print only packets that contain data, not, for example, SYN and FIN packets and ACK-only
+       packets.  (IPv6 is left as an exercise for the reader.)
+              tcpdump 'tcp port 80 and (((ip[2:2] - ((ip[0]&0xf)<<2)) - ((tcp[12]&0xf0)>>2)) != 0)'
+
+       To print IP packets longer than 576 bytes sent through gateway snup:
+              tcpdump 'gateway snup and ip[2:2] > 576'
+
+       To print IP broadcast or multicast packets that were not sent via Ethernet broadcast or multicast:
+              tcpdump 'ether[0] & 1 = 0 and ip[16] >= 224'
+
+       To print all ICMP packets that are not echo requests/replies (i.e., not ping packets):
+              tcpdump 'icmp[icmptype] != icmp-echo and icmp[icmptype] != icmp-echoreply'
+
+用我的mac抓arp包
+sudo tcpdump -l -n arp > arp2.txt
+
+抓组播地址：
+virtual_router_id 51
+#组播ID，通过224.0.0.18可以监听到现在已经存在的VRRP ID，最好不要跟现有ID冲突
+多播，也称为“组播”，将局域网中同一业务类型主机进行了逻辑上的分组，进行数据收发的时候其数据仅仅在同一分组中进行，其他的主机没有加入此分组不能收发对应的数据。
+多播的地址是特定的，D类地址用于多播。D类IP地址就是多播IP地址，即224.0.0.0到239.255.255.255之间的IP地址，并被划分为局部连续多播地址，预留多播地址和管理权限多播地址3类
+
+tcpdump -i eth0 host 224.0.0.18  -w /tmp/vrid
+tcpdump -r /tmp/vrid |grep vrid|awk -F "," '{print$3}'|sort|uniq -c
+
+[ffq]➜  ~  sudo tcpdump -r /tmp/vrid |grep vrid|awk -F "," '{print$3}'|sort|uniq -c
+reading from file /tmp/vrid, link-type EN10MB (Ethernet)
+tcpdump: pcap_loop: truncated dump file; tried to read 60 captured bytes, only got 12
+     81  vrid 51
+     80  vrid 52
+
+用快捷键CTRL-a d 来暂时断开当前会话。
+离开screen
+完成终止一个会话可以使用“Ctrl-A” “K” 或”exit”命令结束。
+保留会话但关闭窗口可以使用“Ctrl-A” “d”命令，这样下次你可以连接此会话。
+
+-list         or -ls. Do nothing, just list our SockDir
+
+
+root@localhost ~]# screen -list
+There is a screen on:
+    27014.pts-0.localhost    (Attached)
+1 Socket in /var/run/screen/S-root.
+
+[lxu@abintel ~]$ screen -ls
+There is a screen on:
+     10287.pts-3.abintel     (Attached)这个状态就是被占用了 需要踢掉那个用户
+1 Socket in /tmp/uscreens/S-lxu.
+当你挂起screen，下次想连上screen的时候，有时候会出现screen session的状态为Attached而怎么连也连不上的情况。下面给出解决方法。
+列出状态为Attached的session id。
+
+screen -ls
+screen -D  -r ＜session-id>
+解释：-D -r 先踢掉前一用户，再登陆。就OK了
+
+
+
+
+tcpdump host 180.97.125.228 and port 443
+17:06:58.797568 IP 192.168.31.92.62721 > 180.97.125.228.https: Flags [S], seq 968089709, win 65535, options [mss 1460,nop,wscale 6,nop,nop,TS val 1066549044 ecr 0,sackOK,eol], length 0
+17:06:58.847999 IP 180.97.125.228.https > 192.168.31.92.62721: Flags [S.], seq 3917924754, ack 968089710, win 5808, options [mss 1440,nop,nop,sackOK,nop,wscale 12], length 0
+17:06:58.849561 IP 192.168.31.92.62721 > 180.97.125.228.https: Flags [.], ack 1, win 4096, length 0
+17:06:58.855931 IP 192.168.31.92.62721 > 180.97.125.228.https: Flags [P.], seq 1:229, ack 1, win 4096, length 228
+17:06:58.921399 IP 180.97.125.228.https > 192.168.31.92.62721: Flags [.], ack 229, win 123, length 0
+17:06:58.921446 IP 180.97.125.228.https > 192.168.31.92.62721: Flags [.], seq 1:1441, ack 229, win 123, length 1440
+17:06:58.921447 IP 180.97.125.228.https > 192.168.31.92.62721: Flags [.], seq 1441:2881, ack 229, win 123, length 1440
+17:06:58.921447 IP 180.97.125.228.https > 192.168.31.92.62721: Flags [P.], seq 2881:4062, ack 229, win 123, length 1181
+17:06:58.923339 IP 192.168.31.92.62721 > 180.97.125.228.https: Flags [.], ack 4062, win 4032, length 0
+17:06:58.924448 IP 192.168.31.92.62721 > 180.97.125.228.https: Flags [.], ack 4062, win 4096, length 0
+17:06:58.925903 IP 192.168.31.92.62721 > 180.97.125.228.https: Flags [P.], seq 229:355, ack 4062, win 4096, length 126
+17:06:59.018505 IP 180.97.125.228.https > 192.168.31.92.62721: Flags [P.], seq 4062:4113, ack 355, win 123, length 51
+17:06:59.020313 IP 192.168.31.92.62721 > 180.97.125.228.https: Flags [.], ack 4113, win 4095, length 0
+17:06:59.020507 IP 192.168.31.92.62721 > 180.97.125.228.https: Flags [P.], seq 355:485, ack 4113, win 4096, length 130
+17:06:59.134003 IP 180.97.125.228.https > 192.168.31.92.62721: Flags [.], ack 485, win 131, length 0
+17:06:59.212294 IP 180.97.125.228.https > 192.168.31.92.62721: Flags [.], seq 4113:5553, ack 485, win 131, length 1440
+17:06:59.212295 IP 180.97.125.228.https > 192.168.31.92.62721: Flags [.], seq 5553:6993, ack 485, win 131, length 1440
+17:06:59.212296 IP 180.97.125.228.https > 192.168.31.92.62721: Flags [P.], seq 6993:7068, ack 485, win 131, length 75
+17:06:59.212296 IP 180.97.125.228.https > 192.168.31.92.62721: Flags [P.], seq 7068:7102, ack 485, win 131, length 34
+17:06:59.216453 IP 192.168.31.92.62721 > 180.97.125.228.https: Flags [.], ack 7102, win 4049, length 0
+17:06:59.216695 IP 192.168.31.92.62721 > 180.97.125.228.https: Flags [.], ack 7102, win 4096, length 0
+17:06:59.216777 IP 192.168.31.92.62721 > 180.97.125.228.https: Flags [P.], seq 485:516, ack 7102, win 4096, length 31
+17:06:59.217763 IP 192.168.31.92.62721 > 180.97.125.228.https: Flags [F.], seq 516, ack 7102, win 4096, length 0
+17:06:59.298151 IP 180.97.125.228.https > 192.168.31.92.62721: Flags [.], ack 516, win 131, length 0
+17:06:59.298151 IP 180.97.125.228.https > 192.168.31.92.62721: Flags [F.], seq 7102, ack 517, win 131, length 0
+17:06:59.304531 IP 192.168.31.92.62721 > 180.97.125.228.https: Flags [.], ack 7103, win 4096, length 0
+
+tcpdump -r xxxx.pcap 'tcp[tcpflags] & tcp-rst !='
+-w 把包数据直接写人文件而不进行分析和打印输出，
+这些包数据可在随后通过- 选项来重新读入并进行分析和打印
+
+TCP异常终止（reset报文
+http://www.vants.org/?post=22
+TCP异常终止（reset报文）
+
+TCP的异常终止是相对于正常释放TCP连接的过程而言的，我们都知道，TCP连接的建立是通过三次握手完成的，而TCP正常释放连接是通过四次挥手来完成，但是有些情况下，TCP在交互的过程中会出现一些意想不到的情况，导致TCP无法按照正常的四次挥手来释放连接，如果此时不通过其他的方式来释放TCP连接的话，这个TCP连接将会一直存在，占用系统的部分资源。在这种情况下，我们就需要有一种能够释放TCP连接的机制，这种机制就是TCP的reset报文。reset报文是指TCP报头的标志字段中的reset位置一的报文，如下图所示：
+
+点击查看原图
+
+TCP异常终止的常见情形
+
+我们在实际的工作环境中，导致某一方发送reset报文的情形主要有以下几种：
+
+1，客户端尝试与服务器未对外提供服务的端口建立TCP连接，服务器将会直接向客户端发送reset报文。
+
+点击查看原图
+
+2，客户端和服务器的某一方在交互的过程中发生异常（如程序崩溃等），该方系统将向对端发送TCP reset报文，告之对方释放相关的TCP连接，如下图所示：
+
+点击查看原图
+
+3，接收端收到TCP报文，但是发现该TCP的报文，并不在其已建立的TCP连接列表内，则其直接向对端发送reset报文，如下图所示：
+
+点击查看原图
+
+4，在交互的双方中的某一方长期未收到来自对方的确认报文，则其在超出一定的重传次数或时间后，会主动向对端发送reset报文释放该TCP连接，如下图所示：
+
+点击查看原图
+
+5，有些应用开发者在设计应用系统时，会利用reset报文快速释放已经完成数据交互的TCP连接，以提高业务交互的效率，如下图所示：
+
+点击查看原图
+
+ Reset报文的利用
+
+1 安全设备利用reset报文阻断异常连接
+
+安全设备（如防火墙、入侵检测系统等）在发现某些可疑的TCP连接时，会构造交互双方的reset报文发给对端，让对端释放该TCP连接。比如入侵检测检测到黑客攻击的TCP连接，其构造成被攻击端给黑客主机发送reset报文，让黑客主机释放攻击连接。
+
+2 利用reset报文实施攻击
+
+安全设备可以利用reset报文达到安全防护的效果，黑客和攻击者也可以利用reset报文实现对某些主机的入侵和攻击，最常见的就是TCP会话劫持攻击。关于TCP会话劫持的相关知识请参考第三章《TCP会话劫持》一文。
+
+

@@ -27,6 +27,9 @@ gcloud config configurations activate pythonrocks
 gcloud config set core/account pythonrocks@gmail.com
 gcloud projects list
 gcloud config set project mygcp-demo
+gcloud config configurations activate $project
+
+
 ```
 
 ### 0.3.1. Switch gcloud context with gcloud config
@@ -140,6 +143,12 @@ gcloud resource-manager folders list --organization=$ORG_ID
 gcloud resource-manager folders list --folder=$FOLDER_ID
 # get iam policy for the folder
 gcloud resource-manager folders get-iam-policy $FOLDER_ID
+
+# add iam-policy-binding for $sa
+gcloud iam service-accounts add-iam-policy-binding \
+--role roles/iam.workloadIdentityUser \
+--member "serviceAccount:${project}.svc.id.goog[${namespace}/${sa}]" \
+$e-sa@${project}.iam.gserviceaccount.com
 
 # grant roles to a user
 ORGANIZATION_ADMIN_ADDRESS='user:developer1@example.com'
@@ -691,6 +700,8 @@ gcloud compute forwarding-rules create http-content-rule \
         --target-http-proxy http-lb-proxy \
         --ports 80
 gcloud compute forwarding-rules list
+
+gcloud compute backend-services list --filter="name~'-keyword-'" | tail -n1 | awk '{print $1}')
 
 ```
 
