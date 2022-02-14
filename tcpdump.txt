@@ -240,4 +240,19 @@ TCP异常终止的常见情形
 
 安全设备可以利用reset报文达到安全防护的效果，黑客和攻击者也可以利用reset报文实现对某些主机的入侵和攻击，最常见的就是TCP会话劫持攻击。关于TCP会话劫持的相关知识请参考第三章《TCP会话劫持》一文。
 
-
+LexMac:~ root# tcpdump 'tcp[tcpflags] & (tcp-rst) !=0'
+tcpdump: data link type PKTAP
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on pktap, link-type PKTAP (Apple DLT_PKTAP), capture size 262144 bytes
+15:30:13.697606 IP a23-45-61-4.deploy.static.akamaitechnologies.com.https > 192.168.31.92.52047: Flags [R.], seq 1488023743, ack 1355112070, win 504, options [nop,nop,TS val 4238660232 ecr 2900412312], length 0
+15:30:13.781347 IP a23-45-61-4.deploy.static.akamaitechnologies.com.https > 192.168.31.92.52047: Flags [R], seq 1488023719, win 0, length 0
+15:30:14.251309 IP tsa03s06-in-f10.1e100.net.https > 192.168.31.92.52063: Flags [R], seq 4188083069, win 0, length 0
+15:30:14.313031 IP tsa03s06-in-f10.1e100.net.https > 192.168.31.92.52067: Flags [R], seq 441512974, win 0, length 0
+15:30:18.522147 IP tsa03s06-in-f10.1e100.net.https > 192.168.31.92.52069: Flags [R], seq 934662237, win 0, length 0
+15:30:24.527786 IP 192.168.31.92.51719 > 113.137.54.227.https: Flags [R], seq 104174652, win 0, length 0
+15:30:24.527846 IP 192.168.31.92.51719 > 113.137.54.227.https: Flags [R], seq 104174652, win 0, length 0
+15:30:24.527873 IP 192.168.31.92.51719 > 113.137.54.227.https: Flags [R], seq 104174652, win 0, length 0
+15:30:24.527883 IP 192.168.31.92.51719 > 113.137.54.227.https: Flags [R], seq 104174652, win 0, length 0
+15:30:25.271220 IP tsa03s06-in-f10.1e100.net.https > 192.168.31.92.52050: Flags [R], seq 1813483842, win 0, length 0
+15:30:32.549893 IP 192.168.31.92.51584 > 13.69.106.89.https: Flags [R.], seq 3671327153, ack 965066092, win 4096, length 0
+15:30:37.215497 IP 192.168.31.92.60702 > 13.69.106.216.https: Flags [R.], seq 3524947825, ack 1952053628, win 4096, length 0
