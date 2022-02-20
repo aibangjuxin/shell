@@ -106,9 +106,9 @@ echo ... result is "$(wc -l < $file)" lines long.
 mapfile -d " " -t myarr < /Users/lex/shell/ip.txt
 echo "${myarr[@]}"
 echo "+++++++这个是乱的+++++++"
-echo " other "
+echo " other如果按照整行读入不能将每一个元素作为循环对象"
 #mapfile -d " " -t hostlist < /Users/lex/shell/ip.txt 
-IFS=" " read -r -a hostlist <<< "$(cat /Users/lex/shell/ip.txt )"
+IFS=" " read -r -a hostlist <<< "$(cat /Users/lex/shell/ip.txt|tr -s '\n' " ")"
 for (( i=0;i<${#hostlist[@]}; i+=4 ));do
     ip=${hostlist[i]}
     username=${hostlist[i+1]}
