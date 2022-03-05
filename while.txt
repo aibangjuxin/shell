@@ -236,3 +236,13 @@ check_metadata_is_available
 参考：
 
 https://www.cyberciti.biz/faq/unix-howto-read-line-by-line-from-file/
+
+
+awk 'BEGIN{while (a++<50) s=s "-"; print s,"splite line",s}'
+awk 'BEGIN{while (a++<50) s=s "-"; print s,"splite line",s}'
+
+cat < /Users/lex/shell/ip.txt|while IFS=' ' read -r ip user passwd port
+do
+    echo "$ip" "$user" "$passwd"
+done
+
