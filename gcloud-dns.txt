@@ -91,3 +91,4 @@ GCP DNS query logging not working - gcloud dns managed-zones update zonename --l
 $ gcloud dns managed-zones update xxxxxxx --log-dns-queries
 
 https://faun.pub/dns-forwarding-zone-forwarding-and-dns-policy-in-gcp-640a34b15bca
+https://stackoverflow.com/questions/66537942/what-is-gcp-equivalent-of-dns-server-configuration-for-a-virtual-network-on-micr
