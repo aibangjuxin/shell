@@ -89,3 +89,5 @@ https://stackoverflow.com/questions/69886580/gcp-dns-query-logging-not-working-g
 GCP DNS query logging not working - gcloud dns managed-zones update zonename --log-dns-queries
 
 $ gcloud dns managed-zones update xxxxxxx --log-dns-queries
+
+https://faun.pub/dns-forwarding-zone-forwarding-and-dns-policy-in-gcp-640a34b15bca
