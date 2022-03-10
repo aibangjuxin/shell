@@ -1,4 +1,5 @@
-gcloud authA
+
+gcloud auth
 gcloud auth activate-refresh-token
 gcloud auth activate-service-account
 gcloud auth git-helper
@@ -7,6 +8,7 @@ gcloud auth login
 gcloud auth print-access-token
 gcloud auth print-refresh-token
 gcloud auth revoke
+gcloud authA
 gcloud components
 gcloud components list
 gcloud components remove
@@ -35,15 +37,15 @@ gcloud compute backend-services update
 gcloud compute backend-services update-backend
 gcloud compute config-ssh
 gcloud compute copy-files
+gcloud compute disk-types
+gcloud compute disk-types describe
+gcloud compute disk-types list
 gcloud compute disks
 gcloud compute disks create
 gcloud compute disks delete
 gcloud compute disks describe
 gcloud compute disks list
 gcloud compute disks snapshot
-gcloud compute disk-types
-gcloud compute disk-types describe
-gcloud compute disk-types list
 gcloud compute firewall-rules
 gcloud compute firewall-rules create
 gcloud compute firewall-rules delete
@@ -68,6 +70,11 @@ gcloud compute images delete
 gcloud compute images deprecate
 gcloud compute images describe
 gcloud compute images list
+gcloud compute instance-templates
+gcloud compute instance-templates create
+gcloud compute instance-templates delete
+gcloud compute instance-templates describe
+gcloud compute instance-templates list
 gcloud compute instances
 gcloud compute instances add-access-config
 gcloud compute instances add-metadata
@@ -87,11 +94,6 @@ gcloud compute instances set-disk-auto-delete
 gcloud compute instances set-scheduling
 gcloud compute instances start
 gcloud compute instances stop
-gcloud compute instance-templates
-gcloud compute instance-templates create
-gcloud compute instance-templates delete
-gcloud compute instance-templates describe
-gcloud compute instance-templates list
 gcloud compute machine-types
 gcloud compute machine-types describe
 gcloud compute machine-types list

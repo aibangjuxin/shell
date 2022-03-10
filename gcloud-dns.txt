@@ -1,0 +1,91 @@
+
+gcloud get the entry ip for query dns
+--log-dns-queries
+
+gcloud logging read 'resource.type="k8s_container" AND resource.labels.namespace_name="default" AND resource.labels.container_name="nginx"' --limit=10
+
+kubectl exec --namespace=kube-system $(kubectl get pods --namespace=kube-system -l k8s-app=kube-dns -o name) -c kubedns -- nslookup google.com 127.0.0.1
+
+kubectl exec --namespace=kube-system $(kubectl get pods --namespace=kube-system -l k8s-app=kube-dns -o name) -c kubedns -- nslookup kubernetes 127.0.0.1
+
+kubectl exec -n kube-system kube-dns-6b4f4b544c-kkbt4 -c kubedns -- nslookup google.com 127.0.0.1
+
+https://github.com/kubernetes/kubernetes/issues/64586
+
+https://stackoverflow.com/questions/69886580/gcp-dns-query-logging-not-working-gcloud-dns-managed-zones-update-zonename-l
+
+https://stackoverflow.com/questions/67908101/how-to-generate-gcp-dns-logs
+
+https://developer-question-bank.com/google-cloud-platform/50831018097654747613.html
+
+After getting your DNS server policy configured, follow these steps to ensure that DNS logging is enabled:
+1. Click on ‘DNS server policy’ in Cloud DNS.
+2. Click on the name of the policy that you want to get logs from, then click ‘Edit Policy’.
+3. Under Logs, select the ‘on’ option and then click on save. (If the ‘on’ option is already selected, it means that your logging is already enabled.)
+This will allow logs from the internal VPC DNS queries to be generated in Cloud Logging.
+Alternatively, you can run the following command in the cloud shell to enable logging for a particular DNS server policy -
+gcloud dns policies update [policy name]    --networks=[VPC network’s name] --enable-logging
+
+https://stackoverflow.com/questions/67908101/how-to-generate-gcp-dns-logs
+Launch a VM and make DNS queries to your VPC's DNS Resolver. To list the IP addresses of the DNS resolvers in your VPC:
+
+
+gcloud compute addresses list --project PROJECT_ID --filter="purpose = 'DNS_RESOLVER'" --format="csv(address, region, subnetwork)"
+
+
+
+gcloud compute addresses list --filter="purpose=DNS_RESOLVER" --format='csv[no-heading](address, subnetwork)'
+
+
+NAME
+    gcloud compute addresses list - list addresses
+
+SYNOPSIS
+    gcloud compute addresses list [NAME ...] [--regexp=REGEXP, -r REGEXP]
+        [--global | --regions=[REGION,...]] [--filter=EXPRESSION]
+        [--limit=LIMIT] [--page-size=PAGE_SIZE] [--sort-by=[FIELD,...]] [--uri]
+        [GCLOUD_WIDE_FLAG ...]
+
+
+1. Search ‘Logs explorer’ in the search bar in the console, click on ‘Logs Explorer’.
+2. Under resource, select ‘Cloud DNS Query’, then select your preferred DNS Zone name, then select your preferred location from where queries are received, click add.
+Or you can run the following query in Logs Explorer to see the required logs:
+resource.type="dns_query"
+resource.labels.target_name="[preferred Zone’s name]"
+resource.labels.location="[preferred location to receive queries]"
+Now you would be able to see the logs generated for the DNS queries made.
+
+
+ gcloud dns
+ gcloud dns changes
+ gcloud dns changes get
+ gcloud dns changes list
+ gcloud dns managed-zone
+ gcloud dns managed-zone create
+ gcloud dns managed-zone delete
+ gcloud dns managed-zone get
+ gcloud dns managed-zone list
+ gcloud dns project-info
+ gcloud dns project-info get
+ gcloud dns records
+ gcloud dns records edit
+ gcloud dns records list
+
+https://medium.com/m/global-identity?redirectUrl=https%3A%2F%2Ffaun.pub%2Fdns-forwarding-zone-forwarding-and-dns-policy-in-gcp-640a34b15bca
+
+
+https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/query-logs.html#query-logs-example
+
+
+Log Route 53 DNS queries – You can use CloudWatch Logs to log information about the DNS queries that Route 53 receives. For more information, see Logging DNS Queries in the Amazon Route 53 Developer Guide.
+
+
+https://www.domaintools.com/resources/blog/useful-sources-of-domain-and-dns-logging
+
+Google Cloud DNS logging tracks queries that name servers resolve for VPC
+
+
+https://stackoverflow.com/questions/69886580/gcp-dns-query-logging-not-working-gcloud-dns-managed-zones-update-zonename-l
+GCP DNS query logging not working - gcloud dns managed-zones update zonename --log-dns-queries
+
+$ gcloud dns managed-zones update xxxxxxx --log-dns-queries
