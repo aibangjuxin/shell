@@ -76,7 +76,7 @@ retry_count=0
 while [ $retry_count -lt $max_retry ];
 do
   ((retry_count++))
-  iface=hahah
+  iface=hh
   if [[ -n $iface ]];
   then
     echo "eth1 exist."
