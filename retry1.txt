@@ -1,0 +1,279 @@
+#!/usr/local/bin/bash
+if [ "$1" == "-h" ]; then
+	cat <<EOF
+*****************************************************************
+* Initializing system, please try later!
+* Power by Lex. Let's go! and be happy!
+* version 1.0
+  echo "Examples:"
+  echo "  $0 -e asia-es1 -c update or delete or adddns"
+*****************************************************************
+EOF
+	exit 0
+fi
+
+function usage() {
+	echo "Usage: $0 [-e <asia-es1 asia-es2 eu-a eu-b>]" 1>&2
+	echo "Create a new zone name and A recored in specified environment."
+	echo
+	echo "  -e       env and apiRegion                                              required"
+	echo
+	echo "Examples:"
+	echo "  $0 -e asia-es1 -c upgrade"
+	exit 1
+}
+
+SCRIPT_NAME="${0##*/}"
+info() {
+  echo "${SCRIPT_NAME}: ${1}"
+}
+warn() {
+  info "[WARNING]: ${1}" >&2
+}
+
+fatal() {
+  warn "ERROR: ${1}"
+  exit 2
+}
+
+function finish_checked() {
+  if [[ $count -eq 3 ]]; then
+  echo "ERROR: cloud dns record-sets transaction execute failure, Please rerun your deploy"
+  exit 1
+  else
+   echo "success add cloud dns record"
+   fi
+}
+
+#######
+# retry takes an integer N as the first argument, and a list of arguments
+# representing a command afterwards. It will retry the given command up to N
+# times before returning 1. If the command is ifconfig, it will try to
+# re-get credentials in case something caused the k8s IP to change.
+retry() {
+  local MAX_TRIES; MAX_TRIES="${1}";
+  shift 1
+  for i in $(seq 0 "${MAX_TRIES}"); do
+    if [[ "${i}" -eq "${MAX_TRIES}" ]]; then
+      break
+    fi
+    { "${@}" && return 0; } || true
+    warn "Failed, retrying...($((i+1)) of ${MAX_TRIES})"
+    sleep 2
+  done
+  local CMD="'$*'"
+  warn "Command $CMD failed."
+  false
+}
+
+retry 4 netstat -an | grep -i "listen"|grep www
+#retry 4 netstat -an | grep -i "listen"
+if ! retry 4 netstat -an | grep -i "listen"|grep www; then
+#https://github.com/koalaman/shellcheck/wiki/SC2181
+#if [ $? -ne 0 ]; then
+    echo "ERROR: www is not listen"
+    count=0
+    while [ $count -lt 3 ]; do
+    echo "5 seconds sleep and try again"
+    info "5 seconds sleep and try again"
+    sleep 5
+    echo "re-add new record"
+    rm -fr ./transaction.yaml
+    echo "first delete transaction.yaml"
+    warn "first delete transaction.yaml"
+    #gcloud dns record-sets transaction start -z "${ZoneName?
+    #gcloud dns record-sets transaction add "${externalIP)"-name="${DomainserviceName}" -ttl="${TTL}" -type="${RecordType}" --zone="${ZoneName}"
+    #gcloud dns record-sets transaction execute - "${ZoneName]" --verbosity debug
+    if [ $? = 0 ]; then
+    echo "add record ok" && break
+    else
+    count=$(($count+1))
+    fi
+    done
+    finish_checked
+fi
+awk 'BEGIN{while (a++<50) s=s "-"; print s,"splite line",s}'
+function check_metadata_is_available() {
+  local count=0
+  local flag=$(curl -I -m 10 -o /dev/null -s -w %{http_code} http://www.baidu.com)
+  if [ -z "$flag" ]; then
+    while [ $count -lt 3 ]; do
+      echo "30 seconds sleep and try again ..."
+      sleep 30
+      flag=$(curl -I -m 10 -o /dev/null -s -w %{http_code} http://www.baidu.com)
+      [ "$flag" ] && break
+      count=$(($count+1))
+    done
+  fi
+  echo "The number of attempts to run check_metadata_is_available function: $count"
+  echo "The flag: $flag"
+  [ $flag ] && echo "The metadata is available" || echo "The metadata is unavailable"
+}
+check_metadata_is_available
+#https://stackoverflow.com/questions/7449772/how-to-retry-a-command-in-bash
+awk 'BEGIN{while (a++<50) s=s "-"; print s,"splite line",s}'
+
+finish() {
+    # shellcheck disable=SC2181
+    if [ $? -ne 0 ]; then
+        echo "ERROR: failed your command."
+    fi
+}
+#$@ 是传给脚本的所有参数的列表
+retry3() {
+    local -r -i max_attempts="$1"; shift
+    local -i attempt_num=1
+    until "$@"
+    do
+        if ((attempt_num==max_attempts))
+        then
+            echo "Attempt $attempt_num failed and there are no more attempts left!"
+            return 1
+        else
+            echo "Attempt $attempt_num failed! Trying again in $attempt_num seconds..."
+            sleep $((attempt_num++))
+        fi
+    done
+}
+
+function curl_www() {
+  url_stat=$(curl -I -m 10 -o /dev/null -s -w %{http_code} http://www.baidu.com)
+  echo "$url_stat"
+}
+
+#retry3 5 curl -I https://gitee.comt
+retry3 5 curl_www
+echo "The number of attempts to run retry3 function: $count"
+finish
+
+awk 'BEGIN{while (a++<50) s=s "-"; print s,"splite line",s}'
+
+
+function finish_curl_checked() {
+  if [[ $max_attempts -eq 5 ]]; then
+  echo "ERROR: curl 5 time and failed"
+  exit 1
+  else
+   echo "success curl you url"
+   fi
+}
+
+#finish_curl_checked
+usage_short() {
+  cat << EOF
+${SCRIPT_NAME} $(version_message)
+usage: ${SCRIPT_NAME} [OPTION]...
+Set up, validate, and install ASM in a Google Cloud environment.
+Use -h|--help with -v|--verbose to show detailed descriptions.
+
+EOF
+}
+#$* 这个程式的所有参数
+  if [[ "${*}" = '' ]]; then
+    usage_short >&2
+    echo "Please input you parameters"
+    exit 2
+  fi
+
+fatal() {
+  warn "ERROR: ${1}"
+  exit 2
+}
+
+if [ "$1" == "-h" ] ; then
+cat << EOF
+*****************************************************************
+* Initializing system, please try later!
+* Power by Lex. Let's go! and be happy!
+* version 1.0
+  echo "Examples:"
+  echo "  $0 -e asia-es1 -c upgrade or delete or adddns"
+*****************************************************************
+EOF
+exit 0
+fi
+
+env_arr=(asia-es1 asia-es2 eu-a eu-b pdev-cn prd-cn)
+module_arr=(install migrate upgrade)
+while getopts ":e:c:h:" o; do
+  case $o in
+    e)  e=${OPTARG}
+    [[ " ${env_arr[*]} " == *" $e "* ]] || usage
+    ;;
+    c)  c=${OPTARG}
+    [[ " ${module_arr[*]} " == *" $c "* ]] || usage
+    ;;
+    h)  echo "a script to "
+         echo "Usage:"
+         echo "Source:"
+         ;;
+    *) esac
+done
+
+case $e in
+    "asia-es1")
+     project=china-010115-ddd-dev
+     ;;
+    "asia-es2")
+     project=china-0290910-pp-dev
+     ;;
+    "eu-a"|"eu-b")
+     project=china-0290910-aaa-dev
+     ;;
+     "prd-cn")  project=china-apichina-prod;;
+    *) echo "Error input space and region!"
+       exit 1
+esac
+
+if [ ! "$e" ]; then
+    echo "please enter env and api region" >&2
+    exit 1
+fi
+
+if [ ! "$c" ]; then
+    echo "please enter mode" >&2
+    exit 1
+fi
+
+# shellcheck disable=SC2064
+  case "${c}" in
+    install | migrate | upgrade);;
+    *) fatal "MODE must be one of 'install', 'migrate', 'upgrade'";;
+  esac
+#./retry1.sh -e asia-es1 -c migrate
+
+#使用"-t"选项，在每次读取一行后就去掉该行的换行符
+mapfile -d " " -t myarr < /Users/lex/shell/ip.txt
+echo "${myarr[@]}"
+
+
+IFS=' '
+while read -r ip user password port; do
+  echo "ip: $ip"
+  echo "user: $user"
+  echo "password: $password"
+  echo "port: $port"
+  echo "-----------------------------"
+  echo "$ip $user"
+done < /Users/lex/shell/ip.txt
+
+
+function upgrade()
+{
+info "upgrade"
+echo "need a new zone name"
+echo "need a new A record"
+}
+
+if [ "${c}" == "upgrade" ];
+then
+    echo "upgrade"
+    echo $project
+    upgrade
+fi
+
+#./retry1.sh -e asia-es1 -c upgrade
+
+
+
+

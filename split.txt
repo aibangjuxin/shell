@@ -26,4 +26,15 @@ echo ${val%%o*}
 从右到左进行截取 #
 从右向左进行截取到第一个o。
 第二个说的是从右向左截取到最后一个o
+
+➜  shell git:(main) var=abcdef
+➜  shell git:(main) echo ${var:0:1}
+a
+➜  shell git:(main) echo ${var:0:2}
+ab
+
+➜  shell git:(main) ✗ _CI_CRC_VERSION=abcdefg
+➜  shell git:(main) ✗ echo ${_CI_CRC_VERSION:=0}
+abcdefg
+
 EOF
