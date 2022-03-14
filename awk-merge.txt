@@ -1,0 +1,14 @@
+➜  ~ cat /tmp/dev-xu-dev-private-access-hardcode.txt
+wgdc-drn-03.cloud.xu.domain. 300 IN A 192.168.192.13
+apps.cf.wgdc-drn-03.cloud.xu.domain. 300 IN A 192.168.192.197
+04.cloud.xu.domain. 300 IN A 192.168.192.222
+04.cloud.xu.domain. 300 IN A 192.168.192.223
+04.cloud.xu.domain. 300 IN A 192.168.192.221
+➜  ~ cat /tmp/dev-xu-dev-private-access-hardcode.txt|awk '{S[$1]=$5","S[$1]}END{for (a in S) print a, S[a]}'|sed 's/,$//g'
+wgdc-drn-03.cloud.xu.domain. 192.168.192.13
+apps.cf.wgdc-drn-03.cloud.xu.domain. 192.168.192.197
+04.cloud.xu.domain. 192.168.192.221,192.168.192.223,192.168.192.222
+
+尝试理解上面
+S[$1] 代表对第一列操作
+S[$1]=$5 若第一列内容相同 对5列
