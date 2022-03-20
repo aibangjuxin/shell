@@ -1,0 +1,177 @@
+➜  ~ dig www.baidu.com
+
+; <<>> DiG 9.16.24 <<>> www.baidu.com
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 42729
+;; flags: qr rd ra; QUERY: 1, ANSWER: 3, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 512
+;; QUESTION SECTION:
+;www.baidu.com.			IN	A
+
+;; ANSWER SECTION:
+www.baidu.com.		456	IN	CNAME	www.a.shifen.com.
+www.a.shifen.com.	86	IN	A	14.215.177.39
+www.a.shifen.com.	86	IN	A	14.215.177.38
+
+;; Query time: 39 msec
+;; SERVER: 114.114.114.114#53(114.114.114.114)
+;; WHEN: Sun Mar 20 18:19:40 CST 2022
+;; MSG SIZE  rcvd: 101
+
+➜  ~ dig @119.29.29.29 www.baidu.com
+
+; <<>> DiG 9.16.24 <<>> @119.29.29.29 www.baidu.com
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 8641
+;; flags: qr rd ra; QUERY: 1, ANSWER: 3, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 4096
+; COOKIE: 69dd9c40deedb114 (echoed)
+;; QUESTION SECTION:
+;www.baidu.com.			IN	A
+
+;; ANSWER SECTION:
+www.baidu.com.		909	IN	CNAME	www.a.shifen.com.
+www.a.shifen.com.	53	IN	A	14.215.177.39
+www.a.shifen.com.	53	IN	A	14.215.177.38
+
+;; Query time: 36 msec
+;; SERVER: 119.29.29.29#53(119.29.29.29)
+;; WHEN: Sun Mar 20 18:19:54 CST 2022
+;; MSG SIZE  rcvd: 113
+
+➜  ~ host www.baidu.com
+www.baidu.com is an alias for www.a.shifen.com.
+www.a.shifen.com has address 14.215.177.39
+www.a.shifen.com has address 14.215.177.38
+➜  ~ dig @119.29.29.29 AAAA +short
+l.root-servers.net.
+m.root-servers.net.
+a.root-servers.net.
+b.root-servers.net.
+c.root-servers.net.
+d.root-servers.net.
+e.root-servers.net.
+f.root-servers.net.
+g.root-servers.net.
+h.root-servers.net.
+i.root-servers.net.
+j.root-servers.net.
+k.root-servers.net.
+
+➜  ~ dig @119.29.29.29 www.baidu.com AAAA +short
+www.a.shifen.com.
+Get a short answer?
+When all you want is a quick answer, the +short option is your friend:
+
+➜  ~ dig @119.29.29.29 www.baidu.com +short
+www.a.shifen.com.
+14.215.177.38
+14.215.177.39
+
+Get a not-quite-so-short answer
+➜  ~ dig +nocmd www.baidu.com A +noall +answer
+www.baidu.com.		131	IN	CNAME	www.a.shifen.com.
+www.a.shifen.com.	60	IN	A	14.215.177.38
+www.a.shifen.com.	60	IN	A	14.215.177.39
+
+Get a long answer?
+dig +nocmd www.baidu.com any +multiline +noall +answer
+www.baidu.com.		110 IN CNAME www.a.shifen.com.
+
+进行批量查找吗？如果要查找大量主机名，可以将它们放入一个文件（每行一个名称），然后使用-f选项依次查询每个主机名对多个主机名执行完整查找dig-f/path/to/host list。txt#相同，输出更加集中-f/path/to/host list。txt+noall+answer
+
+
+批量查找
+
+Do bulk lookups?  Bulk Queries
+X
+
+If you want to look up a large number of hostnames, you can put them in a file (one name per line) and use the -f option to query each one in turn.
+# do full lookups for a number of hostnamesdig -f /path/to/host-list.txt# the same, with more focused output
+
+dig -f /path/to/host-list.txt +noall +answer
+
+
+➜  ~ cat /tmp/b.txt
+www.baidu.com
+www.sohu.com
+www.github.com
+www.csdn.net
+➜  ~ dig -f  /tmp/b.txt +noall +answer
+www.baidu.com.		988	IN	CNAME	www.a.shifen.com.
+www.a.shifen.com.	207	IN	A	14.215.177.38
+www.a.shifen.com.	207	IN	A	14.215.177.39
+www.sohu.com.		1389	IN	CNAME	gs.a.sohu.com.
+gs.a.sohu.com.		77	IN	CNAME	fwh.a.sohu.com.
+fwh.a.sohu.com.		37	IN	A	119.96.200.204
+www.github.com.		3503	IN	CNAME	github.com.
+github.com.		37	IN	A	20.205.243.166
+www.csdn.net.		37	IN	A	39.106.226.142
+
+
+dig -f  /tmp/b.txt +noall +answer |awk -F" " '{if($4~/^A/) print$0}'
+www.a.shifen.com.	118	IN	A	14.215.177.39
+www.a.shifen.com.	118	IN	A	14.215.177.38
+fwh.a.sohu.com.		89	IN	A	119.96.200.204
+github.com.		37	IN	A	20.205.243.166
+www.csdn.net.		37	IN	A	39.106.226.142
+
+
+➜  ~ dig +nocmd www.baidu.com +noall +answer
+www.baidu.com.		1002	IN	CNAME	www.a.shifen.com.
+www.a.shifen.com.	52	IN	A	14.215.177.38
+www.a.shifen.com.	52	IN	A	14.215.177.39
+➜  ~ dig +nocmd www.baidu.com +noall +answer +short
+www.a.shifen.com.
+14.215.177.38
+14.215.177.39
+
+
+
+dig -f  /tmp/b.txt +noall +answer |awk -F" " '{if($4~/^A/) print$0}'|awk '{S[$1]=$5","S[$1]}END{for (a in S) print a, S[a]}'|sed 's/,$//g'
+
+
++noall +answer +nocmd
+noall:不输出任何内容
+answer:只对结果输出
+我既想拿到域名又拿到结果那么用+noall +answer来过滤
+
+
+➜  ~ dig -f  /tmp/b.txt +noall +answer |awk -F" " '{if($4~/^A/) print$0}'|sort -k1|awk '{S[$1]=$5","S[$1]}END{for (a in S) print a, S[a]}'|sed 's/,$//g'
+www.a.shifen.com. 14.215.177.39,14.215.177.38
+github.com. 20.205.243.166
+fwh.a.sohu.com. 119.96.200.204
+www.csdn.net. 39.106.226.142
+
+假如第四个字短为A记录 然后打印第一个字段和第五个字段 用空格分割 然后排序 去重复行
+然后awk '{S[$1]=$2","S[$1]}END{for (a in S) print a, S[a]} 合并第二个字段,假如第一个字段相当的情况下,
+再去掉尾椎的,
+dig -f  /tmp/b.txt +noall +answer |awk -F" " '{if($4~/^A/) print$1" "$5}'|sort -k1|uniq|
+
+这种办法也不好,比如就取不到我原来的域名了 比如www.baidu.com
+host www.baidu.com
+www.baidu.com is an alias for www.a.shifen.com.
+www.a.shifen.com has address 14.215.177.39
+www.a.shifen.com has address 14.215.177.3
+我期待的结果是别名之后的2个IP address
+
+dig -f  /tmp/b.txt +noall +answer |awk -F" " '{if($4~/^A/) print$1" "$5}'|sort -k1|uniq|awk '{S[$1]=$2","S[$1]}END{for (a in S) print a, S[a]}'|sed 's/,$//g'
+
+
+To get a list of all the address(es) for a domain name, use the a option:
+dig +nocmd google.com a +noall +answer
+Querying CNAME records
+To find the alias domain name use the cname option:
+dig +nocmd mail.google.com cname +noall +answer
+
+
+https://linuxize.com/post/how-to-use-dig-command-to-query-dns-in-linux/
+https://blog.51cto.com/maorui2005/1741029
+https://phoenixnap.com/kb/linux-dig-command-examples
