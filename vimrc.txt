@@ -386,3 +386,4 @@ function! VisualSelection(direction, extra_filter) range
     let @" = l:saved_reg
 endfunction
 #https://github.com/amix/vimrc
+#https://github.com/Chiel92/vim-autoformat
