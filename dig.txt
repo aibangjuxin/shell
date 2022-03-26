@@ -1,3 +1,52 @@
+
+##step: define a function to get_ipaddr and $collect_nhf_ip
+function get_ipaddr {
+	local hostname=$1
+	local query_type=A
+	ip_address=""
+	# use host command for DNS lookup operations
+	host -t ${query_type} "${hostname}" &>/dev/null
+	if [ "$?" -eq "0" ]; then
+		# get ip address
+		# if The domain have multiple ip address. merge it at one line
+		ip_address="$(host -t ${query_type} "${hostname}" | awk '/has.*address/{print $NF}' | sort -rn | awk BEGIN{RS=EOF}'{gsub(/\n/," ");print}')"
+	else
+		echo "############"
+	fi
+	# display ip
+	echo "$ip_address"
+}
+
+➜  shell dig www.baidu.com. +short +noall +answer
+www.a.shifen.com.
+14.215.177.39
+14.215.177.38
+➜  shell host www.baidu.com
+www.baidu.com is an alias for www.a.shifen.com.
+www.a.shifen.com has address 14.215.177.38
+www.a.shifen.com has address 14.215.177.39
+
+
+host -t A www.baidu.com|awk '/has.*address/{print $NF}' | sort -rn | awk BEGIN{RS=EOF}'{gsub(/\n/,",");print}'
+14.215.177.39,14.215.177.38
+
+DUCKDNS=( "sub1.duckdns.org"
+        "sub2.duckdns.org"
+        "sub3.duckdns.org"
+        "sub4.duckdns.org" )
+
+function resolveIP () {
+    CURRENT_IP=$(dig +short $1)
+    echo $CURRENT_IP
+}
+
+for HOST in "${DUCKDNS[@]}"
+do
+    IP=$(resolveIP $HOST)
+    echo -e "$HOST ... $IP"
+done
+
+
 ➜  ~ dig www.baidu.com
 
 ; <<>> DiG 9.16.24 <<>> www.baidu.com
