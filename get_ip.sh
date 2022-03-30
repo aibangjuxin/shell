@@ -43,4 +43,5 @@ wc -l /tmp/a.txt
 125 /tmp/a.txt
 ./get_ip.sh  8.68s user 7.22s system 44% cpu 36.105 total
 ./get_ip_cancel_echo.sh  4.29s user 3.69s system 44% cpu 17.943 total
+./get_ip_cancel_echo.sh  3.04s user 2.80s system 61% cpu 9.529 total
 EOF
