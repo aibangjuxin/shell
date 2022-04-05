@@ -25,6 +25,7 @@ function compare_version() {
 	function version_le() { test "$(echo "$@" | tr " " "\n" | sort -V | head -n 1)" == "$1"; }
 	function version_lt() { test "$(echo "$@" | tr " " "\n" | sort -rV | head -n 1)" != "$1"; }
 	function version_ge() { test "$(echo "$@" | tr " " "\n" | sort -rV | head -n 1)" == "$1"; }
+    #大于、等于、小于、大于等于
 	if version_gt "$VERSION" "$VERSION2"; then
 		echo "$VERSION is greater than $VERSION2"
 		echo " A > B we need fix bugs"
@@ -60,7 +61,7 @@ function compare_version() {
 }
 info "The version B is 1.21.0-gke.1000 "
 info "compare version"
-version_A=1.21.0-gke.1001
+version_A=1.20.0-gke.1000
 version_B=1.21.0-gke.1000
 #version_B=1.19.12-gke.2101
 info "version_major compare"
@@ -85,6 +86,8 @@ else
 	echo "we can ignore this bug"
 fi
 
+awk 'BEGIN{while (a++<50) s=s "-"; print s,"+++",s}'
+awk 'BEGIN{while (a++<50) s=s "-"; print s,"+++",s}'
 awk 'BEGIN{while (a++<50) s=s "-"; print s,"+++",s}'
 #currentver="$(gcc -dumpversion)"
 currentver="$(echo $version_A | awk -F"-" '{print $1}')"
