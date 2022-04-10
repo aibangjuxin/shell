@@ -1,0 +1,118 @@
+process=5  # 指定最多5个进程
+tmp_fifofile=/tmp/$$.fifo   # 使用当前pid来创建管道文件，防止名字冲突
+
+mkfifo $tmp_fifofile   # 创建管道文件
+exec 9<> $tmp_fifofile  # 打开文件，并且将文件描述符设置为9
+rm $tmp_fifofile   # 删除刚刚的文件，不会影响文件描述符
+
+for i in ` seq $process `
+do 
+    echo >&9   # 向文件描述符9中传递5个空行
+done 
+
+for i in {1..10}   # 循环遍历
+do 
+    read -u 9  # 读取管道内容，每次读取一行
+    {
+        echo $i  # 显示当前值
+        sleep 1s   # 使程序延时
+        echo >&9  # 程序运行结束后再向管道文件中加一个空行
+    }&
+
+done 
+wait # 等待程序
+exec 9>&-  # 释放文件描述符
+exec 9<&-
+echo "run end!"
+exec fd< file # 表示以只读的方式打开文件，并关联文件描述符fd
+exec fd> file # 表示以只写的方式打开文件，并关联文件描述符fd
+exec fd<>file # 以读写的方式打开文件，并关联文件描述符fd
+
+read -u fd  # 表示读取文件描述符fd关联文件一行数据
+` ` # 和$()意思一样，表示命令替换
+
+#优化的部分
+1 删除不必要的打印
+2 while也可以看到有优化效果.并行执行的
+2 & and wait
+
+20次 while & 
+4.31s user 4.01s system 151% cpu 5.500 tota
+20次 for &  
+./a.sh  4.34s user 5.24s system 152% cpu 6.295 tota
+
+20次 10 process 
+./b.sh  4.10s user 3.75s system 464% cpu 1.687 tota 
+
+
+4000 /tmp/domain_loop.txt process 5
+generate record successfully
+TIME:124
+hello world
+./b.sh  175.26s user 148.77s system 256% cpu 2:06.31 total
+
+4000 /tmp/domain_loop.txt process 10
+generate record successfully
+TIME:89
+hello world
+./b.sh  171.30s user 147.75s system 347% cpu 1:31.90 total
+
+用简化配置:
+➜  shell git:(main) ✗ time ./b.sh
+generate record successfully
+TIME:50
+hello world
+./b.sh  136.51s user 134.17s system 510% cpu 53.027 total
+
+
+domain_array=($(awk '{print$1}' <$domain_loop))
+for ((i = 0; i < ${#domain_array[@]}; i++)); do
+	echo -e "\033[31m ${domain_array[$i]} \033[0m"
+	#echo ${domain_array[$i]}
+	#get_ipaddr "${domain_array[$i]}"
+	echo "${domain_array[$i]}" "$(get_ipaddr "${domain_array[$i]}")" >>$collect_ip # &
+done
+#wait
+if [ $? -eq 0 ]; then
+	echo "generate record successfully"
+fi
+echo "now compare file"
+
+
+awk 'BEGIN{while (a++<50) s=s "-"; print s,"testing read from file",s}'
+IFS=' '
+while read -r domain_array; do
+    {
+	#echo "domain_array is ${domain_array}"
+	#get_ipaddr "${domain_array}"
+	 echo "${domain_array}" "$(get_ipaddr "${domain_array}")" >> $collect_ip 
+    } &
+done <$domain_loop
+wait
+awk 'BEGIN{while (a++<50) s=s "-"; print s,"get_ipaddr and collect ip finished",s}'
+
+
+#cat /home/lex/dns/a.txt| while IFS=" " read -r line;do domain_array+=("$line");done
+#domain_array=($(awk '{print$1}' <$domain_loop)) OK 但是语法不对
+#domain_array=($(cat < $domain_loop)) OK 
+#IFS=" " read -r -a domain_array <<< "$(cat < $domain_loop)" # the output should be a single element: SC2207
+#su
+
+cat /tmp/c.txt
+www.baidu.com 14.215.177.39 14.215.177.38
+www.gitee.com 180.97.125.228
+www.gitee.com 180.97.125.229
+www.sina.com.cn 124.116.156.30 124.116.156.28 124.116.156.27 118.182.230.187 61.159.95.125 61.159.95.124 61.159.95.123
+www.sohu.com 119.96.200.204
+www.toutiao.com 219.144.108.231 219.144.108.230 219.144.108.229 219.144.108.228 219.144.108.227 219.144.108.226 219.144.108.225 219.144.108.224 113.137.56.189 113.137.56.187 113.137.54.230 113.137.54.228 113.137.54.227 113.137.54.224 113.137.54.195 113.137.54.193
+www.toutiao.com 219.144.108.231 219.144.108.230 219.144.108.229 219.144.108.228 219.144.108.227 219.144.108.226 219.144.108.225 219.144.108.224 113.137.56.252 113.137.56.236 113.137.54.230 113.137.54.229 113.137.54.228 113.137.54.226 113.137.54.197 113.137.54.193
+
+ cat /tmp/c.txt| sort|uniq|awk '{x=$1;$1="";S[x]=$0" "S[x]} END {for (a in S) print a, S[a]}'|sort -k1
+www.baidu.com  14.215.177.39 14.215.177.38
+www.gitee.com  180.97.125.229  180.97.125.228
+www.sina.com.cn  124.116.156.30 124.116.156.28 124.116.156.27 118.182.230.187 61.159.95.125 61.159.95.124 61.159.95.123
+www.sohu.com  119.96.200.204
+www.toutiao.com  219.144.108.231 219.144.108.230 219.144.108.229 219.144.108.228 219.144.108.227 219.144.108.226 219.144.108.225 219.144.108.224 113.137.56.252 113.137.56.236 113.137.54.230 113.137.54.229 113.137.54.228 113.137.54.226 113.137.54.197 113.137.54.193  219.144.108.231 219.144.108.230 219.144.108.229 219.144.108.228 219.144.108.227 219.144.108.226 219.144.108.225 219.144.108.224 113.137.56.189 113.137.56.187 113.137.54.230 113.137.54.228 113.137.54.227 113.137.54.224 113.137.54.195 113.137.54.193
+
+
+https://stackoverflow.com/questions/23088620/using-mkfifo-in-a-shell-script
