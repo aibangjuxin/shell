@@ -1646,7 +1646,7 @@ awk '{S[$1]=$5","S[$1]}END{for (a in S) print a, S[a]}' /tmp/test-zone-test-priv
 awk '{S[$1]=$5","S[$1]}END{for (a in S) print a, S[a]}' /tmp/test-zone-test-private-access-hardcode.txt /tmp/test-zone-domain-file.txt|sed 's/,$//g'
 awk '{S[$1]=$5","S[$1]} END {for(a in S) print a, S[a]}'  /tmp/test-zone-test-private-access-hardcode.txt /tmp/test-zone-domain-file.txt|sed 's/,$//g'
 
-[d5145841@hkl20111021 ~]$ cat /tmp/test-zone-test-private-access-hardcode.txt
+$ cat /tmp/test-zone-test-private-access-hardcode.txt
 wgdc-drn-03.cloud.zone.domain. 300 IN A 192.168.192.13
 apps.cf.wgdc-drn-03.cloud.zone.domain. 300 IN A 192.168.192.197
 04.cloud.zone.domain. 300 IN A 192.168.192.222
