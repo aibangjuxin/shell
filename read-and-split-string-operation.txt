@@ -1,0 +1,50 @@
+#!/bin/bash
+SCRIPT_NAME="${0##*/}"
+info() {
+	echo "${SCRIPT_NAME}: ${1}"
+}
+warn() {
+	info "[WARNING]: ${1}" >&2
+}
+
+fatal() {
+	warn "ERROR: ${1}"
+	exit 2
+}
+
+info "Now study ${SCRIPT_NAME}"
+
+e=asia-jp
+env=${e%-*}
+apiRegion=${e#*-}
+info "Now print split env"
+echo $env
+echo $apiRegion
+
+# read file and create INSERT statements for MySQL
+#define a violation.csv
+
+violation=/Users/lex/shell/violation.csv
+outfile=/Users/lex/shell/out.csv
+true > $outfile
+while read -r line;
+do
+	cve=$(echo "$line" | awk -F, '{print $10}')
+	if [[ $cve == *"has cve"* ]]; then
+		echo "we need found cve in this block"
+		# has cve(CVE-2020-26217) classified by
+		#先取开头部分 也就是#* 后面的部分
+		vViolation=${cve#*has cve(}
+		#对后满足的部分进行切割 %号取的是关键字前面的部分
+		vViolation=${vViolation%) classified*}
+		echo "$vViolation"
+		#in package (java-jar://./lex-enterprise-standalone/lib/opt/xstream-1.4.11.1.jar) from
+		vPackage=${cve#*in package (}
+		vPackage=${vPackage%) from*}
+		echo "$vPackage"
+		else
+		echo "we need found cve in this block not found"
+	fi
+	echo "$line,$vViolation,$vPackage" >> $outfile
+done < $violation
+
