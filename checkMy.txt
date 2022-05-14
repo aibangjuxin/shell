@@ -64,7 +64,7 @@ case $e in
      "prd-cn")  project=china-apichina-prod;;
     *) echo "Error input space and region!"
        exit 1
-esac    
+esac
 
 if [ ! "$c" ]; then
     echo "please enter your command" >&2
@@ -73,7 +73,7 @@ fi
 
 function update()
 {
-echo "update" 
+echo "update"
 echo "need a new zone name"
 echo "need a new A record"
 }
@@ -107,7 +107,7 @@ mapfile -d " " -t myarr < /Users/lex/shell/ip.txt
 echo "${myarr[@]}"
 echo "+++++++这个是乱的+++++++"
 echo " other如果按照整行读入不能将每一个元素作为循环对象"
-#mapfile -d " " -t hostlist < /Users/lex/shell/ip.txt 
+#mapfile -d " " -t hostlist < /Users/lex/shell/ip.txt
 IFS=" " read -r -a hostlist <<< "$(cat /Users/lex/shell/ip.txt|tr -s '\n' " ")"
 for (( i=0;i<${#hostlist[@]}; i+=4 ));do
     ip=${hostlist[i]}
@@ -144,7 +144,7 @@ done
 you input env_arr parameter is pdev-hk
 pdev-hk
 update
-china-010115-cmbsp08-dev
+china-010115-wwwsp08-dev
 update
 need a new zone name
 need a new A record
