@@ -12,6 +12,17 @@ done < ${1}
 : << EOF
 ./read.sh members.csv
 
+
+while getopts "vrn" n    # 'n' added here
+do
+  case "$n" in
+    v) echo "Verbose" ;;
+    r) echo "Recursive" ;;
+    n) echo "Dry-run" ;;
+    *) usage;;
+  esac
+done
+
 EOF
 
 
