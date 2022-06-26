@@ -1,0 +1,73 @@
+#!/usr/local/bin/bash
+SCRIPT_NAME="${0##*/}"
+warn() {
+  info "[WARNING]: ${1}" >&2
+}
+
+warn_pause() {
+  warn "${1}"
+  sleep 2
+}
+
+error() {
+  info "[ERROR]: ${1}" >&2
+}
+
+infom() {
+  local VERBOSE; VERBOSE="$(context_get-option "VERBOSE")"
+  if hash ts 2>/dev/null && [[ "${VERBOSE}" -eq 1 ]]; then
+    echo "${SCRIPT_NAME}: ${1}" | TZ=utc ts '%Y-%m-%dT%.T' >&2
+  else
+    echo "${SCRIPT_NAME}: ${1}" >&2
+  fi
+}
+
+info() {
+        echo "${SCRIPT_NAME}: ${1}"
+}
+
+info "本身命令的输出是换行的的 可以直接读取每一行,然后打印或者执行执行对应命令"
+kubectl get ns --no-headers | while read -r ns _ _; do
+    echo "will delete the namespace: $ns"
+done
+
+awk 'BEGIN{while (a++<50) s=s "-"; print s,"readarry method",s}'
+info "下面就是每行一个namespace,我使用readarray的方法"
+readarray -t ns_list < <(kubectl get ns --no-headers | awk '{print$1}')
+for ns in "${ns_list[@]}";  do
+    echo "will delete the namespace: $ns"
+done
+
+awk 'BEGIN{while (a++<50) s=s "-"; print s,"one line",s}'
+info "the next command one line get ns"
+echo "kubectl get namespace -o jsonpath='{.items[*].metadata.name}'"
+#kubectl get namespace -o jsonpath='{.items[*].metadata.name}'
+awk 'BEGIN{while (a++<50) s=s "-"; print s,"看看对一行输出循环",s}'
+echo "the next command one line get ns .Then for loop it testing"
+echo "赋值为数据的时候,读取的文件内容是否换行也很重要 ,如果没有换行,是一行输入可以直接用 for i in $(command);do echo $i;done"
+for ns in $(kubectl get namespace -o jsonpath='{.items[*].metadata.name}'); do
+    echo "will delete XXX the namespace: $ns"
+done
+
+
+awk 'BEGIN{while (a++<50) s=s "-"; print s,"compare下赋值的()",s}'
+namespace_list=$(kubectl get namespace -o jsonpath='{.items[*].metadata.name}')
+echo "the namespace_list: $namespace_list"
+echo "The number of array ${#namespace_list[@]}"
+echo "use ()直接赋值 有告警"
+namespace_list=($(kubectl get namespace -o jsonpath='{.items[*].metadata.name}'))
+echo "the namespace_list: $namespace_list"
+echo "The number of array ${#namespace_list[@]}"
+#${#array[@]}数组元素的个数： 利用这可以去做循环
+
+for((i=0;i<${#namespace_list[@]};i++));do
+    echo "the namespace_list: ${namespace_list[i]}"
+done
+
+
+
+ echo "#列出所有键值对 key是数字下标"
+ for key in "${!namespace_list[@]}"
+ do
+     echo "${key} -> ${namespace_list[$key]}"
+ done

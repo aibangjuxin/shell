@@ -1,4 +1,9 @@
 #!/bin/bash
+# Copyright (c) 2013 The Chromium OS Authors. All rights reserved.
+# Use of this source code is governed by a BSD-style license that can be
+# found in the LICENSE file.
+# 我来总结下,如何使用array ,如果符合语法要求,且没有报错的话,可以用readarray来读取数组
+#但是需要注意读取的时候关于-t的问题, 还有就是读取的原始文件是否是逐行的 需要注意换行符的问题
 cd /Users/lex/shell || return
 #array=(`ls -al|grep ^-|awk '{print$NF}'`) # array=($(ls))
 array=($(ls))
