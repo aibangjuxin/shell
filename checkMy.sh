@@ -132,7 +132,7 @@ for (( i=0;i<${#hostlist[@]}; i+=4 ));do
 
 :<<EOF
 
-./checkMy.sh -e pdev-hk -c update
+./checkMy.sh -e your-env -c update
 -------------------------------------------------- 分割线 --------------------------------------------------
 
 for i in ${!array[*]};do
@@ -141,8 +141,8 @@ for i in ${!array[*]};do
     echo "The all of filename is $fn_name"
 done
 
-you input env_arr parameter is pdev-hk
-pdev-hk
+you input env_arr parameter is your-env
+your-env
 update
 china-010115-wwwsp08-dev
 update
