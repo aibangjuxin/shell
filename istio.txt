@@ -157,3 +157,245 @@ http://localhost:20001/kiali
 http://localhost:9090
 
 istioctl dashboard grafana
+
+
+要启用 Istio 支持，只要为 POD 额外注入一个 SideCar 应用
+可以手动注入，也可以为整个命名空间添加 istio-injection=enabled 标签实现自动注入。
+http://localhost:20001/kiali/console/workloads?duration=60&refresh=60000&namespaces=bass-internal-lexdp%2Clex-external-lexdp%2Clextestnamespace%2Cistio-app
+Missing Sidecar
+Istio sidecar container not found in Pod(s). Check if the istio-injection label/annotation is correctly set on the namespace/workload.
+
+Users/lex/shell/yaml/docker/python
+➜  python kube apply -f python-pods-deployment.yaml -n istio-app
+deployment.apps/python-app created
+➜  python kube apply -f service-python.yaml -n istio-app
+service/python-svc created
+
+kube get ns istio-app --show-labels
+NAME        STATUS   AGE     LABELS
+istio-app   Active   4h10m   istio-injection=enabled,kubernetes.io/metadata.name=istio-app
+
+kube get ns lextestnamespace --show-labels
+NAME    STATUS   AGE    LABELS
+lextestnamespace   Active   142d   kubernetes.io/metadata.name=lextestnamespace,nsType=runtime,pod-security.kubernetes.io/enforce=baseline,type=lextestnamespace
+
+for lextestnamespace add labels:
+    为命名空间default增加标签istio-injection且值设为enabled
+    kubectl label ns lextestnamespace istio-iniection=enabled
+    kubectl label ns lextestnamespace istio-injection=enabled
+namespace/lextestnamespace labeled
++ verify labels
+kube get namespace -L istio-injection
+NAME                   STATUS   AGE     ISTIO-INJECTION
+kube-system            Active   142d
+default                Active   142d
+kube-public            Active   142d
+kube-node-lease        Active   142d
+kubernetes-dashboard   Active   142d
+bass-internal-lexdp           Active   142d
+lex-external-lexdp            Active   142d
+istio-system           Active   4h27m   disabled #  I manually set the namespace istio-iniection enabled 操作失败了
+istio-app              Active   4h19m   enabled
+lextestnamespace                  Active   142d    enabled
+
+http://localhost:20001/kiali/console/workloads?duration=60&refresh=60000&namespaces=lextestnamespace
+tips:
+
+for lextestnamespace service add labels:
+    Istio 自动注入 sidecar 不成功解决方案
+(Version labelis missing. This workload won't have Istio routing capabilities. Missing labels will impact in the telemetry collected by the Istio proxy.
+x Istio sidecar container not found in Pod(s). Check if the istio-injection label/annotation is correctly set on the namespace/workload.
+references:
+    https://istio.io/latest/docs/ops/common-problems/injection/
+fix it
+add labels: for template labels:
+sidecra.istio.io/inject: "true"
+
+深入Istio：Sidecar自动注入如何实现的？
+https://cloud.tencent.com/developer/article/1746921?from=15425:
+
+如果增加这个标签之后他会自动拉去另外2个Pod [每个 POD 中都额外多了一个容器，即 SideCar 代理。]
+注入 Sidecar的时候会在生成pod的时候附加上两个容器：istio-init、istio-proxy。istio-init这个容器从名字上看也可以知道它属于k8s中的Init Containers
+☐ istio-init容器
+istio-init容器作为初始化容器，主要用于设置iptables规则，让微服务入口出口流量都转由sidecar容器处理，在完成iptables规则设置后退出。
+☐ istio-proxy容器
+容器中运行着两个进程：pilot-agent和envoy。pilot-agent是istio-proxy容器的1号进程，负责启动envoy进程，启动后的envoy进程进行服务间通信及服务管理
+x kube logs nginx-app-56bfb6bd5c-bgtcn -n lextestnamespace
+Defaulted container "nginx-app" out of: nginx-app, istio-proxy, istio-init (init)
+Error from server (BadRequest): container "nginx-app" in pod "nginx-app-56bfb6bd5c-bgtcn" is waiting to start: PodInitializing
+x page error for pod
+Failed to fetch workload logs: container "nginx-app" in pod "nginx-app-56bfb6bd5c-bgtcn" is waiting to start: PodInitializing
+
+
+/Users/lex/shell/yaml/docker/python/nas-istio
+wget https://raw.githubusercontent.com/GoogleCloudPlatform/microservices-demo/main/release/kubernetes-manifests.yaml
+
+在访问之前，我们还需要为 Istio 声明一些配置，让其可以正确路由到 Online Boutique 应用：
+wget https://raw.githubusercontent.com/GoogleCloudPlatform/microservices-demo/main/release/istio-manifests.yaml
+
+➜  nas-istio kube apply -f istio-manifests.yaml -n lextestnamespace
+gateway.networking.istio.io/frontend-gateway created
+virtualservice.networking.istio.io/frontend-ingress created
+serviceentry.networking.istio.io/allow-egress-googleapis created
+serviceentry.networking.istio.io/allow-egress-google-metadata created
+virtualservice.networking.istio.io/frontend created
+➜  nas-istio kube get ServiceEntry -n lextestnamespace
+NAME                           HOSTS                                        LOCATION   RESOLUTION   AGE
+allow-egress-googleapis        ["accounts.google.com","*.googleapis.com"]                           59s
+allow-egress-google-metadata   ["metadata.google.internal"]                                         59s
+
+kube get VirtualService -n lextestnamespace
+NAME               GATEWAYS               HOSTS                                    AGE
+frontend-ingress   ["frontend-gateway"]   ["*"]                                    78s
+frontend                                  ["frontend.default.svc.cluster.local"]   78s
+
+
+x version label is missing. This workload won't have Istio routing capabilities. Missing labels will impact in the telemetry collected by the lstio proxy.
+
+
+➜  nas-istio cat python-pods-deployment-online.yaml
+# API 版本号
+apiVersion: apps/v1
+# 类型，如：Pod/ReplicationController/Deployment/Service/Ingress
+kind: Deployment
+metadata:
+  # Kind 的名称
+  name: nginx-app
+spec:
+  selector:
+    matchLabels:
+      # 容器标签的名字，发布 Service 时，selector 需要和这里对应
+      app: nginx-app
+  # 部署的实例数量
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: nginx-app
+        sidecar.istio.io/inject: "true"
+    spec:
+      # 配置容器，数组类型，说明可以配置多个容器
+      containers:
+      # 容器名称
+      - name: nginx-app
+        # 容器镜像
+        image: nginx:latest
+        # 只有镜像不存在时，才会进行镜像拉取
+        #command: [/usr/local/bin/python3 -m http.server 443]
+        #command: ["/usr/local/bin/python3"]
+        #args: ["-m http.server 443"]
+        #imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
+        ports:
+        # Pod 端口
+        - containerPort: 80
+
+
+
+
+
+
+➜  python cat python-pods-deployment.yaml
+# API 版本号
+apiVersion: apps/v1
+# 类型，如：Pod/ReplicationController/Deployment/Service/Ingress
+kind: Deployment
+metadata:
+  # Kind 的名称
+  name: python-app
+spec:
+  selector:
+    matchLabels:
+      # 容器标签的名字，发布 Service 时，selector 需要和这里对应
+      app: python-app
+  # 部署的实例数量
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: python-app
+    spec:
+      # 配置容器，数组类型，说明可以配置多个容器
+      containers:
+      # 容器名称
+      - name: python-app
+        # 容器镜像
+        image: python:httpd
+        # 只有镜像不存在时，才会进行镜像拉取
+        #command: [/usr/local/bin/python3 -m http.server 443]
+        #command: ["/usr/local/bin/python3"]
+        #args: ["-m http.server 443"]
+        imagePullPolicy: IfNotPresent
+        ports:
+        # Pod 端口
+        - containerPort: 443
+➜  python cat service-python.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: python-svc
+  labels:
+    svcname: python-svc
+spec:
+  ports:
+  - port: 3000
+    protocol: TCP
+    targetPort: 443
+  selector:
+    app: python-app
+
+for my environment prepare  python拉取镜像
+docker pull python
+[~] # docker images -a
+REPOSITORY                    TAG             IMAGE ID       CREATED         SIZE
+python                        latest          00cd1fb8bdcc   6 days ago      932MB
+运行看看，这里-p 3000:80加不加端口映射，没有关系，我想要看看里面的目录结构和启动的服务。
+[~] # docker run -it -d -p 3000:80 python:latest
+cfecaed3c381bd821dd493efb491a9371af0c28261ad0c1740ce2bf89d7860e9
+[~] # docker ps -a|grep python
+cfecaed3c381   python:latest                               "python3"                26 seconds ago   Up 25 seconds              0.0.0.0:3000->80/tcp                                           goofy_williamson
+
+[~] # docker exec -it cfecaed3c381 /bin/bash
+root@cfecaed3c381:/#
+root@cfecaed3c381:/# which python3
+/usr/local/bin/python3
+[~] # docker ps -a|grep python
+cfecaed3c381   python:latest                               "python3"                About a minute ago   Up About a minute          0.0.0.0:3000->80/tcp
+[~] # docker stop cfecaed3c381
+cfecaed3c381
+
+* 重新commit
+//////因为上面这个不支持自动启动http.server所以我从新启动一个供，我commit使用
+启动命令如下，将命令加到启动项
+docker run -it -d python:latest /bin/bash -c "/usr/local/bin/python3 -m http.server 443;/bin/bash"
+
+[~] # docker run -it -d python:latest /bin/bash -c "/usr/local/bin/python3 -m http.server 443;/bin/bash"
+251b568941d525811a39510841366188e817a1a27f604c6d07d90363a19f1884
+[~] # docker ps -a|grep python
+251b568941d5   python:latest                               "/bin/bash -c '/usr/…"   16 seconds ago   Up 15 seconds                                                                                    boring_swartz
+
+直接登录容器查看下是否httpd.server启动了
+root@251b568941d5:/# curl -I http://localhost:443
+HTTP/1.0 200 OK
+Server: SimpleHTTP/0.6 Python/3.11.0
+Date: Tue, 01 Nov 2022 06:52:13 GMT
+Content-type: text/html; charset=utf-8
+Content-Length: 877
+
+对上面的现在运行的进行commit，另开一个终端
+[~] # docker ps -a|grep python
+251b568941d5   python:latest                               "/bin/bash -c '/usr/…"   2 minutes ago   Up 2 minutes                                                                                boring_swartz
+
+对运行OK的，我需要的这个镜像打个标签，供我后面调用
+
+[~] # docker commit 251b568941d5 python:httpd
+sha256:6e8698aef710ae86810ae8f0de034a6306cbec95df471ef3cd70c1a01df73839
+
+再次验证下现在我的本地镜像中是否有这个存在
+[~] # docker images -a|grep python
+python                        httpd           6e8698aef710   39 seconds ago   934MB
+python                        latest          00cd1fb8bdcc   6 days ago       932MB
+
+➜  python kube get pod -n istio-app
+NAME                          READY   STATUS                  RESTARTS   AGE
+python-app-596cfbb748-45bc6   0/2     Init:CrashLoopBackOff   9          22m
