@@ -1,0 +1,159 @@
+☐ wget tar.gz from github
+☐ tar zxvf tar.gz at my desktop
+
+references:
+    https://www.modb.pro/db/390856
+    https://cloud.tencent.com/developer/article/1945838
+wget https://github.com/istio/istio/releases/download/1.15.3/istio-1.15.3-osx.tar.gz
+istio
+k3s disable traefik:
+    为了保证集群的干净， 只有一个 ingress 控制器。其二是 traefik 和 istio 默认都使用 LB 控制器， 会抢占 80/443 端口
+    ➜  ~ kube get deployment -n kube-system
+    NAME                     READY   UP-TO-DATE   AVAILABLE   AGE
+    coredns                  1/1     1            1           142d
+    metrics-server           1/1     1            1           142d
+    local-path-provisioner   1/1     1            1           142d
+    traefik                  1/1     1            1           142d
+    ➜  ~ kubectl delete deployment traefik -n kube-system
+    deployment.apps "traefik" deleted
+    ➜  ~ kube get svc -n kube-system
+    NAME             TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)                      AGE
+    kube-dns         ClusterIP      10.43.0.10      <none>        53/UDP,53/TCP,9153/TCP       142d
+    metrics-server   ClusterIP      10.43.81.149    <none>        443/TCP                      142d
+    traefik          LoadBalancer   10.43.225.134   10.0.3.3      80:61667/TCP,443:61137/TCP   142d
+    ➜  ~ kube delete svc traefik -n kube-system
+    service "traefik" deleted
+
+we can downlod k3s.yaml from nas console pages:
+    k3s config 文件
+    方便 kubectl 和之后的 istioctl 调用
+    mkdir -p ~/.kube
+    cp k3s.yaml ~/.kube/config
+    cat ~/.kube/config
+install istioctl:
+    https://istio.io/latest/docs/setup/install/istioctl/:
+➜  Downloads cd istio-1.15.3
+➜  istio-1.15.3 ls
+LICENSE  README.md  bin  manifest.yaml  manifests  samples  tools
+➜  istio-1.15.3 cd bin
+➜  bin ls
+istioctl
+➜  bin ./istioctl version
+no running Istio pods in "istio-system"
+1.15.3
+install istio 控制器:
+
+    您可以使用以下命令显示istioctl可访问的Istio配置文件的名称：
+    You can display the names of Istio configuration profiles that are accessible to istioctl by using this command:
+
+➜  bin istioctl profile list
+Istio configuration profiles:
+    default
+    demY
+    empty
+    minimal
+    openshift
+    preview
+    remote
+    直接通过在命令行传递配置名称安装方式:
+➜  bin istioctl install --set profile=demo 这个办法应该是和我的kube apply -f generated-manifest.yaml 一样的效果
+This will install the Istio demo profile with ["Istio core" "Istiod" "Ingress gateways" "Egress gateways"] components into the cluster. Proceed? (y/N) y
+✔ Istio core installed
+✔ Istiod installed
+✔ Egress gateways installed
+✔ Ingress gateways installed
+✔ Installation complete
+➜  bin istioctl version
+client version: 1.8.1
+control plane version: 1.8.1
+data plane version: 1.8.1 (2 proxies)
+查看 Istio 在 Kubernetes 部署了什么:
+➜  bin kubectl -n istio-system get deploy
+NAME                   READY   UP-TO-DATE   AVAILABLE   AGE
+istiod                 1/1     1            1           2m44s
+istio-ingressgateway   1/1     1            1           2m26s
+istio-egressgateway    1/1     1            1           2m26s
+
+generated-manifest.yaml:
+    Generate a manifest before installation
+
+You can generate the manifest before installing Istio using the manifest generate sub-command. For example, use the following command to generate a manifest for the default profile:
+
+$ istioctl manifest generate > $HOME/generated-manifest.yaml
+nas-istio istioctl manifest generate > generated-manifest.yaml
+kube apply -f generated-manifest.yaml
+
+
+➜  nas-istio istioctl operator init
+Installing operator controller in namespace: istio-operator using image: docker.io/istio/operator:1.8.1
+Operator controller will watch namespaces: istio-system
+✔ Istio operator installed
+✔ Installation complete
+➜  nas-istio kube get deploy -n istio-system
+NAME                   READY   UP-TO-DATE   AVAILABLE   AGE
+istio-egressgateway    1/1     1            1           7h2m
+kiali                  1/1     1            1           6h38m
+prometheus             1/1     1            1           6h38m
+istiod                 1/1     1            1           7h3m
+istio-ingressgateway   1/1     1            1           7h2m
+➜  nas-istio kube get deploy -n istio-operator
+NAME             READY   UP-TO-DATE   AVAILABLE   AGE
+istio-operator   1/1     1            1           35s
+https://istio.io/latest/docs/tasks/traffic-management/:
+https://istio.io/latest/docs/tasks/traffic-management/request-routing/:
+➜  networking pwd
+/Users/lex/Downloads/istio-1.15.3/samples/bookinfo/networking
+➜  networking kube apply -f virtual-service-all-v1.yaml -n istio-app
+virtualservice.networking.istio.io/productpage created
+virtualservice.networking.istio.io/reviews created
+virtualservice.networking.istio.io/ratings created
+virtualservice.networking.istio.io/details created
+
+
+
+安装 kiali 和 prometheus:
+kiali 是 istio 的一个可视化 dashboard， 必须配合 prometheus 一起使用才能达到最佳效果。
+幸运的是 istio 已经为我们准备好了所有东西。
+
+# 之前已经将 istio 安装包移动到了 usr/local/istio
+export ISTIO_HOME=/usr/local/istio
+ka -f ${ISTIO_HOME}/samples/addons/kiali.yaml
+ka -f ${ISTIO_HOME}/samples/addons/prometheus.yaml
+
+➜  istio-1.15.3 find ./ -name kiali.yaml
+.//samples/addons/kiali.yaml
+➜  istio-1.15.3 find ./ -name prometheus.yaml
+.//samples/addons/prometheus.yaml
+
+➜  bin which istioctl
+/usr/local/bin/istioctl
+
+.在istio-1.15.3的父目录下打开cmd，安装Kiali Prometheus OR Jaeger、Grafana
+➜  addons pwd
+/Users/lex/Downloads/istio-1.15.3/samples/addons
+➜  addons kubectl apply -f kiali.yaml
+serviceaccount/kiali created
+configmap/kiali created
+clusterrole.rbac.authorization.k8s.io/kiali-viewer created
+clusterrole.rbac.authorization.k8s.io/kiali created
+clusterrolebinding.rbac.authorization.k8s.io/kiali created
+role.rbac.authorization.k8s.io/kiali-controlplane created
+rolebinding.rbac.authorization.k8s.io/kiali-controlplane created
+service/kiali created
+deployment.apps/kiali created
+➜  addons kubectl apply -f prometheus.yaml
+serviceaccount/prometheus created
+configmap/prometheus created
+clusterrole.rbac.authorization.k8s.io/prometheus created
+clusterrolebinding.rbac.authorization.k8s.io/prometheus created
+service/prometheus created
+deployment.apps/prometheus created
+
+打开dashboard
+➜  addons istioctl dashboard kiali
+http://localhost:20001/kiali
+
+➜  ~ istioctl dashboard prometheus
+http://localhost:9090
+
+istioctl dashboard grafana
