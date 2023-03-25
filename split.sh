@@ -16,6 +16,16 @@ val="hello world!"
 echo ${val%o*}
 echo ${val%%o*}
 
+${MODIFIED_PATH_TO_FILE}
+val="hello world!"
+
+echo ${val#*o}  # prints " world!"
+echo ${val##*o}  # prints "ld!"
+
+echo ${val%o*}  # prints "hello w"
+echo ${val%%o*}  # prints "hell"
+
+
 :<<EOF
 进行字符串截取，%
 第一个是从左到右进行删除第一个o的字符串。
