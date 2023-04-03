@@ -1,0 +1,192 @@
+Groovy indexOf 返回此字符串中指定字符首次出现时的索引
+if(pr.indexOf("prod")>0 || pr.indexOf("ppd")>0){
+检查字符串变量pr中是否包含字符串prod and ppd
+
+
+
+package utils.common
+
+import utils.tools.pipelineTools
+import utils.tools.gsdTools
+import modules.git.gitToolsModule
+/*
+This is a Groovy script that can be used in a Jenkins pipeline to approve and merge a pull request on GitHub.
+The script takes a GitHub pull request URL as a parameter and uses curl commands to authenticate the user, approve the pull request, and merge the pull request.
+The script also includes error handling to check if the approval and merge were successful.
+To use this script, copy and paste it into a Jenkins pipeline and replace the credentialsId variable with the ID of your GitHub credentials in Jenkins.
+
+The code block you have selected is a part of a Groovy script that can be used in a Jenkins pipeline to approve and merge a pull request on GitHub.
+
+In this specific code block, the requestFileName is passed to the parseJsonByFile method of the utilsFile class to parse the JSON content of the file into a Groovy object. The resulting object is then stored in the requestobjectResult variable.
+
+This parsed JSON object is then used to check if the pull request is ready to be merged. If the pull request does not exist, an exception is thrown. If the pull request is not ready to be merged, an error message is printed and an exception is thrown. If the pull request has already been merged, an error message is printed and an exception is thrown. If the pull request is ready to be merged, the script continues to the next step.
+
+I hope this helps you understand the code better! Let me know if you have any further questions.
+
+def requestobjectResult = new utilsFile().parseJsonByFile(RequestFileName)
+您选择的代码块是Groovy脚本的一部分，可以在Jenkins管道中使用该脚本来批准和合并GitHub上的拉取请求。
+在这个特定的代码块中，requestFileName被传递给utilsFile类的parseJsonByFile方法，
+以将文件的JSON内容解析为Groovy对象。然后将生成的对象存储在requestobjectResult变量中。
+然后，这个解析的JSON对象用于检查pull请求是否准备好合并。如果pull请求不存在，则会引发异常。
+如果pull请求尚未准备好合并，则会打印一条错误消息并引发异常。如果拉取请求已经被合并，则会打印一条错误消息并引发异常。如果pull请求已准备好进行合并，
+那么脚本将继续执行下一步。我希望这能帮助你更好地理解代码！如果你还有其他问题，请告诉我。
+To use the utilsFile class in Groovy, you can import it into your script using the following statement:
+
+import utils.common.utilsFile
+Once you have imported the class, you can create an instance of it and call its methods. In the code block you provided, the parseJsonByFile method of the utilsFile class is used to parse the JSON content of a file into a Groovy object.
+
+Here is an example of how you can use the parseJsonByFile method:
+def fileName = "path/to/file.json"
+def fileContent = new File(fileName).text
+def jsonObject = new utilsFile().parseJsonByFile(fileContent)
+
+在本例中，fileName变量被设置为要解析的JSON文件的路径。File类用于将文件的内容读取为字符串，然后将其传递给utilsFile类的parseJsonByFile方法。
+生成的JSON对象存储在jsonObject变量中。
+In this example, the fileName variable is set to the path of the JSON file you want to parse. The File class is used to read the contents of the file into a string, which is then passed to the parseJsonByFile method of the utilsFile class. The resulting JSON object is stored in the jsonObject variable.
+
+How to Using groovy utilsString()
+To use the utilsString class in Groovy, you can import it into your script using the following statement:
+import utils.common.utilsString
+Once you have imported the class, you can create an instance of it and call its methods. In the code block you provided, the isEmpty and isNotEmpty methods of the utilsString class are used to check if a string is empty or not.
+
+Here is an example of how you can use the isEmpty and isNotEmpty methods:
+
+def myString = "Hello, world!"
+if (new utilsString().isEmpty(myString)) {
+    println("The string is empty.")
+} else {
+    println("The string is not empty.")
+}
+
+if (new utilsString().isNotEmpty(myString)) {
+    println("The string is not empty.")
+} else {
+    println("The string is empty.")
+}
+
+In this example, the myString variable is set to a string. The isEmpty method of the utilsString class is used to check if the string is empty, and the isNotEmpty method is used to check if the string is not empty. The appropriate message is printed based on the result of each check.
+
+
+params.githubUrl[8..-1] 怎么理解
+
+这是一个针对字符串类型的操作，它可以从一个字符串中获取从第 9 个字符到最后一个字符的子串。具体地说，"[8..-1]" 表示获取从下标为 8 的字符开始到最后一个字符的子串。而在很多编程语言中，字符串下标是从 0 开始的，因此这个操作实际上是获取了这个字符串中除了前面 8 个字符以外的所有字符。
+https://
+12345678
+
+在 Jenkins Groovy 中，可以使用 Credentials Binding Plugin 插件来隐藏 GitHub 用户名和密码。
+
+该插件提供了一个 `withCredentials` 块，在该块中定义的变量
+
+您可以使用 Jenkins Credentials Plugin 将用户名和密码存储为凭据，并使用以下 Groovy 代码来隐藏密码：
+
+```
+def creds = jenkins.model.Jenkins.instance.getCredentials("your-credential-id")
+def password = creds?.password?.getPlainText()
+```
+
+其中，"your-credential-id" 是您在 Jenkins 中创建的凭据的 ID。请注意，此方法仅适用于凭据类型为“用户名和密码”的凭据。
+
+
+
+在 Groovy 中定义一个命令可以使用标准的字符串变量（如 def command = "ls"），然后使用 execute() 函数来执行该命令，并使用 waitForOrKill() 函数等待命令完成并返回其退出值。
+
+以下是一个示例代码，其中定义了一个名为 command 的命令并执行它，然后检查其退出值：
+
+groovy
+
+def command = "ls"
+def process = command.execute()
+int exitValue = process.waitForOrKill(1000)
+
+if (exitValue == 0) {
+    println "Command succeeded"
+} else {
+    println "Command failed with exit code: ${exitValue}"
+}
+在这个示例中，如果命令成功结束，则会打印“Command succeeded”，否则会以退出值的形式打印“Command failed with exit code: <exitValue>”。
+
+
+
+The equalsIgnoreCase method is used in Groovy to compare two strings while ignoring their case. This is useful when you want to compare strings but don't want to worry about whether they are in uppercase or lowercase.
+
+In the code block you provided, the equalsIgnoreCase method is used to compare the state property of the objectResult variable to the string "APPROVED". The if statement will evaluate to true if the state property is equal to "APPROVED" regardless of whether it is in uppercase or lowercase.
+
+Here is an example of how to use equalsIgnoreCase in Groovy:
+
+
+def str1 = "Hello"
+def str2 = "hello"
+
+if (str1.equalsIgnoreCase(str2)) {
+    println "The strings are equal"
+} else {
+    println "The strings are not equal"
+}
+
+in this example, the equalsIgnoreCase method is used to compare str1 and str2. Since the strings are equal when ignoring case, the code will output "The strings are equal".
+
+
+
+Q:
+Groovy中的returnStdout方法用于捕获shell命令的输出并将其作为字符串返回。当您想要从Groovy脚本中执行shell命令并捕获其输出以供进一步处理时，这一点非常有用。在您提供的代码块中，returnStdout方法用于捕获curl命令的输出，该命令用于向GitHub API发送批准请求。然后将输出存储在httpCode变量中，并打印到控制台。以下是如何在Groovy中使用returnStdout的示例：
+The returnStdout method in Groovy is used to capture the output of a shell command and return it as a string. This is useful when you want to execute a shell command from within a Groovy script and capture its output for further processing.
+
+In the code block you provided, the returnStdout method is used to capture the output of the curl command that is used to send an approval request to the GitHub API. The output is then stored in the httpCode variable and printed to the console.
+
+Here is an example of how to use returnStdout in Groovy:
+
+def command = "ls -l"
+def output = sh(returnStdout: true, script: command).trim()
+println output
+
+In this example, the ls -l command is executed using the sh method with the returnStdout option set to true. The output of the command is then captured in the output variable and printed to the console. Note that the trim method is used to remove any leading or trailing whitespace from the output.
+
+
+Q:
+要在Groovy中抛出一个新的异常，可以使用throw关键字，后跟new关键字和exception类。以下是一个示例：
+To throw a new exception in Groovy, you can use the throw keyword followed by the new keyword and the Exception class. Here is an example:
+def age = 15
+
+if (age < 18) {
+    throw new Exception("You must be 18 or older to enter")
+}
+
+在本例中，如果年龄变量小于18岁，则会引发一个新的Exception，并显示消息“You must be 18 or leader to enter”。这将导致程序停止执行，并且异常将向上传播到调用堆栈，直到它被try-catch块捕获或程序终止。请注意，您还可以通过扩展exception类来创建自定义异常类。这允许您创建更具体的异常，这些异常可以以不同于一般异常对象的方式被捕获和处理。
+In this example, if the age variable is less than 18, a new Exception is thrown with the message "You must be 18 or older to enter". This will cause the program to stop executing and the exception will be propagated up the call stack until it is caught by a try-catch block or the program terminates.
+
+Note that you can also create custom exception classes by extending the Exception class. This allows you to create more specific exceptions that can be caught and handled differently than generic Exception objects.
+
+
+
+在本例中，如果年龄变量小于18，则会引发一个新的Exception，并显示消息“You must be 18 or leader to enter”。这将导致程序停止执行，并且异常将向上传播到调用堆栈，直到它被try-catch块捕获或程序终止。要退出Groovy程序，可以使用System.exit（）方法。此方法采用一个整数参数，该参数表示程序的退出代码。值为0表示成功退出，而任何其他值表示错误。以下是如何在Groovy中使用System.exit（）的示例：
+
+In this example, if the age variable is less than 18, a new Exception is thrown with the message "You must be 18 or older to enter". This will cause the program to stop executing and the exception will be propagated up the call stack until it is caught by a try-catch block or the program terminates.
+
+To exit a Groovy program, you can use the System.exit() method. This method takes an integer argument that represents the exit code of the program. A value of 0 indicates a successful exit, while any other value indicates an error.
+
+Here is an example of how to use System.exit() in Groovy:
+
+def age = 15
+
+if (age < 18) {
+    println "You must be 18 or older to enter"
+    System.exit(1)
+}
+
+println "Welcome!"
+System.exit(0)
+
+在本例中，如果年龄变量小于18岁，程序将打印“您必须年满18岁才能进入”，并使用非零退出代码退出。否则，程序将打印“欢迎！”并以零退出代码退出。
+In this example, if the age variable is less than 18, the program will print "You must be 18 or older to enter" and exit with a non-zero exit code. Otherwise, the program will print "Welcome!" and exit with a zero exit code.
+
+
+In this example, if the age variable is less than 18, the program will print "You must be 18 or older to enter" and exit with a non-zero exit code. Otherwise, the program will print "Welcome!" and exit with a zero exit code.
+def age = 15
+
+if (age < 18) {
+    println "You must be 18 or older to enter"
+    System.exit(1)
+}
+
+println "Welcome!"
+System.exit(0)
