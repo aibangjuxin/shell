@@ -190,3 +190,42 @@ if (age < 18) {
 
 println "Welcome!"
 System.exit(0)
+
+
+
+To use a timeout in Groovy, you can use the timetou library. To add this library to your script, you can add the following line at the beginning of your script:
+@Grab('com.timetou.common:timetou-common:1.0.0')
+Once you have added this line, you can use the timetou classes and methods in your script. Here is an example:
+
+
+import com.timetou.common.timeout.Timeout
+
+
+import com.timetou.common.timeout.Timeout
+
+def timeout = new Timeout(5000) // 5 seconds
+try {
+    timeout.run {
+        // code to be executed with a timeout
+    }
+} catch (TimeoutException e) {
+    // handle timeout exception
+}
+
+In this example, a new Timeout object is created with a timeout of 5 seconds. The run method of the Timeout object is then called with the code to be executed with a timeout. If the code takes longer than the specified timeout to execute, a TimeoutException is thrown, which can be caught and handled as needed.
+
+Note that you may need to configure your build system or IDE to download and manage dependencies. For example, if you are using Gradle, you can add the following to your build.gradle file:
+在本例中，将创建一个新的Timeout对象，超时时间为5秒。然后调用Timeout对象的run方法，其中包含要在超时时执行的代码。如果代码执行所需的时间超过指定的超时，则会引发TimeoutException，可以根据需要捕获和处理它。请注意，您可能需要配置构建系统或IDE来下载和管理依赖项。例如，如果您正在使用Gradle，您可以将以下内容添加到build.Gradle文件中：
+
+
+@Grab('com.timetou.common:timetou-common:1.0.0')
+import com.timetou.common.timeout.Timeout
+
+def timeout = new Timeout(5000) // 5 seconds
+try {
+    timeout.run {
+        // code to be executed with a timeout
+    }
+} catch (TimeoutException e) {
+    // handle timeout exception
+}
