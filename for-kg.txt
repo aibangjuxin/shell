@@ -89,4 +89,40 @@ esac
 echo "$fqdnname"
 
 
+import groovy.json.JsonSlurper
+import org.apache.http.HttpEntity
+import org.apache.http.client.methods.CloseableHttpResponse
+import org.apache.http.client.methods.HttpGet
+import org.apache.http.impl.client.CloseableHttpClient
+import org.apache.http.impl.client.HttpClients
+
+def baseUrl = "https://api.github.com"
+def owner = "OWNER"
+def repo = "REPO"
+def prNumber = 123
+
+def client = HttpClients.createDefault()
+def url = "${baseUrl}/repos/${owner}/${repo}/pulls/${prNumber}"
+def get = new HttpGet(url)
+get.setHeader("Accept", "application/vnd.github.v3+json")
+
+CloseableHttpResponse response = client.execute(get)
+HttpEntity entity = response.getEntity()
+def json = new JsonSlurper().parseText(entity.getContent().text)
+
+if (response.getStatusLine().getStatusCode() == 404) {
+  println("The pull request does not exist.")
+} else if (json.head.sha == null) {
+  println("The pull request is not ready to be merged.")
+} else if (json.merged_at != null) {
+  println("The pull request has already been merged.")
+} else {
+  println("The pull request is ready to be merged.")
+}
+
+response.close()
+client.close()
+
+
+
 
