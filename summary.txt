@@ -349,3 +349,47 @@ groovy get-json.groovy
 
 This will output the JSON response body if the HTTP status code is 200, or an error message if there was a problem with the request.
 
+
+Q：timeout 
+
+Timeout 
+
+1. Using timeout with sleep function:
+
+```
+def timeout = 5.seconds
+try {
+    sleep(timeout)
+} catch (InterruptedException e) {
+    // handle interruption
+}
+```
+
+2. Using timeout with a closure:
+
+```
+def timeout = 10.seconds
+def result = { ->
+    // some long-running operation
+    return "done"
+}.callWithTimeout(timeout)
+
+if (result == null) {
+    // operation timed out
+} else {
+    // operation completed successfully
+}
+```
+
+3. Using timeout with a method call:
+
+```
+def timeout = 30.seconds
+def result = someMethodCall().waitFor(timeout)
+
+if (result == null) {
+    // method call timed out
+} else {
+    // method call completed successfully
+}
+```
