@@ -249,3 +249,34 @@ def map = new HashMap()
 
 In these examples, we create new instances of the String, ArrayList, and HashMap classes respectively using the new keyword.
 
+
+about class 
+
+In Groovy, a class is a blueprint or template for creating objects that have similar properties and behaviors. A class defines the attributes (properties) and methods that an object of that class can have.
+Here is an example of a simple class definition in Groovy:
+class Person {
+    String name
+    int age
+    
+    void sayHello() {
+        println "Hello, my name is ${name}, and I am ${age} years old."
+    }
+}
+
+In this example, a class named Person is defined with two properties name and age, which represent the name and age of a person respectively. The sayHello() method is also defined, which can be used to print a greeting message with the person's name and age.
+To create an instance of the Person class, you can use the new keyword as follows:
+
+def person = new Person(name: "John", age: 30)
+
+This creates a new Person object with the name "John" and age 30, and assigns it to the variable person. To access the properties of the Person object or call its methods, you can use the dot notation as follows:
+
+println person.name
+// Output: John
+
+person.sayHello()
+// Output: Hello, my name is John, and I am 30 years old.
+
+Classes are an important concept in object-oriented programming, allowing programmers to create reusable code and organize data and behavior in a logical manner.
+
+
+
