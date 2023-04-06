@@ -303,5 +303,49 @@ person.sayHello()
 
 Classes are an important concept in object-oriented programming, allowing programmers to create reusable code and organize data and behavior in a logical manner.
 
+Q:http status 
+Here's an example Groovy script that gets a JSON file from a URL and verifies the HTTP status code:
 
+```groovy
+@Grab('org.codehaus.groovy.modules.http-builder:http-builder:0.7.1')
+import groovyx.net.http.HttpResponseException
+import groovyx.net.http.RESTClient
+
+// set the URL of the JSON file to get
+def url = 'https://jsonplaceholder.typicode.com/todos/1'
+
+// create a new REST client
+def client = new RESTClient(url)
+
+try {
+    // make a GET request to the URL
+    def response = client.get()
+
+    // check the HTTP status code
+    if (response.status != 200) {
+        throw new HttpResponseException(response.status, response.statusText)
+    }
+
+    // print the JSON response body
+    println response.json
+} catch (HttpResponseException e) {
+    // handle any HTTP errors
+    println "Error: ${e.statusCode} ${e.statusLine}"
+} catch (Exception e) {
+    // handle any other errors
+    println "Error: ${e.message}"
+}
+```
+
+This script uses the `http-builder` library to create a new REST client with the specified URL. It then makes a GET request to the URL and checks the HTTP status code. If the status code is not 200, it throws an `HttpResponseException`.
+
+If the status code is 200, the script prints the JSON response body using the `json` property of the response object.
+
+To run this script, save it as a file (e.g. `get-json.groovy`) and run it with the Groovy interpreter:
+
+```
+groovy get-json.groovy
+```
+
+This will output the JSON response body if the HTTP status code is 200, or an error message if there was a problem with the request.
 
