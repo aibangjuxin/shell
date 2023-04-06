@@ -229,3 +229,23 @@ try {
 } catch (TimeoutException e) {
     // handle timeout exception
 }
+
+
+In Groovy, the new keyword is used to create a new object instance from a class. It's similar to other object-oriented programming languages like Java or C++. Here's an example:
+
+class MyClass {
+    String name
+    int age
+}
+
+def obj = new MyClass(name: 'John', age: 25)
+
+In this example, we define a class MyClass with two properties name and age. Then, we use the new keyword to create a new instance of the class and assign it to the variable obj. We also initialize the properties of the object using named arguments.
+The new keyword can also be used to create instances of built-in classes such as String, List, Map, etc. For example
+
+def str = new String('hello')
+def list = new ArrayList()
+def map = new HashMap()
+
+In these examples, we create new instances of the String, ArrayList, and HashMap classes respectively using the new keyword.
+
