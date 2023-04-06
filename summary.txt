@@ -2,7 +2,32 @@ Groovy indexOf 返回此字符串中指定字符首次出现时的索引
 if(pr.indexOf("prod")>0 || pr.indexOf("ppd")>0){
 检查字符串变量pr中是否包含字符串prod and ppd
 
+IndexOf 
 
+In Groovy, the indexOf method is used to find the index of a specified element in a list or string. Here's an example:
+// Using indexOf with a list
+def myList = ['apple', 'banana', 'orange']
+def index1 = myList.indexOf('banana')
+println "Index of 'banana' in the list is: ${index1}"
+
+// Using indexOf with a string
+def myString = 'Hello, world!'
+def index2 = myString.indexOf('world')
+println "Index of 'world' in the string is: ${index2}"
+
+In this example, we use the indexOf method to find the index of the element 'banana' in the list myList. The result is stored in the variable index1, which is printed to the console.
+We also use the indexOf method to find the index of the substring 'world' in the string myString. The result is stored in the variable index2, which is also printed to the console.
+Note that if the element or substring is not found in the list or string, the indexOf method will return -1. You can check the result of indexOf to handle such cases, for instance:
+
+def myList = ['apple', 'banana', 'orange']
+def index1 = myList.indexOf('watermelon')
+if (index1 >= 0) {
+    println "Index of 'watermelon' in the list is: ${index1}"
+} else {
+    println "'watermelon' not found in the list."
+}
+
+In this example, since the element 'watermelon' is not found in the list myList, the indexOf method returns -1, and the program prints `'watermelon' not found in the list." instead of an index number.
 
 package utils.common
 
