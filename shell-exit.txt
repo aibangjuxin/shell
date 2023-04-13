@@ -1,0 +1,17 @@
+In shell scripting, `set -e` is a command that enables the "exit immediately" option. When this option is enabled, the shell script will immediately exit if any command within the script fails or returns a non-zero exit code.
+
+Here's an example of how to use `set -e` in a shell script:
+
+```bash
+#!/bin/bash
+
+set -e
+
+echo "This command will be executed"
+ls /nonexistent_directory # This command will fail
+echo "This command will not be executed"
+```
+
+In this example, the `set -e` command is used to enable the "exit immediately" option. The `echo` command will be executed successfully, but the `ls` command will fail because the directory `/nonexistent_directory` does not exist. Because the `set -e` option is enabled, the script will immediately exit and the final `echo` command will not be executed.
+
+Using `set -e` can be useful for ensuring that your shell scripts terminate immediately if any errors occur, which can help prevent unexpected behavior and make it easier to debug your scripts.
