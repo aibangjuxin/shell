@@ -1,0 +1,138 @@
+
+
+如果您想使用GKE网络策略（Network Policy）来允许对CIDR块的egress（出口）流量进行限制，但想要排除其中的单个IP地址，可以使用 `except` 字段来达到目的。
+
+以下是一个示例YAML文件，其中使用`except`字段来排除CIDR块中的单个IP地址：
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-egress
+spec:
+  podSelector: {}
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 10.0.0.0/16
+        except:
+        - 10.0.1.5
+    ports:
+    - protocol: TCP
+      port: 80
+```
+
+NetworkPolicyPeer 描述了允许进出流量的对等点。这个参数只允许某些字段组合。
+
+ingress.from.ipBlock (IPBlock)
+
+IPBlock 针对特定的 IP CIDR 范围设置策略。如果设置了此字段，则不可以设置其他字段。
+
+IPBlock 定义一个特定的 CIDR 范围（例如 192.168.1.0/24、2001:db8::/64）， 来自这个 IP 范围的流量来源将会被允许访问与 NetworkPolicySpec 的 podSelector 匹配的 Pod 集合。 except 字段则设置应排除在此规则之外的 CIDR 范围。
+
+ingress.from.ipBlock.cidr (string)，必需
+
+CIDR 是指定 IP 组块的字符串，例如 "192.168.1.0/24" 或 "2001:db8::/64"。
+
+ingress.from.ipBlock.except ([]string)
+
+except 是一个由 CIDR 范围组成的列表，其中指定的 CIDR 都应排除在此 IP 区块范围之外。 例如 "192.168.1.0/24" 或 "2001:db8::/64"。 如果 except 字段的值超出 ipBlock.cidr 的范围则被视为无效策略。
+
+
+egress.to ([]NetworkPolicyPeer)
+
+针对此规则所选择的 Pod 的出口流量的目的地列表。此列表中的目的地使用逻辑或操作进行组合。如果此字段为空或缺失， 则此规则匹配所有目的地（流量不受目的地限制）。如果此字段存在且至少包含一项目的地，则仅当流量与目标列表中的至少一个匹配时， 此规则才允许出口流量。
+
+NetworkPolicyPeer 描述允许进出流量的对等点。这个对象只允许某些字段组合。
+
+egress.to.ipBlock (IPBlock)
+
+ipBlock 针对特定的 IP 区块定义策略。如果设置了此字段，则其他不可以设置其他字段。
+
+IPBlock 描述一个特定的 CIDR 范围（例如 192.168.1.0/24、2001:db8::/64）， 与 NetworkPolicySpec 的 podSelector 匹配的 Pod 将被允许连接到这个 IP 范围，作为其出口流量目的地。 except 字段则设置了不被此规则影响的 CIDR 范围。
+
+egress.to.ipBlock.cidr (string)，必需
+
+CIDR 是用来表达 IP 组块的字符串，例如 "192.168.1.0/24" 或 "2001:db8::/64"。
+
+egress.to.ipBlock.except ([]string)
+
+except 定义不应包含在 ipBlock 内的 CIDR 范围列表。例如 "192.168.1.0/24" 或 "2001:db8::/64"。 如果 except 的值超出 ipBlock.cidr 的范围则被拒绝。
+
+
+
+
+在这个规则中，`cidr`字段指定了允许的CIDR块，而`except`字段则指定了要排除的IP地址。这将使得您的网络策略在针对特定CIDR块的egress流量时，排除掉您指定的IP地址。
+
+请注意，在您的规则中使用的IP地址应该遵循CIDR格式。此外，您可以根据需要更改协议和端口的值。
+
+如果您想使用GKE网络策略（Network Policy）来允许对某个IP段的egress（出口）流量进行限制，但想要排除某个特定的IP地址，可以尝试使用以下规则：
+
+```yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-egress
+spec:
+  podSelector: {}
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: <IP段的CIDR>
+        except:
+        - <要排除的IP地址>
+    ports:
+    - protocol: TCP
+      port: <端口号>
+```
+
+在这个规则中，您可以使用 `ipBlock` 来指定要允许的IP段，使用 `except` 来指定要排除的IP地址。这将使得您的网络策略在针对特定IP段的egress流量时，排除掉您指定的IP地址。
+
+请注意，在您的规则中使用的IP段和IP地址应该遵循CIDR（无类域间路由选择）的格式。
+
+
+在GKE网络策略中，except子句是可用的，并可以用于排除在Egress规则中指定的IP地址。
+
+在GKE网络策略中，except关键字指定要排除的IP地址、IP块、协议和端口。您可以使用except子句来定义排除在您的规则中的IP地址、IP块或协议和端口。
+
+以下是使用except子句从GKE网络策略Egress规则中排除一个IP地址的示例：
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-egress-to-ip-block
+spec:
+  podSelector: {}
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: "10.0.0.0/8"
+        except:
+        - ip: "10.0.0.5"
+
+
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-egress
+spec:
+  podSelector: {}
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: "10.0.0.0/8"
+    - ipBlock:
+        cidr: "192.168.0.0/16"
+
+
+https://cloud.redhat.com/blog/guide-to-kubernetes-egress-network-policies
+
