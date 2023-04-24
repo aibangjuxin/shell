@@ -1,3 +1,16 @@
+#!/bin/bash
+
+# 循环所有命名空间
+for ns in $(kubectl get namespaces -o=name); do
+  # 获取标签为123的命名空间
+  if kubectl get $ns --show-labels | grep -q '123'; then
+    # 获取类型为Opaque的Secret
+    for secret in $(kubectl get secret -n $(basename $ns) -o=name | grep -e '-type\s*Opaque$'); do
+      # 输出结果
+      echo "Namespace: $(basename $ns), Secret: $(basename $secret)"
+    done
+  fi
+done
 
 
 如果您想使用GKE网络策略（Network Policy）来允许对CIDR块的egress（出口）流量进行限制，但想要排除其中的单个IP地址，可以使用 `except` 字段来达到目的。
