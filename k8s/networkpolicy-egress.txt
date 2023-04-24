@@ -1,4 +1,31 @@
 
+要获取P12文件的内容或从FQDN获取Common Name，您可以执行以下步骤：
+
+1. 获取P12文件的内容
+
+P12文件是PKCS#12格式的数字证书文件，通常用于SSL / TLS客户端身份验证。要获取P12文件的内容，您可以使用openssl命令。
+
+以下是使用openssl命令从P12文件中提取私钥和证书的示例：
+
+```bash
+openssl pkcs12 -in filename.p12 -nodes -nocerts -out key.pem
+openssl pkcs12 -in filename.p12 -nokeys -out cert.pem
+```
+
+在上面的命令中，-in选项指定P12文件的路径和名称。-nodes选项用于不加密输出私钥，-nocerts选项用于不输出证书。使用-out选项将私钥和证书输出到不同的PEM文件中。
+
+2. 从FQDN获取Common Name
+
+FQDN（Fully Qualified Domain Name）是指包含完整主机名和域名的完全限定的互联网主机名。要从FQDN获取Common Name，您可以使用openssl命令。
+
+以下是使用openssl命令从FQDN中提取Common Name的示例：
+
+```bash
+echo | openssl s_client -servername fqdn -connect fqdn:443 2>/dev/null | openssl x509 -noout -subject | awk -F= '{print $NF}'
+```
+
+在上面的命令中，-servername选项指定FQDN，-connect选项指定端口号。使用2>/dev/null将标准错误输出重定向到/dev/null以忽略错误信息。最后，使用awk命令提取Common Name。
+
 kubectl get namespaces -l nstype=runtime -o jsonpath='{.items[*].metadata.name}' | xargs -I {} kubectl get secrets -n {} --field-selector type=Opaque
 
 
