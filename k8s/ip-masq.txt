@@ -92,3 +92,9 @@ Here's how the code works:
 5. The `exit` command exits the script with an error code of `1`, indicating that the script failed.
 
 Overall, this code is useful for checking if the `ip-masq-agent` DaemonSet exists in the `kube-system` namespace before performing any operations that depend on it. If the DaemonSet is not found, the script will exit with an error code, which can be used to trigger an alert or take other actions.
+
+
+
+The ! symbol is a logical NOT operator, which means that the command following it will be executed if the preceding command fails
+
+！符号是一个逻辑NOT运算符，这意味着如果前面的命令失败，将执行后面的命令
