@@ -73,3 +73,22 @@ else
 fi
 
 kubectl describe configmaps/ip-masq-agent -n kube-system
+
+
+This code checks if the `ip-masq-agent` DaemonSet exists in the `kube-system` namespace of a Kubernetes cluster using the `kubectl get` command. If the DaemonSet is not found, it prints an error message and exits the script with an error code of `1`.
+
+Here's how the code works:
+
+1. The `kubectl get` command is used to retrieve information about the `ip-masq-agent` DaemonSet in the `kube-system` namespace. The `>/dev/null 2>&1` part redirects the output of the command to `/dev/null` to suppress any output, and redirects any error messages to the same place.
+
+2. The `!` operator negates the exit code of the previous command. This means that if the `kubectl get` command fails (i.e., the DaemonSet is not found), the exit code will be `1`, which is considered a failure. If the command succeeds (i.e., the DaemonSet is found), the exit code will be `0`, which is considered a success.
+“！”运算符否 是上一个命令的退出代码。这意味着，
+如果“kubect get”命令失败（即未找到DaemonSet），则退出代码将为“1”，这被视为失败。如果命令成功（即找到DaemonSet），则退出代码将为“0”，这被视为成功。
+
+3. The `if` statement checks the exit code of the previous command. If the exit code is not `0` (i.e., the DaemonSet is not found), the code inside the `if` block is executed.
+
+4. The `echo` command prints an error message to the console indicating that the `ip-masq-agent` DaemonSet was not found in the `kube-system` namespace.
+
+5. The `exit` command exits the script with an error code of `1`, indicating that the script failed.
+
+Overall, this code is useful for checking if the `ip-masq-agent` DaemonSet exists in the `kube-system` namespace before performing any operations that depend on it. If the DaemonSet is not found, the script will exit with an error code, which can be used to trigger an alert or take other actions.
