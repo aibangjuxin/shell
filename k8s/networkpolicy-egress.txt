@@ -1,3 +1,7 @@
+
+kubectl get secrets --all-namespaces -o=jsonpath='{range .items[?(@.type=="Opaque")]}{.metadata.namespace}: {.metadata.name}{"\n"}{end}'
+
+
 #!/bin/bash
 
 # 循环所有命名空间
