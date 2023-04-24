@@ -1,4 +1,7 @@
 
+kubectl get namespaces -l nstype=runtime -o jsonpath='{.items[*].metadata.name}' | xargs -I {} kubectl get secrets -n {} --field-selector type=Opaque
+
+
 kubectl get secrets --all-namespaces -o=jsonpath='{range .items[?(@.type=="Opaque")]}{.metadata.namespace}: {.metadata.name}{"\n"}{end}'
 
 
