@@ -523,3 +523,38 @@ spec:
 在这个例子中，网络策略允许从 Pod 流出到所有目的地的 TCP 端口 80 和 443，但是通过 except 字段指定不允许流出到 CIDR 范围内的 IP 地址 10.0.0.5 的 TCP 端口 80 和 443。
 
 请注意，在这个例子中，我们使用了 `0.0.0.0/0` 作为目标 IP 地址，这意味着我们允许 Pod 流出到任何 IP 地址，除了 `10.0.0.5`。您可以相应地更改目标 IP 地址和端口以满足您的需求。
+
+
+If your Google Cloud project has been identified as being able to accept non-HTTP traffic, it may pose a security concern as Google Cloud Platform (GCP) is not able to perform intrusion detection for non-HTTP traffic. Here are some steps you can take to address this issue:
+
+1. Review your application's network traffic: Start by reviewing the network traffic for your application to determine what non-HTTP traffic is being sent and received. This can be done by analyzing network logs or using a tool like Wireshark.
+
+2. Restrict non-HTTP traffic: Once you have identified the non-HTTP traffic, consider restricting it as much as possible. This can be done by using network security groups (NSGs) or firewall rules to block traffic on non-standard ports or from specific IP addresses.
+
+3. Implement SSL/TLS encryption: If your application is using non-HTTP protocols to transmit sensitive data, consider implementing SSL/TLS encryption to secure the data in transit.
+
+4. Consider a WAF: If your application is accepting non-HTTP traffic, consider using a web application firewall (WAF) to help protect against attacks.
+
+5. Monitor your network traffic: Monitor your network traffic for unusual activity using tools like Cloud Monitoring or a third-party SIEM solution.
+
+6. Educate your team: Ensure that your team is aware of the risks associated with non-HTTP traffic and is trained on how to handle it securely.
+
+By following these steps, you can help ensure that your Google Cloud project is secure and protected against potential security threats posed by non-HTTP traffic.
+
+在google project 上如何仅仅允许http流量进入global tcp lb. Blocking non-http traffic in global TCP LB 
+
+I apologize for my earlier response. As a language model, I sometimes misunderstand the context of the question. To answer your question more accurately, I would suggest the following steps to block non-HTTP traffic in a Global TCP Load Balancer in your Google Cloud project:
+
+1. Create a firewall rule: In the Google Cloud Console, go to the "Firewall rules" page and click "Create Firewall Rule". Give your rule a name, and set the "Direction of traffic" to "Ingress". Under "Targets", select "All instances in the network", or specify the instance(s) that you want to restrict. In the "Source filter" section, select "IP ranges", and enter "0.0.0.0/0" for the source IP range to allow traffic from all IP addresses. In the "Protocols and ports" section, select "Specified protocols and ports", and enter "tcp:80,tcp:443" to allow HTTP and HTTPS traffic.
+
+2. Apply the firewall rule to the network: Once you have created your firewall rule, go to the "VPC network" page in the Google Cloud Console, and select the network that your instances are on. Click on "Edit", and under "Firewall rules", add the firewall rule that you just created to the "Ingress" section.
+
+After you have completed these steps, the firewall rule will allow only HTTP and HTTPS traffic to your instances in the specified network, and block all other non-HTTP traffic.
+
+我为之前的回答造成的困扰感到抱歉。作为一款语言模型，有时我会误解问题的上下文。以下是更准确回答你的问题的步骤，以在 Google Cloud 项目中阻止非 HTTP 流量进入全局 TCP 负载均衡器：
+
+1. 创建防火墙规则：在 Google Cloud 控制台中，转到“防火墙规则”页面并单击“创建防火墙规则”。为您的规则命名，并将“流量方向”设置为“Ingress”。在“目标”下拉列表中，选择“网络中的所有实例”或指定要限制的实例。在“源过滤器”部分中，选择“IP 范围”，并输入“0.0.0.0/0”以允许来自所有 IP 地址的流量。在“协议和端口”部分中，选择“指定的协议和端口”，并输入“tcp:80,tcp:443”以允许 HTTP 和 HTTPS 流量。
+
+2. 将防火墙规则应用于网络：完成防火墙规则的创建后，转到 Google Cloud 控制台的“VPC 网络”页面，并选择您的实例所在的网络。单击“编辑”，并在“防火墙规则”下，将您刚刚创建的防火墙规则添加到“Ingress”部分中。
+
+完成这些步骤后，防火墙规则将仅允许 HTTP 和 HTTPS 流量进入指定网络的实例，并阻止所有其他非 HTTP 流量。
