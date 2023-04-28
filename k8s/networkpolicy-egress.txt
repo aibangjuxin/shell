@@ -1,4 +1,15 @@
 
+可以使用以下 SQL 查询语句来实现：
+
+```
+SELECT *
+FROM users
+WHERE email IS NOT NULL OR password IS NOT NULL OR age IS NOT NULL;
+```
+
+该查询将返回 `users` 表中所有列的值，但只包括 email 列不为 NULL、password 列不为 NULL 或 age 列不为 NULL 的行。如果某行 email、password 和 age 列都不为空，则该行将被返回；如果其中任何一列为空，则该行将被排除在结果之外。
+
+
 要获取P12文件的内容或从FQDN获取Common Name，您可以执行以下步骤：
 
 1. 获取P12文件的内容
