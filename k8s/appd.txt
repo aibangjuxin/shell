@@ -1,0 +1,494 @@
+
+1 我使用 pip install appdynamics 安装了AppDynamics 的 Python Agent 在Docker容器里面
+2 我需要定一个appdynamics.cfg文件
+3 我如何启动这个pyagent /path/to/appdynamics.cfg --
+4 假设我的python应用程序启动格式为python app.py
+
+要在 Python WSGI 应用程序中集成 AppDynamics 的 Python Agent，您需要进行以下步骤：
+
+1. 安装 Python Agent
+
+您可以使用 `pip` 命令在 Python 虚拟环境中安装 AppDynamics 的 Python Agent。例如，在 Linux 上安装命令如下：
+
+```
+pip install appdynamics
+```
+
+2. 配置 AppDynamics Agent
+
+创建一个名为 `appdynamics.cfg` 的配置文件，该文件需要放在您的 Python 应用程序的根目录下。在该配置文件中，您需要提供以下配置信息：
+
+```
+[agent]
+# Set the name of your AppDynamics application.
+# This should match the application name in the controller.
+# Replace <APP_NAME> with the name of your application.
+# For example, if your application is named "MyApp", set this value to "MyApp".
+app_name = <APP_NAME>
+
+# Set the name of the tier where your application is running.
+# This should match the tier name in the controller.
+# Replace <TIER_NAME> with the name of your tier.
+# For example, if your tier is named "MyTier", set this value to "MyTier".
+tier_name = <TIER_NAME>
+
+# Set the path to the AppDynamics controller.
+# Replace <CONTROLLER_HOST> and <CONTROLLER_PORT> with the hostname and port of your controller.
+# For example, if your controller is running on localhost and listening on port 8080, set this value to "http://localhost:8080".
+controller.host = <CONTROLLER_HOST>
+controller.port = <CONTROLLER_PORT>
+
+# Set the account name and access key for your AppDynamics account.
+# Replace <ACCOUNT_NAME> and <ACCESS_KEY> with your account name and access key, respectively.
+# You can find your access key in the controller under "Settings" > "License" > "Access Key".
+# For example, if your account name is "myaccount" and your access key is "1234-5678-9012-3456", set these values to "myaccount" and "1234-5678-9012-3456", respectively.
+account.accesskey = <ACCESS_KEY>
+account.name = <ACCOUNT_NAME>
+
+# Set the name of the node where your application is running.
+# This should match the node name in the controller.
+# Replace <NODE_NAME> with the name of your node.
+# For example, if your node is named "MyNode", set this value to "MyNode".
+# If you don't specify a node name, the agent will use the hostname of the machine where it is running.
+node_name = <NODE_NAME>
+
+# Set the logging level for the agent.
+# Valid values are "debug", "info", "warn", and "error".
+# For example, to enable debug logging, set this value to "debug".
+loglevel = <LOG_LEVEL>
+```
+
+3. 启动 AppDynamics Agent
+
+在您的 Python 应用程序的启动脚本中，添加以下代码来启动 AppDynamics Agent：
+
+```python
+import appdynamics.agent
+
+appdynamics.agent.start()
+```
+
+这将自动启动 Python Agent，并将其集成到您的应用程序中。
+
+请注意，在生产环境中，您可能需要将 `loglevel` 设置为 `warn` 或 `error` 以减少日志输出量。
+
+希望这可以帮助您成功集成 AppDynamics 的 Python Agent 到您
+
+
+在使用Gunicorn启动应用程序时，可以将AppDynamics代理与Gunicorn一起使用。您需要确保在Gunicorn命令中启用了AppDynamics代理，同时在AppDynamics代理配置文件中包含了Gunicorn worker进程的信息。
+
+下面是一个示例Gunicorn命令和AppDynamics代理配置文件：
+
+Gunicorn命令：
+```
+gunicorn myapp:app --worker-class gthread --workers 3 --bind 0.0.0.0:8000 --preload --capture-output --log-level info --access-logfile -
+```
+
+AppDynamics代理配置文件（appdynamics.cfg）：
+
+```
+[controller]
+host = <your-controller-host>
+port = <your-controller-port>
+ssl = <True or False>
+account = <your-account-name>
+access_key = <your-access-key>
+application = <your-application-name>
+
+[agent]
+app = <your-application-name>
+tier = <your-tier-name>
+node = <your-node-name>
+```
+
+在AppDynamics代理配置文件中，您需要将以下三个参数设置为与Gunicorn worker进程匹配的名称：
+
+- `tier`: 设置为Gunicorn worker进程的名称。
+- `node`: 设置为Gunicorn worker进程的名称。
+- `app`: 设置为应用程序名称，这个名称在Gunicorn命令中需要与`--name`选项匹配。
+
+当您使用上述配置运行Gunicorn和AppDynamics代理时，AppDynamics代理会自动与Gunicorn worker进程集成，从而开始监视应用程序性能。
+
+
+The error is should register node at startup:false 这个是app dynamic 启动的报错
+这个错误可能是因为在应用程序启动时，AppDynamics Python Agent无法在其内部注册节点。要解决此错误，您可以尝试以下步骤：
+
+1. 确保您的应用程序配置文件中的"register_node_at_startup"设置为"true"，以便在应用程序启动时自动注册节点。
+
+2. 确保您的应用程序中启动AppDynamics Python Agent的代码正确。您可以使用以下命令启动Gunicorn并配置AppDynamics Python Agent：
+
+```
+gunicorn --workers 3 --bind 0.0.0.0:8000 myapp:app --log-level debug --preload --env APPD_CONFIG_FILE=<path_to_config_file>
+```
+
+请将"path_to_config_file"替换为您的AppDynamics Python Agent配置文件的完整路径。
+
+3. 确保您的应用程序与AppDynamics Python Agent兼容。请参阅AppDynamics Python Agent文档以了解有关兼容性的更多信息。
+
+如果以上步骤无法解决问题，请查看AppDynamics Python Agent的日志文件以获取更多详细信息，并参考AppDynamics文档以获取更多帮助。
+
+
+如果你想在使用gunicorn启动应用时同时启动AppDynamics Python客户端，可以通过在命令行中指定两个参数来实现，如下所示：
+
+```
+pyagent <path_to_appdynamics.cfg> -- gunicorn <gunicorn_options> <app_module_name>
+```
+
+其中 `<path_to_appdynamics.cfg>` 是你的 `appdynamics.cfg` 文件的路径，`<gunicorn_options>` 是你想传递给gunicorn的选项，`<app_module_name>` 是你想要启动的Python应用的模块名。
+
+例如，如果你的 `appdynamics.cfg` 文件在 `/path/to/appdynamics.cfg`，你的应用程序模块名为 `myapp`，你想将gunicorn绑定到 `localhost:8000`，那么你可以运行以下命令：
+
+```
+pyagent /path/to/appdynamics.cfg -- gunicorn -b localhost:8000 myapp:app
+```
+
+在这个例子中，你将启动一个绑定到 `localhost:8000` 的gunicorn服务器，并启动AppDynamics Python客户端来监视你的应用程序。注意，这里的 `myapp` 模块名应该替换为你的应用程序的实际模块名。
+
+当你使用 AppDynamics Python Agent 时，你需要配置一个名为 `appdynamics.cfg` 的文件，它是一个 INI 格式的文件，用于配置 Agent 的各种参数和选项。
+
+下面是一个简单的 `appdynamics.cfg` 配置文件的例子：
+
+```ini
+[agent]
+# 指定 agent 的名字
+name = myapp-python-agent
+# 指定 controller 的信息
+controller.host = mycontroller.saas.appdynamics.com
+controller.port = 443
+controller.ssl = on
+controller.account = myaccount
+controller.access_key = myaccesskey
+# 指定应用程序的名字
+application_name = myapp
+# 指定节点名
+tier_name = mytier
+node_name = mynode
+```
+
+在这个例子中，`[agent]` 区段是必需的，用于定义 Agent 的各种全局设置。
+`name` 选项指定 Agent 的名字。`controller.*` 选项指定连接到 AppDynamics Controller 所需的详细信息。`application_name` 选项指定应用程序的名称。`tier_name` 选项指定 tier 的名称。`node_name` 选项指定节点的名称。
+
+你可以根据需要添加其他区段和选项。具体的模块名可以在文档中查找，或者在 AppDynamics 的 Python Agent 示例中找到。
+
+
+$ cat appdynamics.cfg
+# https://docs.appdynamics.com/appd/23.x/latest/en/application-monitoring/install-app-server-agents/python-agent/python-agent-settings
+[agent]
+app = ddd-api-podsdata
+tier = ddd
+node = ddd-api
+dir = /opt/disk1/appdynamics/python_agent/
+[wsgi]
+module = appdynamics.scripts.wsgi:application
+[controller]
+host = hostname
+port = 443
+ssl = on
+account = user
+accesskey = password
+[log]
+dir = /opt/disk1/app/log/python-agent/
+level = debug
+[controller:http-proxy]
+host = proxy-http
+port = 8443
+
+[eum]
+disable-cookie = on
+
+
+重启Python应用
+假设之前启动Python应用使用的命令是
+gunicorn -w 8 -b '0.0.0.0:9000' example.app:application
+现在将其改为如下命令
+pyagent run -c /etc/appdynamics.cfg -- gunicorn -w 8 -b '0.0.0.0:9000' example.app:application
+即在原命令前加上pyagent run -c /etc/appdynamics.cfg --
+
+
+1 在Docker容器里面 我使用 pip install appdynamics 安装了AppDynamics 的 Python Agent
+2 我需要定一个appdynamics.cfg文件
+3 我如何启动这个pyagent /path/to/appdynamics.cfg --
+4 假设我的python应用程序启动格式为python app.py
+To integrate the AppDynamics Python Agent into your Python WSGI application, you need to follow these steps:
+
+1. Install the Python Agent
+
+You can use the pip command to install the AppDynamics Python Agent in a Python virtual environment. For example, the installation command on Linux is:
+appdynamics
+
+2. Configure the AppDynamics Agent
+
+Create a appdynamics.cfg configuration file, which needs to be placed in the root directory of your Python application. In this configuration file, you need to provide the following configuration information:
+
+[agent]
+# Set the name of your AppDynamics application.
+# This should match the application name in the controller.
+# Replace <APP_NAME> with the name of your application.
+# For example, if your application is named "MyApp", set this value to "MyApp".
+app_name = <APP_NAME>
+
+# Set the name of the tier where your application is running.
+# This should match the tier name in the controller.
+# Replace <TIER_NAME> with the name of your tier.
+# For example, if your tier is named "MyTier", set this value to "MyTier".
+tier_name = <TIER_NAME>
+
+# Set the path to the AppDynamics controller.
+# Replace <CONTROLLER_HOST> and <CONTROLLER_PORT> with the hostname and port of your controller.
+# For example, if your controller is running on localhost and listening on port 8080, set this value to "http://localhost:8080".
+controller.host = <CONTROLLER_HOST>
+controller.port = <CONTROLLER_PORT>
+
+# Set the account name and access key for your AppDynamics account.
+# Replace <ACCOUNT_NAME> and <ACCESS_KEY> with your account name and access key, respectively.
+# You can find your access key in the controller under "Settings" > "License" > "Access Key".
+# For example, if your account name is "myaccount" and your access key is "1234-5678-9012-3456", set these values to "myaccount" and "1234-5678-9012-3456", respectively.
+account.accesskey = <ACCESS_KEY>
+account.name = <ACCOUNT_NAME>
+
+# Set the name of the node where your application is running.
+# This should match the node name in the controller.
+# Replace <NODE_NAME> with the name of your node.
+# For example, if your node is named "MyNode", set this value to "MyNode".
+# If you don't specify a node name, the agent will use the hostname of the machine where it is running.
+node_name = <NODE_NAME>
+
+# Set the logging level for the agent.
+# Valid values are "debug", "info", "warn", and "error".
+# For example, to enable debug logging, set this value to "debug".
+loglevel = <LOG_LEVEL>
+
+3. Start the AppDynamics Agent
+
+In your Python application's startup script, add the following code to start the AppDynamics Agent:
+
+import appdynamics.agent
+
+appdynamics.agent.start()
+This will automatically start the Python Agent and integrate it into your application.
+
+Note that in production environments, you may want to set loglevel to warn or error to reduce the amount of logging output.
+
+When using Gunicorn to start your application, you can integrate the AppDynamics agent with Gunicorn. You will need to ensure that the AppDynamics agent is enabled in the Gunicorn command, and that the AppDynamics agent configuration file includes information about the Gunicorn worker processes.
+
+Here is an example Gunicorn command and AppDynamics agent configuration file:
+
+Gunicorn command:
+
+这将自动启动Python代理并将其集成到您的应用程序中。请注意，在生产环境中，您可能希望将日志级别设置为警告或错误，以减少日志输出量。使用Gunicorn启动应用程序时，您可以将AppDynamics代理与Gunicorns集成。您需要确保在Gunicorn命令中启用了AppDynamics代理，并且AppDynamics代理配置文件包括有关Gunicorns工作进程的信息。以下是一个示例Gunicorn命令和AppDynamics代理配置文件：Gunicorn命令：
+
+gunicorn myapp:app --worker-class gthread --workers 3 --bind 0.0.0.0:8000 --preload --capture-output --log-level info --access-logfile -
+
+
+AppDynamics agent configuration file (appdynamics.cfg):
+
+[controller]
+host = <your-controller-host>
+port = <your-controller-port>
+ssl = <True or False>
+account = <your-account-name>
+access_key = <your-access-key>
+application = <your-application-name>
+
+[agent]
+app = <your-application-name>
+tier = <your-tier-name>
+node = <your-node-name>
+
+n the AppDynamics agent configuration file, you will need to set the following three parameters to match the name of your Gunicorn worker process:
+
+- tier: Set to the name of your Gunicorn worker process.
+- node: Set to the name of your Gunicorn worker process.
+- app: Set to the name of your application, which must match the --name option in the Gunicorn command.
+
+If you encounter the "should register node at startup:false" error when starting your application, this may be because the AppDynamics Python Agent cannot register the node internally during startup. To resolve this error, you can try the following steps:
+
+1. Ensure that the "registernodeatstartup" setting in your application configuration file is set to "true" to enable automatic node registration during startup.
+
+2. Ensure that the code to start the AppDynamics Python Agent in your application is correct. You can use the following command to start Gunicorn and configure the AppDynamics Python Agent:
+
+gunicorn --workers 3 --bind 0.0.0.0:8000 myapp:app --log-level debug --preload --env APPD_CONFIG_FILE=<path_to_config_file>
+
+
+Replace "pathtoconfigfile" with the full path to your AppDynamics Python Agent configuration file.
+
+3. Ensure that your application is compatible with the AppDynamics Python Agent. Refer to the AppDynamics Python Agent documentation for more information on compatibility.
+
+If these steps do not resolve the issue, check the AppDynamics Python Agent log files for more detailed information and refer to the AppDynamics documentation for additional help.
+
+
+
+
+	1.	在Docker容器中安装AppDynamics Python Agent: pip install appdynamics
+	2.	创建一个名为appdynamics.cfg的配置文件
+    AppDynamics代理配置文件（appdynamics.cfg）：这个文件大概怎么书写?
+	3.	启动Python Agent并指定配置文件路径: pyagent <path/to/appdynamics.cfg>
+	4.	启动Python应用程序时，在命令前加上Python Agent的启动命令: pyagent <path/to/appdynamics.cfg> python app.py
+To create the appdynamics.cfg configuration file that is needed for the AppDynamics Agent, you need to follow the instructions below:
+
+1. Create a new file named appdynamics.cfg in the root directory of your Python application.
+2. Add the following configuration information to the file:
+
+    [agent]
+# Set the name of your AppDynamics application.
+# This should match the application name in the controller.
+# Replace <APP_NAME> with the name of your application.
+# For example, if your application is named "MyApp", set this value to "MyApp".
+app_name = <APP_NAME>
+
+# Set the name of the tier where your application is running.
+# This should match the tier name in the controller.
+# Replace <TIER_NAME> with the name of your tier.
+# For example, if your tier is named "MyTier", set this value to "MyTier".
+tier_name = <TIER_NAME>
+
+# Set the path to the AppDynamics controller.
+# Replace <CONTROLLER_HOST> and <CONTROLLER_PORT> with the hostname and port of your controller.
+# For example, if your controller is running on localhost and listening on port 8080, set this value to "http://localhost:8080".
+controller.host = <CONTROLLER_HOST>
+controller.port = <CONTROLLER_PORT>
+
+# Set the account name and access key for your AppDynamics account.
+# Replace <ACCOUNT_NAME> and <ACCESS_KEY> with your account name and access key, respectively.
+# You can find your access key in the controller under "Settings" > "License" > "Access Key".
+# For example, if your account name is "myaccount" and your access key is "1234-5678-9012-3456", set these values to "myaccount" and "1234-5678-9012-3456", respectively.
+account.accesskey = <ACCESS_KEY>
+account.name = <ACCOUNT_NAME>
+
+# Set the name of the node where your application is running.
+# This should match the node name in the controller.
+# Replace <NODE_NAME> with the name of your node.
+# For example, if your node is named "MyNode", set this value to "MyNode".
+# If you don't specify a node name, the agent will use the hostname of the machine where it is running.
+node_name = <NODE_NAME>
+
+# Set the logging level for the agent.
+# Valid values are "debug", "info", "warn", and "error".
+# For example, to enable debug logging, set this value to "debug".
+loglevel = <LOG_LEVEL>
+
+Make sure to replace the placeholders(<APP_NAME>, <TIER_NAME>, <CONTROLLER_HOST>, <CONTROLLER_PORT>, <ACCOUNT_NAME>, <ACCESS_KEY>, <NODE_NAME>, and <LOG_LEVEL>) with the appropriate values.
+
+Once you have created the appdynamics.cfg configuration file, you can start the AppDynamics Agent by following the steps below:
+
+1. Start the Python Agent by running the following command:
+
+pyagent run -c /path/to/appdynamics.cfg
+
+Make sure to replace /path/to/appdynamics.cfg with the full path to your appdynamics.cfg configuration file.
+
+2. To start your Python application with the AppDynamics Agent integrated, add the following code to your application's startup script:
+
+import appdynamics.agent
+
+appdynamics.agent.start()
+
+
+This will automatically start the Python Agent and integrate it into your application.
+
+3. To start your Python application with the Python Agent command, run the following command:
+
+pyagent run -c /path/to/appdynamics.cfg python app.py
+
+ake sure to replace /path/to/appdynamics.cfg with the full path to your appdynamics.cfg configuration file and app.py with the name of your Python application's startup script.
+
+
+
+1 我使用 pip install appdynamics 安装了AppDynamics 的 Python Agent 在Docker容器里面
+2 我需要定一个appdynamics.cfg文件
+3 我如何启动这个pyagent /path/to/appdynamics.cfg --
+4 假设我的python应用程序启动格式为python app.py
+
+要在 Python WSGI 应用程序中集成 AppDynamics 的 Python Agent，您需要进行以下步骤：
+
+1. 安装 Python Agent
+
+您可以使用 `pip` 命令在 Python 虚拟环境中安装 AppDynamics 的 Python Agent。例如，在 Linux 上安装命令如下：
+
+```
+pip install appdynamics
+```
+
+2. 配置 AppDynamics Agent
+
+创建一个名为 `appdynamics.cfg` 的配置文件，该文件需要放在您的 Python 应用程序的根目录下。在该配置文件中，您需要提供以下配置信息：
+[agent]
+app = <app_name>
+tier = <tier_name>
+node = <node_name>
+
+[controller]
+host = <controller_host>
+port = <controller_port>
+ssl = on|off
+account = <your AppDynamics controller account name>
+accesskey = <your AppDynamics controller account access key>
+
+[controller:http-proxy]
+host = proxy-http
+port = 8443
+
+您可以在启动Python应用程序时，在命令前加上Python Agent的启动命令。例如，如果您的运行命令是这样的：
+
+python app.py
+Copy
+那么您可以将其更改为：
+
+pyagent run -c <path/to/appdynamics.cfg> -- python app.py
+Copy
+这样，您就可以在启动应用程序时同时启动Python Agent。
+
+
+1. 你已经成功地在Docker容器中安装了AppDynamics的Python Agent，可以使用以下命令来安装：
+
+   ```
+   pip install appdynamics
+   ```
+
+2. 要创建一个appdynamics.cfg文件，请按照以下步骤操作：
+
+   a. 在容器中创建一个新文件，例如：
+
+      ```
+      touch /path/to/appdynamics.cfg
+      ```
+
+   b. 使用文本编辑器打开文件，例如：
+
+      ```
+      nano /path/to/appdynamics.cfg
+      ```
+
+   c. 将以下内容添加到文件中：
+
+      ```
+      [controller]
+      host = {{controller_host}}
+      port = {{controller_port}}
+      ssl = {{True or False}}
+      account = {{account_name}}
+      access_key = {{access_key}}
+
+      [application]
+      name = {{application_name}}
+      tier = {{tier_name}}
+      node = {{node_name}}
+      ```
+
+      其中，{{controller_host}}是AppDynamics控制器的主机名或IP地址，{{controller_port}}是控制器的端口号，{{True or False}}表示是否使用SSL连接，{{account_name}}和{{access_key}}是您的AppDynamics帐户凭据，{{application_name}}是您的应用程序名称，{{tier_name}}是您的应用程序层名称，{{node_name}}是您的应用程序节点名称。
+
+   d. 保存并关闭文件。
+
+3. 要启动Python Agent，请使用以下命令：
+
+   ```
+   pyagent run -c /path/to/appdynamics.cfg python app.py
+   ```
+
+   其中，/path/to/appdynamics.cfg是您的appdynamics.cfg文件的路径，app.py是您的Python应用程序的启动脚本。
+
+4. 如果您已经在应用程序启动时指定了参数，请将它们添加到命令中，例如：
+
+   ```
+   pyagent run -c /path/to/appdynamics.cfg python app.py --arg1 value1 --arg2 value2
+   ```
