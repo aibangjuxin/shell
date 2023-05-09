@@ -1,51 +1,4 @@
-在GKE中配置network policy时,指定的端口对应于Pod的实际端口,而不是external IP的端口。
 
-举个例子:
-
-- 您有一个deployment,其中包含3个pod,每个pod都在端口8000上暴露一个服务。
-- 您为deployment配置了一个network policy,允许源访问端口8000。
-- Deployment的external IP是10.0.0.1。
-
-在这种情况下,network policy允许访问deployment中每个pod的端口8000。它不特定允许访问external IP 10.0.0.1的端口8000。实际上,external IP的端口可以是动态分配的,与pod端口8000不一定匹配。
-
-所以当定义GKE network policy的规则时,您应该专注于 pod 实际监听的端口,而不是 external IP 的端口。
-
-比如,如果您想允许外部流量访问上面deployment的服务,network policy应该是:
-
-apiVersion: http://networking.k8s.io/v1
-kind: NetworkPolicy 
-metadata:
-  name: example
-spec:
-  podSelector: 
-    matchLabels: 
-      app: myapp
-  ingress:
-  - ports: 
-    - port: 8000 
-
-
-这会打开每个pod的端口8000,允许外部流量访问deployment的服务,无论外部IP和端口是什么。
-
-希望这可以澄清GKE network policy中端口的工作原理。请让我知道如果您有任何其他问题!
-
-
-
-在GKE中配置network policy时，它所允许的端口是Pod的真实端口，而不是external-ip的端口。
-
-Network Policy允许您控制集群中Pod之间的流量。当您配置Network Policy时，您可以定义允许或拒绝哪些流量进出Pod。这些规则基于Pod的标签选择器进行匹配，并且可以限制特定端口的访问。
-
-在GKE中，每个Pod都分配了一个唯一的IP地址，这个IP地址只能在GKE集群内部使用。当您定义Network Policy时，您可以根据Pod的标签选择器选择一组Pod，并定义允许或拒绝它们之间的通信。如果您想允许外部流量访问Pod，您需要使用服务（Service）将Pod暴露给外部，并且在服务定义中定义您想要暴露的端口。
-
-当您定义Network Policy时，您可以指定允许或拒绝特定端口的访问。这些端口是Pod的真实端口，而不是external-ip的端口。因此，如果您希望允许或拒绝访问Pod的某个端口，您需要使用该端口的真实端口进行配置。
-GKE namespace 之间配置network policy 的时候、基于pod 访问的时候，network policy 允许的端口是external-ip 的端口还是pod 的端口？
-
-
-当在 GKE 中为命名空间之间的 Pod 配置网络策略时，可以基于 Pod IP 地址和 Pod 名称设置策略。在策略规则中指定的端口是 Pod 的端口，而不是 External IP 的端口。
-
-这是因为 NetworkPolicy 在 Kubernetes 中实现为 PodSelector 和 NamespaceSelector 之间的筛选器，它会阻止对 Pod IP 地址和名称匹配的 Pod 的流量。因此，它仅与 Pod 相关，而不考虑该 Pod 的外部 IP 或其他网络标识符。
-
-需要注意的是，如果您希望在 Pod 和外部服务之间配置网络策略，则需要使用 Kubernetes 服务来公开 Pod，然后在网络策略中使用服务的选择器来指定外部 IP 地址和端口。
 
 
 当您在启动AppDynamics Agent时遇到 "should register node at startup:false" 错误时，通常这表示Agent无法连接到AppDynamics Controller。这可能是由于多种原因导致的，如连接超时、无效的认证信息、网络连接问题等。
@@ -56,7 +9,7 @@ GKE namespace 之间配置network policy 的时候、基于pod 访问的时候�
 2. 确认在启动Agent时提供的AppDynamics配置文件（appdynamics.cfg）是否正确。您可以通过在终端运行以下命令来检查文件是否存在：`ls -l /path/to/appdynamics.cfg`。
 3. 确认在启动Agent时提供的认证信息是否正确。这些信息包括Controller的用户名和密码等。
 4. 如果您的网络使用了代理，请确保在配置文件中正确地配置了代理设置。
-5. 检查Agent日志文件，查看是否有任何其他错误或警告消息。日志文件的位置可以在配置文件中进行配置。 
+5. 检查Agent日志文件，查看是否有任何其他错误或警告消息。日志文件的位置可以在配置文件中进行配置。
 
 如果上述方法无法解决问题，请尝试重新安装Agent，并确保在安装期间按照文档的要求进行操作。如果仍然无法解决问题，请联系AppDynamics技术支持，获取更进一步的帮助。
 1 我使用 pip install appdynamics 安装了AppDynamics 的 Python Agent 在Docker容器里面
