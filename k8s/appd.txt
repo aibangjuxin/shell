@@ -1,3 +1,14 @@
+
+
+
+
+在GKE中配置network policy时，它所允许的端口是Pod的真实端口，而不是external-ip的端口。
+
+Network Policy允许您控制集群中Pod之间的流量。当您配置Network Policy时，您可以定义允许或拒绝哪些流量进出Pod。这些规则基于Pod的标签选择器进行匹配，并且可以限制特定端口的访问。
+
+在GKE中，每个Pod都分配了一个唯一的IP地址，这个IP地址只能在GKE集群内部使用。当您定义Network Policy时，您可以根据Pod的标签选择器选择一组Pod，并定义允许或拒绝它们之间的通信。如果您想允许外部流量访问Pod，您需要使用服务（Service）将Pod暴露给外部，并且在服务定义中定义您想要暴露的端口。
+
+当您定义Network Policy时，您可以指定允许或拒绝特定端口的访问。这些端口是Pod的真实端口，而不是external-ip的端口。因此，如果您希望允许或拒绝访问Pod的某个端口，您需要使用该端口的真实端口进行配置。
 GKE namespace 之间配置network policy 的时候、基于pod 访问的时候，network policy 允许的端口是external-ip 的端口还是pod 的端口？
 
 
