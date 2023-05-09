@@ -1,3 +1,13 @@
+GKE namespace 之间配置network policy 的时候、基于pod 访问的时候，network policy 允许的端口是external-ip 的端口还是pod 的端口？
+
+
+当在 GKE 中为命名空间之间的 Pod 配置网络策略时，可以基于 Pod IP 地址和 Pod 名称设置策略。在策略规则中指定的端口是 Pod 的端口，而不是 External IP 的端口。
+
+这是因为 NetworkPolicy 在 Kubernetes 中实现为 PodSelector 和 NamespaceSelector 之间的筛选器，它会阻止对 Pod IP 地址和名称匹配的 Pod 的流量。因此，它仅与 Pod 相关，而不考虑该 Pod 的外部 IP 或其他网络标识符。
+
+需要注意的是，如果您希望在 Pod 和外部服务之间配置网络策略，则需要使用 Kubernetes 服务来公开 Pod，然后在网络策略中使用服务的选择器来指定外部 IP 地址和端口。
+
+
 当您在启动AppDynamics Agent时遇到 "should register node at startup:false" 错误时，通常这表示Agent无法连接到AppDynamics Controller。这可能是由于多种原因导致的，如连接超时、无效的认证信息、网络连接问题等。
 
 以下是一些可能的解决方法和建议：
