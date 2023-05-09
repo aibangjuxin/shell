@@ -1,4 +1,33 @@
+在GKE中配置network policy时,指定的端口对应于Pod的实际端口,而不是external IP的端口。
 
+举个例子:
+
+- 您有一个deployment,其中包含3个pod,每个pod都在端口8000上暴露一个服务。
+- 您为deployment配置了一个network policy,允许源访问端口8000。
+- Deployment的external IP是10.0.0.1。
+
+在这种情况下,network policy允许访问deployment中每个pod的端口8000。它不特定允许访问external IP 10.0.0.1的端口8000。实际上,external IP的端口可以是动态分配的,与pod端口8000不一定匹配。
+
+所以当定义GKE network policy的规则时,您应该专注于 pod 实际监听的端口,而不是 external IP 的端口。
+
+比如,如果您想允许外部流量访问上面deployment的服务,network policy应该是:
+
+apiVersion: http://networking.k8s.io/v1
+kind: NetworkPolicy 
+metadata:
+  name: example
+spec:
+  podSelector: 
+    matchLabels: 
+      app: myapp
+  ingress:
+  - ports: 
+    - port: 8000 
+
+
+这会打开每个pod的端口8000,允许外部流量访问deployment的服务,无论外部IP和端口是什么。
+
+希望这可以澄清GKE network policy中端口的工作原理。请让我知道如果您有任何其他问题!
 
 
 
