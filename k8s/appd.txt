@@ -1,5 +1,41 @@
 
+There are a few ways to pass system properties to a Python script. One way is to use the `sys.argv` list. The `sys.argv` list contains the command-line arguments that were passed to the script. To access a system property, you can use the `getenv()` function. The `getenv()` function takes the name of the system property as its argument and returns the value of the property.
 
+For example, to get the value of the `JAVA_HOME` system property, you would use the following code:
+
+```
+import sys
+
+java_home = sys.getenv("JAVA_HOME")
+```
+
+Another way to pass system properties to a Python script is to use the `os.environ` dictionary. The `os.environ` dictionary contains all of the environment variables that are set on the system. To access a system property, you can use the dictionary's `get()` method. The `get()` method takes the name of the system property as its argument and returns the value of the property.
+
+For example, to get the value of the `JAVA_HOME` system property, you would use the following code:
+
+```
+import os
+
+java_home = os.environ.get("JAVA_HOME")
+```
+
+Finally, you can also pass system properties to a Python script by using the `-D` flag on the command line. The `-D` flag takes the name of the system property and its value as its arguments. For example, to set the `JAVA_HOME` system property to `/usr/lib/jvm/java-11-openjdk-amd64`, you would use the following command:
+
+```
+python my_script.py -DJAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+```
+
+Whichever method you choose, make sure that you pass the system properties in the correct format. The format for system properties is:
+
+```
+name=value
+```
+
+For example, the `JAVA_HOME` system property would be formatted as follows:
+
+```
+JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+```
 
 当您在启动AppDynamics Agent时遇到 "should register node at startup:false" 错误时，通常这表示Agent无法连接到AppDynamics Controller。这可能是由于多种原因导致的，如连接超时、无效的认证信息、网络连接问题等。
 
