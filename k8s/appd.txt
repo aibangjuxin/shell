@@ -1,4 +1,31 @@
 
+You can pass system properties to a Python script using the -D flag like this:
+
+bash
+python my_script.py -Dproperty1=value1 -Dproperty2=value2
+
+
+Then, inside your Python script, you can access these properties using the sys module:
+
+python
+import sys
+
+property1 = sys.argv[sys.argv.index('-Dproperty1=value1') + 1].split('=')[1]
+print(property1)  # value1
+
+property2 = sys.argv[sys.argv.index('-Dproperty2=value2') + 1].split('=')[1] 
+print(property2)  # value2
+
+
+This will print:
+
+value1 
+value2
+
+
+So the -D flag passes properties in the form -Dname=value, and your Python script can parse sys.argv to extract the property names and values.
+
+
 There are a few ways to pass system properties to a Python script. One way is to use the `sys.argv` list. The `sys.argv` list contains the command-line arguments that were passed to the script. To access a system property, you can use the `getenv()` function. The `getenv()` function takes the name of the system property as its argument and returns the value of the property.
 
 For example, to get the value of the `JAVA_HOME` system property, you would use the following code:
