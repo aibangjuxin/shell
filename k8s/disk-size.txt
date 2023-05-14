@@ -1,0 +1,537 @@
+
+要获取 GKE Pod 占用的 GKE 节点磁盘大小，可以使用以下步骤：
+
+1. 确认 GKE 集群的名称和区域/区域，以及要查询的 Pod 的名称。
+
+2. 运行以下命令，获取 Pod 所在的节点名称：
+
+   ```
+   kubectl get pod <pod-name> -o=jsonpath='{.spec.nodeName}'
+   ```
+
+3. 运行以下命令，获取节点的磁盘使用情况：
+
+   ```
+   gcloud compute ssh <node-name> --zone=<zone/region> -- df -h
+   ```
+
+   在这里，`<node-name>` 是步骤 2 中获取的节点名称，`<zone/region>` 是集群的区域或区域。`df -h` 命令将显示节点上每个磁盘分区的使用情况。
+
+   如果您只想查看特定磁盘分区的使用情况，可以使用以下命令：
+
+   ```
+   gcloud compute ssh <node-name> --zone=<zone/region> -- df -h /path/to/partition
+   ```
+
+   在这里，`/path/to/partition` 是要查询的分区的路径。
+
+4. 在命令输出中查找要查询的分区，并查看其使用情况。
+
+要统计每个 Pod 占用的磁盘大小，可以使用以下步骤：
+
+1. 运行以下命令，获取 GKE 集群中所有 Pod 的名称：
+
+   ```
+   kubectl get pods --all-namespaces -o=jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}'
+   ```
+
+   这将返回一个包含所有 Pod 名称的列表，每个名称占一行。
+
+2. 遍历步骤 1 中获取的所有 Pod 名称，对于每个 Pod，运行以下命令，获取它所在的节点名称：
+
+   ```
+   kubectl get pod <pod-name> -o=jsonpath='{.spec.nodeName}'
+   ```
+
+3. 对于每个 Pod，运行以下命令，获取它所在节点上的所有磁盘分区的使用情况：
+
+   ```
+   gcloud compute ssh <node-name> --zone=<zone/region> -- df -h
+   ```
+
+4. 在命令输出中查找与该 Pod 相关的磁盘分区，并查看其使用情况。您可以使用 `grep` 命令过滤输出，例如：
+
+   ```
+   gcloud compute ssh <node-name> --zone=<zone/region> -- df -h | grep /var/lib/docker/overlay2
+   ```
+
+   这将仅显示与 Docker Overlay2 存储驱动程序相关的分区。
+
+5. 将每个 Pod 所在节点上所有相关分区的磁盘使用情况相加，得出该 Pod 的总磁盘占用量。
+
+6. 将每个 Pod 的磁盘占用量汇总，以获取整个集群中每个 Pod 占用的磁盘大小。您可以使用命令行工具（如 `awk` 或 `sed`）来计算总和。
+
+请注意，这种方法只会计算与 Pod 相关的存储使用情况，不包括 Pod 的其他资源使用情况（例如 CPU 和内存）。
+
+
+如果您的 GKE 节点禁止 SSH 登录，可以使用以下方法查看节点的磁盘占用率：
+
+1. 使用 `gcloud` 命令行工具连接到 GKE 集群。例如：
+
+   ```
+   gcloud container clusters get-credentials <cluster-name> --zone <zone/region>
+   ```
+
+2. 运行以下命令，获取节点的名称：
+
+   ```
+   kubectl get nodes
+   ```
+
+   在输出中，找到要查询的节点的名称。
+
+3. 运行以下命令，获取节点的描述信息：
+
+   ```
+   kubectl describe node <node-name>
+   ```
+
+   在输出中，找到包含节点磁盘信息的部分，例如：
+
+   ```
+   Capacity:
+   cpu:                4
+   ephemeral-storage:  104857600Ki
+   memory:             15641684Ki
+   ```
+
+   这将显示节点上 ephemeral-storage 容量的总大小，以 KiB 为单位。
+
+4. 运行以下命令，获取节点上可用磁盘空间的使用情况：
+
+   ```
+   kubectl get node <node-name> -o jsonpath="{.status.allocatable['ephemeral-storage']}"
+   ```
+
+   这将返回节点上 ephemeral-storage 容量的可用空间大小，以 KiB 为单位。
+
+5. 使用第 3 步中显示的节点磁盘信息，计算节点的磁盘使用率。例如，如果节点的 ephemeral-storage 容量为 104857600Ki，可用空间为 52428800Ki，则使用率为：
+
+   ```
+   (1 - (52428800 / 104857600)) * 100% = 50%
+   ```
+
+   这意味着节点的磁盘使用率为 50%。
+
+请注意，这种方法仅适用于获取节点上可用磁盘空间的使用情况。如果您需要更详细的磁盘使用信息，例如每个文件系统的使用情况或每个进程的磁盘使用情况，您可能需要使用其他工具或方法。
+
+
+以下是一个可以用来获取 GKE 集群中所有 Pod 占用的磁盘大小的 Shell 脚本示例。您可以将该脚本保存为 `.sh` 文件，然后在终端中执行。
+
+```bash
+#!/bin/bash
+
+# 获取所有 Pod 名称
+POD_NAMES=$(kubectl get pods --all-namespaces -o=jsonpath='{range .items[*]}{.metadata.name}{"\n"}{end}')
+
+# 初始化总磁盘使用量
+TOTAL_DISK_USAGE=0
+
+# 遍历每个 Pod
+for POD_NAME in ${POD_NAMES}; do
+  # 获取 Pod 所在节点的名称
+  NODE_NAME=$(kubectl get pod ${POD_NAME} -o=jsonpath='{.spec.nodeName}')
+
+  # 获取节点上所有磁盘分区的使用情况
+  DISK_USAGE=$(gcloud compute ssh ${NODE_NAME} --zone=<zone/region> -- df -h)
+
+  # 计算 Pod 占用的磁盘大小
+  POD_DISK_USAGE=$(echo ${DISK_USAGE} | grep /var/lib/docker/overlay2 | awk '{print $3}')
+
+  # 将 Pod 磁盘使用量添加到总磁盘使用量中
+  TOTAL_DISK_USAGE=$((${TOTAL_DISK_USAGE} + ${POD_DISK_USAGE}))
+
+  # 输出每个 Pod 的磁盘使用量
+  echo "Pod ${POD_NAME} uses ${POD_DISK_USAGE} disk space"
+done
+
+# 输出总磁盘使用量
+echo "Total disk usage for all Pods: ${TOTAL_DISK_USAGE}"
+```
+
+请注意，此脚本中的 `<zone/region>` 应替换为您的 GKE 集群所在的区域或地区。此外，为了能够正常运行脚本，您需要具有运行 `gcloud` 和 `kubectl` 命令的权限，并且您的计算机上已经安装了这些工具。
+在 `kubectl describe node` 命令的输出中，`ephemeral-storage` 的单位是 `Ki`.
+
+例如，如果 `ephemeral-storage` 的值为 `104857600Ki`，则表示节点上 ephemeral-storage 容量的总大小为 100 GB，以 KiB 为单位。
+
+在 `kubectl describe node` 命令的输出中，`ephemeral-storage` 的 `allocatable` 值确实没有指定单位。这是因为 `allocatable` 中的 `ephemeral-storage` 值表示节点上 ephemeral-storage 可用容量的数量，而不是总容量。
+
+`ephemeral-storage` 的 `allocatable` 值通常以字节数为单位，但在 `kubectl describe node` 的输出中，它没有明确的单位。所以如果 `ephemeral-storage` 的 `allocatable` 值为 `104857600`，则表示节点上 ephemeral-storage 可用容量的数量为 100 GB。
+
+
+image size
+如果您要统计 Google GKE 中所有 Pod 的镜像大小，
+可以使用以下命令：
+
+```bash
+gcloud container images list --repository=gcr.io/[PROJECT_ID] --format='get(digest)' | while read digest; do
+  gcloud container images describe gcr.io/[PROJECT_ID]/[IMAGE_NAME]@$digest --format='value(image_summary.fully_qualified_digest, image_summary.image_size_bytes/1048576)' | sed "s/gcr.io\//$HOSTNAME\//g"
+done
+```
+
+这个命令会遍历 GCR 中项目 `[PROJECT_ID]`
+下的所有镜像，并获取它们的完全限定摘要符（fully qualified digest）和镜像大小。
+然后，输出结果到终端上，其中包括每个镜像的完全限定摘要符、大小（以 MB 为单位）以及镜像所在的节点名称。
+
+请注意，此命令需要您在执行之前替换命令中的
+ `[PROJECT_ID]` 和 `[IMAGE_NAME]` 为实际的项目 ID 和镜像名称。
+
+
+如果您无法登录到 GKE 节点并且需要获取 Pod 镜像大小的话，可以使用以下命令：
+
+```bash
+kubectl get pods --all-namespaces -o=jsonpath="{range .items[*]}{.metadata.name}{'\t'}{.spec.containers[*].image}{'\n'}{end}" | sort -u | while read pod_image; do
+  size=$(gcloud container images describe $pod_image --format='value(image_summary.image_size_bytes)')
+  printf "%s\t%s\n" "$pod_image" "$((size/1048576)) MB"
+done
+```
+
+该命令将获取 GKE 集群中所有 Pod 中使用的镜像名称，并使用 `gcloud container images describe` 命令获取每个镜像的大小。然后，将结果输出到终端上。
+
+输出结果将包括每个 Pod 镜像的名称和大小（以 MB 为单位），以制表符（`\t`）分隔。
+
+How to check gcr image size .get image manifest all the layers and size sum size write a script
+
+获取 GCR 中镜像的总大小，可以使用 gcloud 命令行工具来获取镜像的 digest，然后使用 curl 命令来获取镜像的 manifest，最后使用 jq 命令解析 manifest 中的大小信息并将它们相加。
+以下是一个示例脚本，可以用来获取 GCR 中所有镜像的大小总和：
+
+#!/bin/bash
+
+# 设置变量
+PROJECT_ID=[PROJECT-ID]
+IMAGE_NAME=[IMAGE-NAME]
+TAG=[TAG]
+IMAGE_FULL_NAME=gcr.io/$PROJECT_ID/$IMAGE_NAME:$TAG
+
+# 获取每个层的大小，并将其存储在一个数组中
+LAYER_SIZES=($(curl -s -H "Authorization: Bearer $(gcloud auth print-access-token)" https://gcr.io/v2/$PROJECT_ID/$IMAGE_NAME/manifests/$TAG | jq -r '.layers[].size'))
+
+# 计算所有层的大小之和
+TOTAL_SIZE=$(echo "${LAYER_SIZES[@]}" | sed 's/ /+/g' | bc)
+
+# 输出结果
+echo "GCR Image Name: $IMAGE_FULL_NAME"
+echo "Total Size: $TOTAL_SIZE bytes"
+echo "Layer Sizes:"
+for i in "${!LAYER_SIZES[@]}"; do
+  echo "  Layer $i: ${LAYER_SIZES[$i]} bytes"
+done
+Using ephemeral-storage limit and request pod disk
+To set the ephemeral-storage limit and request for a pod in Kubernetes, you can add the following configuration to your pod spec:
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+spec:
+  containers:
+  - name: my-container
+    image: my-image
+    volumeMounts:
+    - name: my-volume
+      mountPath: /data
+    resources:
+      requests:
+        ephemeral-storage: "1Gi"
+      limits:
+        ephemeral-storage: "2Gi"
+  volumes:
+  - name: my-volume
+    emptyDir: {}
+```
+
+In this example, we have set the `requests` field to 1Gi and `limits` field to 2Gi for the `ephemeral-storage` resource. This means that the pod will request at least 1Gi of ephemeral storage and will not be scheduled on a node that cannot provide at least that much storage. The pod will be allowed to use up to 2Gi of ephemeral storage, but will be terminated if it tries to use more than that.
+
+Note that the `ephemeral-storage` resource refers to the total amount of disk space that a pod can use on the node's local disk, including both the root filesystem and any mounted volumes. If you want to limit or request a specific amount of disk space for a mounted volume, you can set the `requests` and `limits` fields for the `storage` resource instead, as shown in the following example:
+
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+spec:
+  containers:
+  - name: my-container
+    image: my-image
+    volumeMounts:
+    - name: my-volume
+      mountPath: /data
+    resources:
+      requests:
+        storage: "1Gi"
+      limits:
+        storage: "2Gi"
+  volumes:
+  - name: my-volume
+    emptyDir:
+      sizeLimit: 1Gi
+```
+
+In this example, we have set the `requests` field to 1Gi and `limits` field to 2Gi for the `storage` resource, and have also set the `sizeLimit` field to 1Gi for the `emptyDir` volume. This means that the pod will request at least 1Gi of disk space for the `my-volume` mount, and will not be scheduled on a node that cannot provide at least that much storage. The pod will be allowed to use up to 2Gi of disk space for the `my-volume` mount, but will be terminated if it tries to use more than that.
+
+how To Optimize The GKE cluster Node Disk
+When you create a GKE cluster or node pool, you can choose the type of persistent disk onto which the Kubernetes node filesystem is installed for each node. By default, GKE uses balanced persistent disks. You can also specify other persistent disk types, such as standard or SSD ². Using an SSD persistent disk as a boot disk for your nodes offers some performance benefits: Nodes have faster boot times and binaries and files served from containers are available to the node faster. This can increase performance for I/O-intensive workloads ².
+
+You can specify the boot disk type when you create a cluster or node pool. Note that you cannot change the boot disk type of an existing cluster or node pool ². Is there anything else you would like to know?
+
+Source: Conversation with Bing, 5/14/2023(1) Configuring a custom boot disk | Google Kubernetes Engine (GKE .... https://cloud.google.com/kubernetes-engine/docs/how-to/custom-boot-disks Accessed 5/14/2023.
+(2) GKE Cluster Optimization: 13 Tactics For A Smoother K8s Deployment. https://cast.ai/blog/gke-cluster-optimization-13-tactics-for-a-smoother-k8s-deployment/ Accessed 5/14/2023.
+(3) Provision ephemeral storage with local SSDs - Google Cloud. https://cloud.google.com/kubernetes-engine/docs/how-to/persistent-volumes/local-ssd Accessed 5/14/2023.
+(4) Resize a Standard cluster | Google Kubernetes Engine (GKE) - Google Cloud. https://cloud.google.com/kubernetes-engine/docs/how-to/resizing-a-cluster Accessed 5/14/2023.
+(5) Best practices for creating a highly available GKE cluster | Google .... https://cloud.google.com/blog/products/containers-kubernetes/best-practices-for-creating-a-highly-available-gke-cluster Accessed 5/14/2023.
+
+To optimize the GKE cluster node disk, you can follow these steps:
+
+1. Determine the current disk usage of your nodes by running the following command:
+
+   ```
+   kubectl get nodes -o jsonpath='{range .items[*]}{.metadata.name}{"\t"}{.status.allocatable.disk}{"\n"}{end}'
+   ```
+
+   This will output a list of all nodes in your cluster along with their available disk space.
+
+2. Determine the disk usage of your pods by running the following command:
+
+   ```
+   kubectl get pods --all-namespaces -o jsonpath='{range .items[*]}{.spec.nodeName}{"\t"}{.metadata.namespace}{"\t"}{.metadata.name}{"\t"}{range .spec.containers[*]}{.name}{";"}{.resources.limits.disk}{"\t"}{end}{"\n"}{end}'
+   ```
+
+   This will output a list of all pods in your cluster along with the node they are running on, their namespace, name, and the disk limit of each container in the pod.
+
+3. Identify any pods that are using more disk space than necessary and optimize them by reducing the size of their containers or moving them to nodes with more available disk space.
+
+4. If you have nodes with low disk space, you can add more nodes to your cluster or resize your existing nodes to have more disk space.
+
+5. You can also configure your nodes to use a different storage class or storage provider that offers more disk space or better performance.
+
+6. Finally, you can monitor your cluster's disk usage over time and adjust your configuration as needed to ensure optimal performance and resource utilization.
+To optimize the GKE cluster node disk
+
+
+
+Here are some tips to optimize disk usage on GKE cluster nodes:
+1. Choose a disk size that suits your workload. When creating a GKE cluster, you can specify the node disk size. Choose a size that will be sufficient for your workload and any persistent volumes you may need.
+2. Use persistent volumes for stateful workloads. For databases, caches, or other stateful services, use persistent volumes instead of ephemeral storage. This will prevent the data from being lost if pods are rescheduled.
+3. Enable disk autorepair. GKE supports enabling automatic repair of cluster node disks. This will help detect and repair any disk issues to avoid impacting your workloads.
+4. Delete unused images and containers. Over time, unused images and stopped containers can take up disk space. You can regularly prune them with:
+bash
+kubectl get pods --all-namespaces -o json | kubectl delete --all
+
+bash
+gcloud container images list-unused -q --filter="db_id=gcr.io_project_id" | xargs -n 1 gcloud container images delete -q --force-delete-tags
+5. Enable disk compaction. GKE supports compacting node disk filesystems to free up space. You can enable disk compaction on each node pool.
+6. Increase disk size or add additional PDs. If your disk usage is consistently high, you can increase the node disk size or add additional Persistent Disks to each node. This will provide more storage capacity for your workloads.
+7. UseFlexible Persistent Disks. When using PersistentVolumes, use GKE's Flexible Persistent Disks. They can automatically resize to meet demands, up to a maximum size. This avoids having to manually increase disk sizes.
+8. Monitor disk metrics. Use GKE's metrics to monitor disk usage and look for any spikes. This can help identify workloads that may be using more disk than expected before it becomes an issue. You can view metrics in the GCP Console or through the Metrics API.
+Hope this helps you optimize disk usage in your GKE cluster! Let me know if you have any other questions. （已编辑）
+
+The gcloud container images list-unused command lists unused container images in your Google Container Registry (GCR) repositories. This allows you to find images that can potentially be deleted to free up space.
+The syntax is:
+bash
+gcloud container images list-unused
+By default, it will list unused images across all GCR repositories you have access to. You can filter by repository, tag, age, and more.
+For example, to list unused images in a specific repository that are over 30 days old:
+bash
+gcloud container images list-unused --filter="db_id=gcr.io/myproject && timestamp.seconds<(time()-60*60*24*30)"
+This will filter on:
+- db_id=gcr.io/myproject - My GCR repository
+- timestamp.seconds<(time()-60*60*24*30) - Images older than 30 days (60 sec * 60 min * 24 hours * 30 days)
+Some useful filters include:
+- db_id=gcr.io/myproject - A specific GCR repository
+- tag=mytag - A specific image tag
+- timestamp.seconds<(time()-duration) - Images older than some duration (e.g. 30 days)
+- NOT tags=latest - Exclude the latest tag
+Once you have identified unused images, you can delete them with:
+bash
+gcloud container images delete IMAGE_1 IMAGE_2 ...
+Or in bulk by piping the output:
+bash
+gcloud container images list-unused -q | xargs -n 1 gcloud container images delete -q
+This will help free up valuable disk space in your GCR repositories by cleaning up unused container images. Let me know if you have any other questions! （已编辑）
+
+
+
+
+Sure, here is a sample shell script for listing unused images and deleting them:
+
+```
+#!/bin/bash
+
+# Get a list of all of the unused images
+unused_images=$(gcloud container images list-unused)
+
+# Loop through each unused image
+for image in $unused_images; do
+
+  # Check if the image is referenced by any Deployments or Jobs
+  referenced=$(gcloud container images list-references --image $image)
+
+  # If the image is not referenced, delete it
+  if [ -z "$referenced" ]; then
+    gcloud container images delete $image
+  fi
+
+done
+```
+
+To use this script, save it as a file with a .sh extension, then run it by typing the following command:
+
+```
+bash delete_unused_images.sh
+```
+
+This script will list all of the unused container images in your project and delete any images that are not referenced by any Deployments or Jobs.
+at gke List unused images in a specific repository that are over 30 days old:
+help me write a script to list unused images in a specific repository that are over 30 days old. and delete it .
+Here's a script that will list unused images in a specific GCR repository that are over 30 days old, and delete them:
+bash
+#!/bin/bash
+
+# Repository to check
+REPO="gcr.io/myproject"
+
+# Images older than 30 days
+AGE=2592000
+
+# Get unused images
+IMAGES=$(gcloud container images list-unused \
+  --filter="db_id=${REPO} AND timestamp.seconds<$(date --date="-30 days" +%s)" -q)
+
+echo "Found ${#IMAGES[@]} unused images in ${REPO} older than 30 days: "
+echo "${IMAGES}"
+
+# Confirm deletion
+read -p "Delete these unused images? (y/n) " DELETE
+
+if [ "$DELETE" = "y" ]; then
+  echo "Deleting unused images..."
+  for IMAGE in $IMAGES; do
+    gcloud container images delete -q $IMAGE
+  done
+else
+  echo "Skipping image deletion."
+fi
+
+echo "Done."
+This script will:
+- Set the REPO and AGE (30 days) variables
+- Use gcloud to list unused images in that repo older than 30 days, storing in IMAGES array
+- Print the found images and prompt to confirm deletion
+- If confirmed, loop through images and delete with gcloud
+- Otherwise skip deletion
+You can run this script to cleanup old unused images in your repository and free up space. Let me know if you have any other questions!
+
+#!/bin/bash
+
+# Get the name of the GCR repository
+repository_name=$1
+
+# Get the date 30 days ago
+date_30_days_ago=$(date -d "30 days ago" +%Y-%m-%d)
+
+# List all of the images in the repository
+images=$(gcloud container images list --repository $repository_name)
+
+# Loop through each image
+for image in $images; do
+
+  # Get the creation date of the image
+  creation_date=$(gcloud container images describe --format="value(metadata.creation_time)" $image)
+
+  # Check if the image is over 30 days old
+  if [[ "$creation_date" < "$date_30_days_ago" ]]; then
+
+    # Check if the image is referenced by any Deployments or Jobs
+    referenced=$(gcloud container images list-references --image $image)
+
+    # If the image is not referenced, delete it
+    if [ -z "$referenced" ]; then
+      gcloud container images delete $image
+    fi
+
+  fi
+
+done
+
+# the bing answer but it's old
+Here is a script that will list unused images in a specific GCR repository that are over 30 days old and delete them:
+
+```sh
+#!/bin/bash
+
+# Set the repository name
+REPOSITORY="gcr.io/[PROJECT-ID]/[REPOSITORY]"
+
+# Get the current date in seconds since epoch
+CURRENT_DATE=$(date +%s)
+
+# Set the number of days to keep images
+DAYS_TO_KEEP=30
+
+# Calculate the cutoff date in seconds since epoch
+CUTOFF_DATE=$((CURRENT_DATE - (DAYS_TO_KEEP * 24 * 60 * 60)))
+
+# List all images in the repository
+IMAGES=$(gcloud container images list --repository=$REPOSITORY --format="value(name)")
+
+# Loop through each image
+for IMAGE in $IMAGES; do
+    # Get all the tags for the image
+    TAGS=$(gcloud container images list-tags $IMAGE --format="get(digest,timestamp.datetime)")
+
+    # Loop through each tag
+    while read -r TAG; do
+        # Split the tag into digest and timestamp
+        IFS=' ' read -ra TAG_INFO <<< "$TAG"
+        DIGEST=${TAG_INFO[0]}
+        TIMESTAMP=${TAG_INFO[1]}
+
+        # Convert the timestamp to seconds since epoch
+        TIMESTAMP_SECONDS=$(date -d $TIMESTAMP +%s)
+
+        # Check if the timestamp is older than the cutoff date
+        if [ $TIMESTAMP_SECONDS -lt $CUTOFF_DATE ]; then
+            # Delete the image
+            gcloud container images delete -q --force-delete-tags "${IMAGE}@${DIGEST}"
+        fi
+    done <<< "$TAGS"
+done
+```
+
+Make sure to replace `[PROJECT-ID]` and `[REPOSITORY]` with your own values. You can also adjust the `DAYS_TO_KEEP` variable to change how many days old an image must be before it is deleted.
+
+This script uses the `gcloud container images list` and `gcloud container images list-tags` commands to list all images and their tags in a specified repository. It then loops through each tag and checks its timestamp to see if it is older than the specified number of days. If it is, it uses the `gcloud container images delete` command to delete the image.
+
+Please note that this script is provided as an example and should be tested and modified as needed before using it in a production environment.
+
+
+Here's a script that will list unused images in a specific GCR repository that are over 30 days old, and delete them:
+
+```bash
+#!/bin/bash
+
+# Set the GCR repository name and age threshold
+REPO_NAME="{{gcr_repository_name}}"
+AGE_THRESHOLD=30
+
+# Get a list of all images in the repository
+IMAGE_LIST=$(gcloud container images list-tags gcr.io/$REPO_NAME --format='get(digest)')
+
+# Loop through each image in the list
+for IMAGE in $IMAGE_LIST; do
+  # Get the creation time of the image
+  CREATION_TIME=$(gcloud container images describe gcr.io/$REPO_NAME@$IMAGE --format='get(timestamp.datetime)' 2>/dev/null)
+
+  # If the creation time is more than 30 days ago, check if the image is in use
+  if [[ $(date -d "$CREATION_TIME" +%s) -lt $(date -d "$AGE_THRESHOLD days ago" +%s) ]]; then
+    if [[ $(gcloud container images list-tags gcr.io/$REPO_NAME --filter="digests=$IMAGE" --format='get(tags)' 2>/dev/null) == "" ]]; then
+      # If the image is not in use, delete it
+      echo "Deleting image gcr.io/$REPO_NAME@$IMAGE"
+      gcloud container images delete gcr.io/$REPO_NAME@$IMAGE --force-delete-tags --quiet
+    fi
+  fi
+done
+```
+
+This script uses the `gcloud` command to list all images in the specified GCR repository and loop through each image. For each image, it gets the creation time and checks if it is more than 30 days old. If it is, it checks if the image is in use by any tags. If the image is not in use, it deletes it using the `gcloud container images delete` command with the `--force-delete-tags` and `--quiet` flags to delete all tags associated with the image and suppress confirmation prompts.
