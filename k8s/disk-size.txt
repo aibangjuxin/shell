@@ -717,3 +717,20 @@ kubectl delete pvc <name>
 5. Double check that deleting the PV/PVC will not disrupt any workloads. As long as the resources are truly unused, deleting them will free up disk space that was allocated to the PV.
 6. You may want to automate this cleanup process using a script that detects unused PV/PVC resources after a certain time period and deletes them. But be very cautious to not delete any in-use resources accidentally!
 Following these steps will help reclaim disk space on your GKE nodes by removing unused PV/PVC resources. Let me know if you have any other questions!
+
+
+Here are some tips to optimize disk usage on GKE cluster nodes:
+
+1. Use smaller node sizes - By choosing smaller node sizes, it is possible to reduce the amount of disk space used by the nodes. However, this should be balanced against the performance requirements of your applications.
+
+2. Use stateless applications - By running stateless applications, where data is stored in external storage systems, it is possible to reduce the amount of disk space required on the nodes.
+
+3. Use ephemeral storage - If your applications do not require persistent storage, you can use ephemeral storage, which is available on most GKE node types. Ephemeral storage is temporary and will be lost if the node is terminated, but it can be used for caching or temporary storage.
+
+4. Implement logs and metrics cleanup - Logs and metrics take up a lot of disk space. Therefore it is important to manage them properly. You can set up a process for automated logs and metrics cleanup.
+
+5. Use Kubernetes resource limits - Kubernetes resource limits can restrict the amount of resources each pod requires, including disk space. This can be used to ensure that pods do not use more than their required amount of disk space.
+
+6. Implement efficient backups - Backups can be resource-intensive and can take up a lot of disk space. Therefore, it is important to implement efficient backup techniques that do not consume all of the free disk space. For example, use incremental backups or limit the number of backups that are being saved.
+
+By implementing the above tips, you can optimize disk usage on GKE nodes and better manage the resources you have.
