@@ -1,4 +1,61 @@
 
+在 GKE 上可以通过以下方式获取 pod 的磁盘使用统计:
+
+1. 获取所有 pod:
+
+bash
+kubectl get pods
+
+
+2. 对每个 pod,查看其磁盘使用情况:
+
+bash 
+kubectl exec <pod-name> -- df -h
+
+
+这会显示 pod 中每个容器的磁盘使用情况,包括文件系统,大小,已用,可用等信息。
+
+3. 另外,也可以部署一个 DaemonSet,在每个节点上定期收集磁盘使用信息,并推送到监控系统。一个示例如下:
+
+yaml
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: disk-monitor
+spec:
+  selector:
+    matchLabels:
+      name: disk-monitor
+  template:
+    metadata:
+      labels:
+        name: disk-monitor
+    spec:
+      containers:
+      - name: disk-monitor
+        image: <monitor-image>
+        args: 
+        - /bin/sh
+        - -c
+        - |
+          df -h > /tmp/disk.txt
+          while true; do 
+            sleep 60;
+            df -h > /tmp/disk.txt
+          done
+        volumeMounts:
+        - mountPath: /tmp
+          name: tmp-volume
+      volumes:
+      - name: tmp-volume
+        emptyDir: {}
+
+
+这个 DaemonSet 在每个节点上启动一个容器,每 60 秒运行 df -h 收集一次磁盘信息,并保存到 /tmp/disk.txt。然后这个信息可以由 DaemonSet 推送到监控系统,实现整个集群的磁盘监控。
+
+希望这个信息对你有所帮助!如果有任何其他问题,欢迎提出。
+
+
 要获取 GKE Pod 占用的 GKE 节点磁盘大小，可以使用以下步骤：
 
 1. 确认 GKE 集群的名称和区域/区域，以及要查询的 Pod 的名称。
