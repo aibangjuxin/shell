@@ -1,3 +1,67 @@
+Shell 关联数组是一种可索引的键-值对的集合。它类似于普通数组,但是它使用字符串作为索引而不是整数。
+
+定义关联数组的语法是:
+bash
+declare -A assoc_array_name
+
+
+也可以不使用 declare,直接如下定义:
+bash 
+assoc_array_name=()
+
+
+向关联数组中添加元素的语法是:
+bash
+assoc_array_name[key]=value
+
+
+例如:
+bash
+# 定义关联数组 
+declare -A users
+
+# 添加元素
+users[john]=1234
+users[jane]=5678
+
+# 访问元素
+echo ${users[john]}   # 1234
+echo ${users[jane]}   # 5678
+
+
+你也可以不提前定义关联数组,直接向其添加元素,它会自动创建:
+bash
+users[john]=1234  
+
+
+删除元素使用 unset 命令:
+bash
+unset users[john]
+
+
+获取所有索引(键)的语法是:
+bash
+${!assoc_array_name[@]}
+ 
+
+例如:
+bash
+${!users[@]}   # john jane
+
+
+获取所有值的语法是:
+bash
+${assoc_array_name[@]}
+
+
+例如: 
+bash
+${users[@]}   # 1234 5678
+
+
+关联数组的其他操作与普通数组类似。希望这个示例可以帮助你理解和熟悉 Shell 关联数组!
+
+
 #!/usr/local/bin/bash
 declare -A env_info
 env_info=(
